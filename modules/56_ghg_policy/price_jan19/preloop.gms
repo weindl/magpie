@@ -27,6 +27,8 @@ im_pollutant_prices(t,i,"n2o_n_indirect")$(im_pollutant_prices(t,i,"n2o_n_indire
 ***lowers the economic incentive for CO2 emission reduction (avoided deforestation) and afforestation
 im_pollutant_prices(t,i,"co2_c") = im_pollutant_prices(t,i,"co2_c")*s56_cprice_red_factor;
 
+
+if(s56_ghgprice_phase_in = 1,
 ***phase-in of GHG price over 20 year period; start depends on s56_ghgprice_start
 im_pollutant_prices(t,i,pollutants)$(m_year(t) < s56_ghgprice_start) = 0;
 im_pollutant_prices(t,i,pollutants)$(m_year(t) = s56_ghgprice_start) = 0.1*im_pollutant_prices(t,i,pollutants);
@@ -34,9 +36,12 @@ im_pollutant_prices(t,i,pollutants)$(m_year(t) = s56_ghgprice_start+5) = 0.2*im_
 im_pollutant_prices(t,i,pollutants)$(m_year(t) = s56_ghgprice_start+10) = 0.4*im_pollutant_prices(t,i,pollutants);
 im_pollutant_prices(t,i,pollutants)$(m_year(t) = s56_ghgprice_start+15) = 0.8*im_pollutant_prices(t,i,pollutants);
 im_pollutant_prices(t,i,pollutants)$(m_year(t) >= s56_ghgprice_start+20) = im_pollutant_prices(t,i,pollutants);
+);
 
+if(s56_ghgprice_devstate_scaling = 1,
 ***multiply GHG prices with development state to account for institutional requirements needed for implementing a GHG pricing scheme
 im_pollutant_prices(t,i,pollutants) = im_pollutant_prices(t,i,pollutants)*im_development_state(t,i);
+);
 
 display im_pollutant_prices;
 
@@ -63,3 +68,8 @@ p56_ghg_price_growth_rate(t,i,pollutants)$(p56_ghg_price_growth_rate(t,i,polluta
 p56_ghg_price_growth_rate(t,i,pollutants)$(p56_ghg_price_growth_rate(t,i,pollutants) = 0) = p56_ghg_price_growth_rate_avg(i,pollutants);
 *if average growth rate is zero use 5% as default
 p56_ghg_price_growth_rate(t,i,pollutants)$(p56_ghg_price_growth_rate(t,i,pollutants) = 0) = 0.05;
+
+
+
+
+*p56_discount_factor(t,i,pollutants)

@@ -6,10 +6,12 @@
 *** |  Contact: magpie@pik-potsdam.de
 
 scalars
-  s56_reward_neg_emis reward CDR from all sources (-Inf) or only from afforestation (0) (1) / 0 /
-  s56_limit_ch4_n2o_price upper limit for CH4 and N2O GHG prices (USD05MER per tC) / 1000 /
-  s56_cprice_red_factor reduction factor for CO2 price (-) / 0.5 /
-  s56_ghgprice_start start year for ghg price phase in / 2025 /
+  s56_reward_neg_emis Reward CDR from all sources (-Inf) or only from afforestation (0) (1) / 0 /
+  s56_limit_ch4_n2o_price Upper limit for CH4 and N2O GHG prices (USD05MER per tC) / 1000 /
+  s56_cprice_red_factor reduction Factor for CO2 price (-) / 0.5 /
+  s56_ghgprice_start Start year for ghg price phase in / 2025 /
+  s56_ghgprice_phase_in  Switch for phasing-in GHG price over a 20 year period  (1=on 0=off) (1) / 1 /;
+  s56_ghgprice_devstate_scaling Switch for scaling GHG price with development state (1=on 0=off) (1) / 1 /;
 ;
 
 $setglobal c56_pollutant_prices  R2M41-SSP2-NPi

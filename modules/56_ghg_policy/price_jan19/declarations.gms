@@ -10,7 +10,7 @@ parameters
  p56_pollutant_prices_input(t,i,pollutants)   Certificate prices for N2O-N CH4 CO2-C from input files (USD05MER per Mg)
  p56_ghg_price_growth_rate(t,i,pollutants)    Growth rate of certificate price (% per yr)
  p56_ghg_price_growth_rate_avg(i,pollutants)  Average over time of growth rate of certificate price (% per yr)
- p56_discount_factor(t,i,pollutants)          Discount factor for certificate prices of different pollutants (1)
+ pc56_discount_factor(i,pollutants)           Discount factor for certificate prices of different pollutants for the current time step (1)
  p56_emis_policy(t,i,pollutants,emis_source)  GHG emission policy scenarios (binary)
 ;
 

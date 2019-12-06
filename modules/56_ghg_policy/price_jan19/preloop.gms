@@ -68,8 +68,3 @@ p56_ghg_price_growth_rate(t,i,pollutants)$(p56_ghg_price_growth_rate(t,i,polluta
 p56_ghg_price_growth_rate(t,i,pollutants)$(p56_ghg_price_growth_rate(t,i,pollutants) = 0) = p56_ghg_price_growth_rate_avg(i,pollutants);
 *if average growth rate is zero use 5% as default
 p56_ghg_price_growth_rate(t,i,pollutants)$(p56_ghg_price_growth_rate(t,i,pollutants) = 0) = 0.05;
-
-
-
-
-*p56_discount_factor(t,i,pollutants)

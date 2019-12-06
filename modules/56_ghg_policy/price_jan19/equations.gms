@@ -61,8 +61,8 @@ q56_cell_to_reg(i2,pollutants,emis_source) ..
 *' We therefore distinguish one-off and yearly emissions, and discount one-off emissions assuming an infinite time-horizon to
 *' level them with yearly emissions. Since one-off emissions are delivered by the [52_carbon] module as annual emissions they are
 *' multiplied here by the timestep length `m_timestep_length` to obtain emissions for the entire timestep and are then
-*' transformed back into annual costs by multiplying by the emission price and a discount factor `p56_ghg_price_growth_rate`
-*' that is equal to the growth rate of the emissions price. 
+*' transformed back into annual costs by multiplying by the emission price and a discount factor `pc56_discount_factor`
+*' that is equal to the growth rate of the emissions price.
 
  q56_emission_costs_reg_oneoff(i2,emis_reg_one56) ..
                  v56_emission_costs_reg_oneoff(i2,emis_reg_one56) =g=
@@ -72,7 +72,7 @@ q56_cell_to_reg(i2,pollutants,emis_source) ..
                      * sum(ct,
                       p56_emis_policy(ct,i2,pollutants,emis_reg_one56)
                       * im_pollutant_prices(ct,i2,pollutants)
-                      * p56_ghg_price_growth_rate(ct,i2,pollutants)/(1+p56_ghg_price_growth_rate(ct,i2,pollutants)))
+                      * pc56_discount_factor(i2,pollutants)/(1+pc56_discount_factor(i2,pollutants)))
                  );
 
  q56_emission_costs_cell_oneoff(j2,emis_cell_one56) ..
@@ -83,7 +83,7 @@ q56_cell_to_reg(i2,pollutants,emis_source) ..
                      * sum((ct,cell(i2,j2)),
                     	p56_emis_policy(ct,i2,pollutants,emis_cell_one56)
                          * im_pollutant_prices(ct,i2,pollutants)
-                         * p56_ghg_price_growth_rate(ct,i2,pollutants)/(1+p56_ghg_price_growth_rate(ct,i2,pollutants)))
+                         * pc56_discount_factor(i2,pollutants)/(1+pc56_discount_factor(i2,pollutants)))
                  );
 
 *' **Total regional emission costs** consist of costs from yearly and one-off emissions occuring in this region and its cells.
@@ -95,7 +95,7 @@ q56_cell_to_reg(i2,pollutants,emis_source) ..
                + sum((emis_cell_one56, cell(i2,j2)), v56_emission_costs_cell_oneoff(j2,emis_cell_one56))
                  ;
 
-*' **Benefits** from carbon removal (from afforestation) are also calculated in this module taking into account the policy that was 
+*' **Benefits** from carbon removal (from afforestation) are also calculated in this module taking into account the policy that was
 *' defined above in `f56_aff_policy`. Cost and benefits are however not summed here but in [11_costs].
 
  q56_reward_cdr_aff_reg(i2) ..
@@ -109,5 +109,5 @@ q56_cell_to_reg(i2,pollutants,emis_source) ..
                  vm_cdr_aff(j2) *
                  sum((ct,cell(i2,j2)),
                   im_pollutant_prices(ct,i2,"co2_c")
-                  * p56_ghg_price_growth_rate(ct,i2,"co2_c")/(1+p56_ghg_price_growth_rate(ct,i2,"co2_c"))
+                  * pc56_discount_factor(i2,"co2_c")/(1+pc56_discount_factor(i2,"co2_c"))
                  );

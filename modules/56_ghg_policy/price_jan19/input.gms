@@ -16,6 +16,8 @@ scalars
 
 $setglobal c56_pollutant_prices  R2M41-SSP2-NPi
 $setglobal c56_emis_policy  ssp_nosoil
+$setglobal c56_discount_factor  ghg_price_growth_rate
+
 
 table f56_pollutant_prices(t_all,i,pollutants,ghgscen56) GHG certificate prices for N2O-N CH4 CO2-C (USD05MER per t)
 $ondelim

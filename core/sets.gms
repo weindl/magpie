@@ -144,7 +144,7 @@ sets time_annual Annual extended time steps
 
 ;
 
-set t_past(t_all) Timesteps with observed data 
+set t_past(t_all) Timesteps with observed data
 $If "%c_past%"== "till_2010" /y1965, y1970, y1975, y1980, y1985, y1990,y1995, y2000, y2005, y2010/;
 $If "%c_past%"== "till_1965" /y1965/;
 $If "%c_past%"== "till_1975" /y1965, y1970, y1975/;
@@ -236,6 +236,19 @@ sets
   ac155,ac160,ac165,ac170,ac175,ac180,ac185,ac190,ac195,ac200,
   ac205,ac210,ac215,ac220,ac225,ac230,ac235,ac240,ac245,ac250,
   ac255,ac260,ac265,ac270,ac275,ac280,ac285,ac290,ac295,acx /
+
+  ac_young(ac) age classes young
+  / ac5,ac10,ac15,ac20,ac25,ac30,ac35,ac40,ac45,ac50,ac55,ac60 /
+
+*   ac_intermediate(ac) age classes young
+*   / ac35,ac40,ac45,ac50,ac55,ac60,ac65,ac70,ac75,ac80,ac85,ac90,ac95,ac100 /
+
+  ac_mature(ac) age classes mature
+  /ac65,ac70,ac75,ac80,ac85,ac90,ac95,ac100,ac105,ac110,ac115,
+  ac120,ac125,ac130,ac135,ac140,ac145,ac150,ac155,ac160,ac165,
+  ac170,ac175,ac180,ac185,ac190,ac195,ac200,ac205,ac210,ac215,
+  ac220,ac225,ac230,ac235,ac240,ac245,ac250,ac255,ac260,ac265,
+  ac270,ac275,ac280,ac285,ac290,ac295,acx /
 
    when Temporal location relative to optimization / before, after /
 

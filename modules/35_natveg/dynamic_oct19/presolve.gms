@@ -35,12 +35,12 @@ p35_secdforest(t,j,ac) =
 *' @stop
 
 pc35_secdforest(j,ac) = p35_secdforest(t,j,ac);
-v35_secdforest.l(j,ac) = pc35_secdforest(j,ac);
+vm_natveg_secdforest.l(j,ac) = pc35_secdforest(j,ac);
 vm_land.l(j,"secdforest") = sum(ac, pc35_secdforest(j,ac));
 pcm_land(j,"secdforest") = sum(ac, pc35_secdforest(j,ac));
 
 pc35_other(j,ac) = p35_other(t,j,ac);
-v35_other.l(j,ac) = pc35_other(j,ac);
+vm_natveg_other.l(j,ac) = pc35_other(j,ac);
 vm_land.l(j,"other") = sum(ac, pc35_other(j,ac));
 pcm_land(j,"other") = sum(ac, pc35_other(j,ac));
 
@@ -91,14 +91,14 @@ vm_land.lo(j,"primforest") = p35_save_primforest(t,j);
 vm_land.up(j,"primforest") = vm_land.l(j,"primforest");
 m_boundfix(vm_land,(j,"primforest"),up,10e-5);
 
-v35_secdforest.fx(j,"ac0") = 0;
-v35_secdforest.lo(j,"acx") = p35_save_secdforest(t,j);
-v35_secdforest.up(j,ac_sub) = pc35_secdforest(j,ac_sub);
-m_boundfix(v35_secdforest,(j,ac_sub),up,10e-5);
+vm_natveg_secdforest.fx(j,"ac0") = 0;
+vm_natveg_secdforest.lo(j,"acx") = p35_save_secdforest(t,j);
+vm_natveg_secdforest.up(j,ac_sub) = pc35_secdforest(j,ac_sub);
+m_boundfix(vm_natveg_secdforest,(j,ac_sub),up,10e-5);
 
-v35_other.lo(j,"acx") = p35_save_other(t,j);
-v35_other.up(j,ac_sub) = pc35_other(j,ac_sub);
-m_boundfix(v35_other,(j,ac_sub),up,10e-5);
+vm_natveg_other.lo(j,"acx") = p35_save_other(t,j);
+vm_natveg_other.up(j,ac_sub) = pc35_other(j,ac_sub);
+m_boundfix(vm_natveg_other,(j,ac_sub),up,10e-5);
 
 * calculate carbon density
 * highest carbon density 1st time step to account for reshuffling

@@ -9,13 +9,13 @@
 vm_land.fx(j,"primforest") = pcm_land(j,"primforest");
 
 *fix secdforest
-v35_secdforest.fx(j,ac) = 0;
-v35_secdforest.fx(j,"acx") = pcm_land(j,"secdforest");
+vm_natveg_secdforest.fx(j,ac) = 0;
+vm_natveg_secdforest.fx(j,"acx") = pcm_land(j,"secdforest");
 vm_land.fx(j,"secdforest") = sum(ac, v35_secdforest.l(j,ac));
 
 *fix other land
-v35_other.fx(j,ac) = 0;
-v35_other.fx(j,"acx") = pcm_land(j,"other");
+vm_natveg_other.fx(j,ac) = 0;
+vm_natveg_other.fx(j,"acx") = pcm_land(j,"other");
 vm_land.fx(j,"other") = sum(ac, v35_other.l(j,ac));
 
 vm_landdiff_natveg.fx = 0;

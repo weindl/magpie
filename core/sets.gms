@@ -240,7 +240,7 @@ sets
   ac_young(ac) age classes young
   / ac5,ac10,ac15,ac20,ac25,ac30 /
 
-*   ac_intermediate(ac) age classes young
+*   ac_intermediate(ac) age classes intermediate
 *   / ac35,ac40,ac45,ac50,ac55,ac60,ac65,ac70,ac75,ac80,ac85,ac90,ac95,ac100 /
 
   ac_mature(ac) age classes mature

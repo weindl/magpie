@@ -8,7 +8,7 @@
 ** BEGIN INDC **
 
 * Limit demand for prescribed NPI/NDC afforestation in `p32_aff_pol` if not enough suitable area (`p32_aff_pot`) for afforestation is available.
-   p32_aff_pot(t,j) = (vm_land_fore.l(j,"crop") - vm_land_fore.lo(j,"crop")) + (vm_land_fore.l(j,"past") - vm_land_fore.lo(j,"past"));
+   p32_aff_pot(t,j) = (vm_land.l(j,"crop") - vm_land.lo(j,"crop")) + (vm_land.l(j,"past") - vm_land.lo(j,"past"));
 *correct indc forest stock based on p32_aff_pot
   if((ord(t) > 1),
       p32_aff_pol(t,j)$(p32_aff_pol(t,j) - p32_aff_pol(t-1,j) > p32_aff_pot(t,j)) = p32_aff_pol(t-1,j) + p32_aff_pot(t,j);
@@ -68,7 +68,7 @@ p32_land(t,j,type32,"ac0") = 0;
 *calculate vm_land_fore.l
 vm_land_fore.l(j,type32,ac) = p32_land(t,j,type32,ac);
 pc32_land(j,type32,ac) = p32_land(t,j,type32,ac);
-vm_land_fore.l(j,"forestry") = sum((type32,ac), p32_land(t,j,type32,ac));
+vm_land.l(j,"forestry") = sum((type32,ac), p32_land(t,j,type32,ac));
 pcm_land(j,"forestry") = sum((type32,ac), p32_land(t,j,type32,ac));
 
 ** fix ndc afforestation forever, all age-classes are fixed except ac0

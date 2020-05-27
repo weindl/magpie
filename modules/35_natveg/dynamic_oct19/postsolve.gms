@@ -6,14 +6,14 @@
 *** |  Contact: magpie@pik-potsdam.de
 
 *secdforest age class calculation
-p35_secdforest(t,j,ac) = v35_secdforest.l(j,ac);
+p35_secdforest(t,j,ac) = vm_natveg_secdforest.l(j,ac);
 
 *other land age class calculation
-p35_other(t,j,ac) = v35_other.l(j,ac);
+p35_other(t,j,ac) = vm_natveg_other.l(j,ac);
 
 *#################### R SECTION START (OUTPUT DEFINITIONS) #####################
- ov35_secdforest(t,j,ac,"marginal")              = v35_secdforest.m(j,ac);
- ov35_other(t,j,ac,"marginal")                   = v35_other.m(j,ac);
+ ov35_secdforest(t,j,ac,"marginal")         = vm_natveg_secdforest.m(j,ac);
+ ov35_other(t,j,ac,"marginal")              = vm_natveg_other.m(j,ac);
  ov_landdiff_natveg(t,"marginal")                = vm_landdiff_natveg.m;
  ov35_other_expansion(t,j,ac,"marginal")         = v35_other_expansion.m(j,ac);
  ov35_other_reduction(t,j,ac,"marginal")         = v35_other_reduction.m(j,ac);
@@ -31,8 +31,8 @@ p35_other(t,j,ac) = v35_other.l(j,ac);
  oq35_primforest_reduction(t,j,"marginal")       = q35_primforest_reduction.m(j);
  oq35_min_forest(t,j,"marginal")                 = q35_min_forest.m(j);
  oq35_min_other(t,j,"marginal")                  = q35_min_other.m(j);
- ov35_secdforest(t,j,ac,"level")                 = v35_secdforest.l(j,ac);
- ov35_other(t,j,ac,"level")                      = v35_other.l(j,ac);
+ ov35_secdforest(t,j,ac,"level")            = vm_natveg_secdforest.l(j,ac);
+ ov35_other(t,j,ac,"level")                 = vm_natveg_other.l(j,ac);
  ov_landdiff_natveg(t,"level")                   = vm_landdiff_natveg.l;
  ov35_other_expansion(t,j,ac,"level")            = v35_other_expansion.l(j,ac);
  ov35_other_reduction(t,j,ac,"level")            = v35_other_reduction.l(j,ac);
@@ -50,8 +50,8 @@ p35_other(t,j,ac) = v35_other.l(j,ac);
  oq35_primforest_reduction(t,j,"level")          = q35_primforest_reduction.l(j);
  oq35_min_forest(t,j,"level")                    = q35_min_forest.l(j);
  oq35_min_other(t,j,"level")                     = q35_min_other.l(j);
- ov35_secdforest(t,j,ac,"upper")                 = v35_secdforest.up(j,ac);
- ov35_other(t,j,ac,"upper")                      = v35_other.up(j,ac);
+ ov35_secdforest(t,j,ac,"upper")            = vm_natveg_secdforest.up(j,ac);
+ ov35_other(t,j,ac,"upper")                 = vm_natveg_other.up(j,ac);
  ov_landdiff_natveg(t,"upper")                   = vm_landdiff_natveg.up;
  ov35_other_expansion(t,j,ac,"upper")            = v35_other_expansion.up(j,ac);
  ov35_other_reduction(t,j,ac,"upper")            = v35_other_reduction.up(j,ac);
@@ -69,8 +69,8 @@ p35_other(t,j,ac) = v35_other.l(j,ac);
  oq35_primforest_reduction(t,j,"upper")          = q35_primforest_reduction.up(j);
  oq35_min_forest(t,j,"upper")                    = q35_min_forest.up(j);
  oq35_min_other(t,j,"upper")                     = q35_min_other.up(j);
- ov35_secdforest(t,j,ac,"lower")                 = v35_secdforest.lo(j,ac);
- ov35_other(t,j,ac,"lower")                      = v35_other.lo(j,ac);
+ ov35_secdforest(t,j,ac,"lower")            = vm_natveg_secdforest.lo(j,ac);
+ ov35_other(t,j,ac,"lower")                 = vm_natveg_other.lo(j,ac);
  ov_landdiff_natveg(t,"lower")                   = vm_landdiff_natveg.lo;
  ov35_other_expansion(t,j,ac,"lower")            = v35_other_expansion.lo(j,ac);
  ov35_other_reduction(t,j,ac,"lower")            = v35_other_reduction.lo(j,ac);

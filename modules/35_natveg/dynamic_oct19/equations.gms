@@ -8,9 +8,9 @@
 *' @equations
 *' The interface `vm_land` provides aggregated natveg land pools (`ac`) to other modules.
 
- q35_land_secdforest(j2) .. vm_land(j2,"secdforest") =e= sum(ac, v35_secdforest(j2,ac));
+ q35_land_secdforest(j2) .. vm_land(j2,"secdforest") =e= sum(ac, vm_natveg_secdforest(j2,ac));
 
- q35_land_other(j2) .. vm_land(j2,"other") =e= sum(ac, v35_other(j2,ac));
+ q35_land_other(j2) .. vm_land(j2,"other") =e= sum(ac, vm_natveg_other(j2,ac));
 
 *' Carbon stocks for primary forest, secondary forest or other natural land are calculated
 *' as the product of respective area and carbon density.
@@ -24,11 +24,11 @@
            *sum(ct, fm_carbon_density(ct,j2,"primforest",ag_pools));
 
  q35_carbon_secdforest(j2,ag_pools) .. vm_carbon_stock(j2,"secdforest",ag_pools) =e=
-           sum(ac, v35_secdforest(j2,ac)
+           sum(ac, vm_natveg_secdforest(j2,ac)
            *sum(ct, pm_carbon_density_ac(ct,j2,ac,ag_pools)));
 
  q35_carbon_other(j2,ag_pools)  .. vm_carbon_stock(j2,"other",ag_pools) =e=
-           sum(ac, v35_other(j2,ac)
+           sum(ac, vm_natveg_other(j2,ac)
            *sum(ct, pm_carbon_density_ac(ct,j2,ac,ag_pools)));
 
 
@@ -53,15 +53,15 @@
 
  q35_other_expansion(j2,ac) ..
  	v35_other_expansion(j2,ac) =g=
- 		v35_other(j2,ac) - pc35_other(j2,ac);
+ 		vm_natveg_other(j2,ac) - pc35_other(j2,ac);
 
  q35_other_reduction(j2,ac) ..
  	v35_other_reduction(j2,ac) =g=
- 		pc35_other(j2,ac) - v35_other(j2,ac);
+ 		pc35_other(j2,ac) - vm_natveg_other(j2,ac);
 
  q35_secdforest_reduction(j2,ac) ..
  	v35_secdforest_reduction(j2,ac) =g=
- 		pc35_secdforest(j2,ac) - v35_secdforest(j2,ac);
+ 		pc35_secdforest(j2,ac) - vm_natveg_secdforest(j2,ac);
 
  q35_primforest_reduction(j2) ..
  	v35_primforest_reduction(j2) =g=

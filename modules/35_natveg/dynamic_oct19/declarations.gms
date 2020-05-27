@@ -43,8 +43,8 @@ equations
 ;
 
 positive variables
-  v35_secdforest(j,ac) Detailed stock of secdforest (mio. ha)
-  v35_other(j,ac)      Detailed stock of other land (mio. ha)
+  vm_natveg_secdforest(j,ac) Detailed stock of secdforest (mio. ha)
+  vm_natveg_other(j,ac)      Detailed stock of other land (mio. ha)
   vm_landdiff_natveg       Aggregated difference in natveg land compared to previous timestep (mio. ha)
   v35_other_expansion(j,ac) Other land expansion compared to previous timestep (mio. ha)
   v35_other_reduction(j,ac) Other land reduction compared to previous timestep (mio. ha)
@@ -54,8 +54,8 @@ positive variables
 
 *#################### R SECTION START (OUTPUT DECLARATIONS) ####################
 parameters
- ov35_secdforest(t,j,ac,type)              Detailed stock of secdforest (mio. ha)
- ov35_other(t,j,ac,type)                   Detailed stock of other land (mio. ha)
+ ov35_secdforest(t,j,ac,type)         Detailed stock of secdforest (mio. ha)
+ ov35_other(t,j,ac,type)              Detailed stock of other land (mio. ha)
  ov_landdiff_natveg(t,type)                Aggregated difference in natveg land compared to previous timestep (mio. ha)
  ov35_other_expansion(t,j,ac,type)         Other land expansion compared to previous timestep (mio. ha)
  ov35_other_reduction(t,j,ac,type)         Other land reduction compared to previous timestep (mio. ha)

@@ -4,7 +4,7 @@
 *** or later. See LICENSE file or go to http://www.gnu.org/licenses/
 *** Contact: magpie@pik-potsdam.de
 
-$setglobal c44_price_biodiv_loss  p1_p1000
+$setglobal c44_price_biodiv_loss  p0
 
 table f44_luh2_side_layers(j,luh2_side_layers44) bii side layers (grid cell share)
 $ondelim

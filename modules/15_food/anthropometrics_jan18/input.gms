@@ -79,11 +79,11 @@ scalar s15_maxiter Scalar defining maximum number of iterations (1) / 5 /;
 
 scalar s15_convergence Convergence criterion (1) / 0.005 /;
 
-scalar s15_exo_waste Switch for transition towards exogenous food waste scenario (1)  / 0 /;
+scalar s15_exo_waste Switch for transition towards exogenous food waste scenario (0=endogenous 1=exogenous)  / 0 /;
 
 scalar s15_waste_scen Scenario target for the ratio between food demand and intake (1)  / 1.2 /;
 
-scalar s15_exo_diet Switch for transition towards exogenous diet scenario (1)  / 0 /;
+scalar s15_exo_diet Switch for transition to EAT Lancet diet scenarios (0=endogenous 1=EATLancet_exo 2=EATLancet_mag  / 0 /;
 
 scalar s15_rum_share_fadeout_india_strong 	switch for stronger ruminant fadeout in India (binary) / 1 /;
 

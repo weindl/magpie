@@ -144,9 +144,6 @@ if (s15_elastic_demand = 1 AND m_year(t) > sm_fix_SSP2,
 *###############################################################################
 * ###### Exogenous food substitution scenarios
 
-* "Downwards convergence" of regional calorie oversupply due to food waste to the
-* waste reduction target, i.e. only for values that are higher than the target:
-
 
 *' Substitution of ruminant beef with poultry:
 p15_kcal_pc_calibrated_orig(t,i,kfo) = p15_kcal_pc_calibrated(t,i,kfo);

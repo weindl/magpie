@@ -502,15 +502,14 @@ else
             i15_intake_EATLancet(i,EAT_staples)/sum(EAT_staples2,i15_intake_EATLancet(i,EAT_staples2)) );
 );
 
-*' 3.) The third step estimates the calorie supply at household level by multiplying
-*' daily per capita calorie intake with a ratio  of supply to intake
-*' (`f15_overcons_FAOwaste(i,kfo)`), based on FAO estimates on historical food waste
-*' at consumption level and food conversion factors, and with a calibration
-*' factor `f15_calib_fsupply(i)`. This factor ensures that the estimated food
-*' supply (based on MAgPIE calorie intake, FAO waste shares and food converion
-*' factors) is calibrated to FAO food supply for the only historical time slice
-*' of the EAT Lancet diet scenarios (y2010). A multiplicative factor accounts for
-*' increases in food waste over time relative to the only historical time slice
+*' 3.) The third step estimates the calorie availability at household level by multiplying
+*' daily per capita calorie intake with a food-specific ratio  of calorie availability 
+*' to intake (`i15_demand2intake_detailed_ref(i,kfo)`), based on FAO estimates on 
+*' historical food waste at consumption level, and with a calibration factor 
+*' `f15_calib_fsupply(i)`. This factor ensures that the resulting estimated food
+*' supply (based on MAgPIE calorie intake and food waste assumptions) is calibrated to 
+*' FAO food supply for available historical time steps. A multiplicative factor accounts
+*' for increases in food waste over time, relative to the only historical time slice
 *' of the EAT Lancet diet scenarios, according to the regression-based approach.
 
 * In case, no exogenous waste scenario is selceted, the original regression-
@@ -520,7 +519,7 @@ p15_foodwaste_growth(t,i) = ( 1$(p15_demand2intake_ratio_ref(i) = 0)
               p15_demand2intake_ratio_ref(i) > 0)
               );
 
-i15_kcal_pc_scen_target(t,i,kfo) = (f15_calib_fsupply(i)*f15_overcons_FAOwaste(i,kfo)
+i15_kcal_pc_scen_target(t,i,kfo) = (f15_calib_fsupply(i)*i15_demand2intake_detailed_ref(i,kfo)
                                     *i15_intake_detailed_scen_target(t,i,kfo))
                                     *p15_foodwaste_growth(t,i);
 

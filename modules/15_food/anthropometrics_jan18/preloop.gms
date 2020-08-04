@@ -88,6 +88,16 @@ p15_exo_foodscen_region_shr(t_all,i) = sum(i_to_iso(i,iso), p15_country_dummy(is
 * Note: p15_exo_foodscen_region_shr(t,i) is 1 in the default case)
 i15_exo_foodscen_fader(t,i) = f15_exo_foodscen_fader(t,"%c15_exo_scen_targetyear%") * p15_exo_foodscen_region_shr(t,i);
 
+
+* Specify the historical ratio between food calorie demand and intake for different food commodities according
+* to the underlying food waste assumptions of the selected construction mode (see s15_exo_diet switch) of the EAT Lancet diet scenarios: 
+if (s15_exo_diet = 1,
+	i15_demand2intake_detailed_ref(i,kfo) = f15_overcons_EAT(i,kfo);
+else
+	i15_demand2intake_detailed_ref(i,kfo) = f15_overcons_FAO(i,kfo);
+);
+
+
 * Initialisation of the ratio between food calorie demand and food intake for the
 * historical reference period:
 p15_demand2intake_ratio_ref(i) = 0;

@@ -167,17 +167,45 @@ sets
   EAT_scen15  Scenario of daily per capita calorie intake
        / BMK, FLX, PSC, VEG, VGN, FLX_hmilk, FLX_hredmeat /
 
-   EAT_staples(kfo) All staple food products according to EAT Lancet definition
+  EAT_targettype15 Minimum or maximum target type of the EAT Lancet recommendations
+      / min, max /
+
+  EAT_targets15 Food groups as well as individual foods for which EAT Lancet targets are defined
+       / t_nutseeds,t_fruitveg,t_roots,t_redmeat
+         t_puls_pro,t_soybean,t_fish,t_livst_chick,t_livst_egg,t_livst_milk,t_sugar,t_oils /
+
+  EAT_mtargets15(EAT_targets15) EAT Lancet food targets where direct mapping to magpie categories is possible
+       / t_roots,t_redmeat
+         t_puls_pro,t_soybean,t_fish,t_livst_chick,t_livst_egg,t_livst_milk,t_sugar,t_oils /
+
+  EAT_staples(kfo) All staple food products according to EAT Lancet definition
        / tece,maiz,trce,rice_pro,potato,cassav_sp /
 
-   EAT_nonstaples(kfo) All non-staple food products according to EAT Lancet definition
+  EAT_nonstaples(kfo) All non-staple food products according to EAT Lancet definition
        / soybean,rapeseed,groundnut,sunflower,puls_pro,
          sugr_cane,sugr_beet,
          oils,sugar,molasses,alcohol,brans,scp,
          livst_rum,livst_pig,livst_chick, livst_egg, livst_milk, fish,
          others /
 
+
+***RELATIONSHIPS BETWEEN DIFFERENT SETS***
+
+  EATtargets_kfo15(EAT_mtargets15,kfo) Mapping between EAT Lancet food targets and magpie categories
+       / t_roots             . (potato,cassav_sp)
+         t_redmeat           . (livst_rum,livst_pig)
+         t_puls_pro          . (puls_pro)
+         t_soybean           . (soybean)
+         t_fish              . (fish)
+         t_livst_chick       . (livst_chick)
+         t_livst_egg         . (livst_egg)
+         t_livst_milk        . (livst_milk)
+         t_sugar             . (sugar)
+         t_oils              . (oils)
+       /
+
 ;
+
 
 alias(kst,kst2);
 alias(bmi_group15,bmi_group15_2);

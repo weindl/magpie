@@ -144,9 +144,6 @@ if (s15_elastic_demand = 1 AND m_year(t) > sm_fix_SSP2,
 *###############################################################################
 * ###### Exogenous food substitution scenarios
 
-* "Downwards convergence" of regional calorie oversupply due to food waste to the
-* waste reduction target, i.e. only for values that are higher than the target:
-
 
 *' Substitution of ruminant beef with poultry:
 p15_kcal_pc_calibrated_orig(t,i,kfo) = p15_kcal_pc_calibrated(t,i,kfo);
@@ -240,8 +237,8 @@ if(s15_exo_waste = 1,
 * waste reduction target, i.e. only for values that are higher than the target:
 
 p15_demand2intake_ratio_scen(t,i)$(p15_demand2intake_ratio(t,i) > s15_waste_scen )
-                    = p15_demand2intake_ratio(t,i)*(1-i15_exo_foodscen_fader(t))
-                      + s15_waste_scen*i15_exo_foodscen_fader(t);
+                    = p15_demand2intake_ratio(t,i)*(1-i15_exo_foodscen_fader(t,i))
+                      + s15_waste_scen*i15_exo_foodscen_fader(t,i);
 
 p15_kcal_pc_calibrated_orig(t,i,kfo) = p15_kcal_pc_calibrated(t,i,kfo);
 p15_kcal_pc_calibrated(t,i,kfo)$(p15_demand2intake_ratio(t,i) >0 ) = p15_kcal_pc_calibrated_orig(t,i,kfo)*(
@@ -285,8 +282,8 @@ i15_kcal_pc_scen_target(t,i,kfo) = (f15_calib_fsupply(i)*f15_overcons_FAOwaste(i
 *' convergence:
 
 p15_kcal_pc_calibrated_orig(t,i,kfo) = p15_kcal_pc_calibrated(t,i,kfo);
-p15_kcal_pc_calibrated(t,i,kfo) = p15_kcal_pc_calibrated_orig(t,i,kfo) * (1-i15_exo_foodscen_fader(t))
-                        + i15_kcal_pc_scen_target(t,i,kfo) * i15_exo_foodscen_fader(t);
+p15_kcal_pc_calibrated(t,i,kfo) = p15_kcal_pc_calibrated_orig(t,i,kfo) * (1-i15_exo_foodscen_fader(t,i))
+                        + i15_kcal_pc_scen_target(t,i,kfo) * i15_exo_foodscen_fader(t,i);
 
 
 );

@@ -72,7 +72,7 @@ sets
 
 scalar s15_elastic_demand  Elastic demand switch (1=elastic 0=exogenous) (1) / 1 /;
 
-scalar s15_calibrate Calibration switch (1=calibrated 0=pure regression outcomes) (1) / 0 /;
+scalar s15_calibrate Calibration switch (1=calibrated 0=pure regression outcomes) (1) / 1 /;
 * only for per-capita calories, not for e.g. calibration of transformation parameters between per-capita calories in dm
 
 scalar s15_maxiter Scalar defining maximum number of iterations (1) / 5 /;
@@ -216,17 +216,31 @@ $ondelim
 $include "./modules/15_food/input/f15_intake_EATLancet.cs3"
 $offdelim;
 
-table f15_overcons_FAOwaste(i,kfo)   Ratio between food calorie supply and food intake based on FAO food waste shares (1)
-$ondelim
-$include "./modules/15_food/input/f15_supply2intake_ratio_bottomup.cs3"
-$offdelim;
-
 parameter f15_calib_fsupply(i) Factor calibrating food supply as estimated from intake and FAO waste assumptions to FAO food supply (1)
 /
 $ondelim
 $include "./modules/15_food/input/f15_calib_factor_FAOfsupply.cs4"
 $offdelim
 /;
+
+table f15_targets_EATLancet(i,EAT_targets15,EAT_targettype15)   Minimum and maximum targets for healthy diets recommended by the EAT-Lancet Commission (kcal per capita per day)
+$ondelim
+$include "./modules/15_food/input/f15_targets_EATLancet.cs3"
+$offdelim;
+
+table f15_overcons_EAT(i,kfo)   Ratio between food calorie supply and food intake based on EAT Lancet diet data set (1)
+$ondelim
+*This ratio reflects the food waste assumptions inherent in the diet scenario data set published by the EAT-Lancet Commission (Willett et al., 2019), 
+*where in addition to the FAO food waste shares also conversion factors to isolate the edible parts of food were considered.
+*This ratio is used in the case of EAT Lancet diet scenarios parametrized according to this specific data set that was constructed for and used in 
+*all modelling applications that fed into the EAT Lancet report. 
+$include "./modules/15_food/input/f15_supply2intake_ratio_bottomup.cs3" 
+$offdelim;
+
+table f15_overcons_FAO(i,kfo)   Ratio between food calorie supply and food intake according to FAO food waste shares (1)
+$ondelim
+$include "./modules/15_food/input/f15_supply2intake_ratio_FAO.cs3"
+$offdelim;
 
 table f15_exo_foodscen_fader(t_all,t_scen15) Fader that converges per capita food consumption to an exogenous diet scenario until the target year (1)
 $ondelim

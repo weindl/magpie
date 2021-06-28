@@ -113,6 +113,12 @@ sets
    kfo_pf(kfo) Processed foods including oils sugar alcohol
    / oils,alcohol,sugar /
 
+   kfo_ns(kfo) Food products that can be counted towards nuts and seeds
+   / rapeseed,groundnut,sunflower /
+
+   kfo_norec(kfo) Food products not covered in EAT-Lancet recommendations
+   / sugr_cane,sugr_beet,molasses,alcohol,scp /
+
    knf(kall) Non-food products in the sectoral version
    /
    oilpalm,cottn_pro,foddr, pasture, begr, betr,
@@ -153,10 +159,10 @@ sets
 
   fadeoutscen15  Food substitution scenarios including functional forms with targets and transition periods
        / constant,
-         lin_zero_10_50, lin_zero_20_50, lin_zero_20_30,
+         lin_zero_10_50, lin_zero_20_50, lin_zero_20_30, lin_50pc_20_50, lin_50pc_20_50_extend65, lin_50pc_20_50_extend80,
          lin_50pc_10_50_extend90, lin_75pc_10_50_extend90, lin_80pc_20_50, lin_80pc_20_50_extend95, lin_90pc_20_50_extend95,
-	 lin_99-98-90pc_20_50-60-100
-        /
+	 lin_99-98-90pc_20_50-60-100 /
+
 
   t_scen15(t_all) Target years for transition to exogenous scenario diets
        / y2010, y2030, y2050 /
@@ -171,11 +177,11 @@ sets
       / min, max /
 
   EAT_targets15 Food groups as well as individual foods for which EAT Lancet targets are defined
-       / t_nutseeds,t_fruitveg,t_roots,t_redmeat
+       / t_nutseeds,t_fruitveg,t_roots,t_redmeat,
          t_puls_pro,t_soybean,t_fish,t_livst_chick,t_livst_egg,t_livst_milk,t_sugar,t_oils /
 
   EAT_mtargets15(EAT_targets15) EAT Lancet food targets where direct mapping to magpie categories is possible
-       / t_roots,t_redmeat
+       / t_roots,t_redmeat,
          t_puls_pro,t_soybean,t_fish,t_livst_chick,t_livst_egg,t_livst_milk,t_sugar,t_oils /
 
   EAT_staples(kfo) All staple food products according to EAT Lancet definition
@@ -189,9 +195,10 @@ sets
          others /
 
 
+
 ***RELATIONSHIPS BETWEEN DIFFERENT SETS***
 
-  EATtargets_kfo15(EAT_mtargets15,kfo) Mapping between EAT Lancet food targets and magpie categories
+  EATtar_kfo15(EAT_mtargets15,kfo) Mapping between EAT Lancet food targets and magpie categories
        / t_roots             . (potato,cassav_sp)
          t_redmeat           . (livst_rum,livst_pig)
          t_puls_pro          . (puls_pro)
@@ -213,6 +220,10 @@ alias(kfo,kfo2);
 alias(kfo_ap,kfo_ap2);
 alias(kfo_st,kfo_st2);
 alias(kfo_pf,kfo_pf2);
+alias(kfo_ns,kfo_ns2);
 alias(iso,iso2);
 alias(reproductive,reproductive2);
 alias(EAT_staples,EAT_staples2);
+alias(EAT_mtargets15,EAT_mtargets15_2);
+alias(EATtar_kfo15,EATtar_kfo15_2);
+

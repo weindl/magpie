@@ -140,21 +140,33 @@ parameters
  p15_intake_total_calibrated(t,i)                      Total regional food intake (kcal per capita per day)
 
 *food waste
- p15_demand2intake_ratio(t,i)                 Ratio between food calorie demand and intake (1)
- p15_demand2intake_ratio_scen(t,i)            Ratio between food calorie demand and intake according to exogenous food waste scenario (1)
+ p15_demand2intake_ratio(t,i)                 	       Ratio between food calorie demand and intake (1)
+ p15_demand2intake_ratio_scen(t,i)                     Ratio between food calorie demand and intake according to exogenous food waste scenario (1)
+ i15_calib_fsupply(i)                                  Factor calibrating food supply as estimated from model-internal intake and FAO waste assumptions to FAO food supply (1)
 
 * transition to exogenous scenario diets
- i15_intake_scen_target(t,i)                  Target for total per capita calorie intake according to an exogenous diet scenario (kcal per capita per day)
- i15_intake_EATLancet(i,kfo)                  Food-specific per capita calorie intake according to EAT Lancet diet scenario (kcal per capita per day)
- i15_intake_detailed_scen_target(t,i,kfo)     Target for food-specific per capita calorie intake according to an exogenous diet scenario (kcal per capita per day)
- p15_demand2intake_ratio_ref(i)               Ratio between food calorie demand and intake for the historical time step of EAT Lancet diets (1)
- p15_foodwaste_growth(t,i)                    Increase in food waste over time relative to the historical time step of EAT Lancet diets (1)
- i15_demand2intake_detailed_ref(i,kfo)        Historical ratio between food calorie demand and intake for different food commodities (1)
- i15_kcal_pc_scen_target(t,i,kfo)             Target for per capita food consumption according to an exogenous diet scenario (kcal per capita per day)
- i15_exo_foodscen_fader(t,i)                  Fader that converges per capita food consumption to an exogenous diet scenario (1)
+ i15_intake_scen_target(t,i)                           Target for total per capita calorie intake according to an exogenous diet scenario (kcal per capita per day)
+ i15_intake_EATLancet(i,kfo)                           Food-specific per capita calorie intake according to EAT Lancet diet scenario (kcal per capita per day)
+ i15_intake_detailed_scen_target(t,i,kfo)              Target for food-specific per capita calorie intake according to an exogenous diet scenario (kcal per capita per day)
+
+ i15_rec_EATLancet(i,EAT_targets15,EAT_targettype15)   Min and max targets for healthy diets recommended by the EAT-Lancet Commission (kcal per capita per day)
+ p15_intake_detailed_regr(t,i,kfo)                     Food-specific per capita calorie intake according to regression-based projections (kcal per capita per day)
+ i15_fruitveg2others_kcal_ratio(t,i)                   Ratio of calories from fruits and vegetables within the "others" food category (1)
+ i15_fruitveg2others_kcal_ratio_scen(t,i)              Ratio of calories from fruits and vegetables within the "others" food category for an exogenous diet scenario (1)
+ p15_intake_detailed_regr_fruitveg(t,i)                Auxiliary parameter for the intake of fruits and vegetables included in "others" (kcal per capita per day)
+ p15_intake_detailed_regr_nsothers(t,i)                Auxiliary parameter for the intake of those nuts and seeds included in "others" (kcal per capita per day)
+ i15_intake_detailed_scen_fruitveg(t,i)                Auxiliary scenario target for the intake of fruits and vegetables included in "others" (kcal per capita per day)
+ i15_intake_detailed_scen_nsothers(t,i)                Auxiliary scenario target for the intake of those nuts and seeds included in "others" (kcal per capita per day)
+
+ p15_demand2intake_ratio_ref(i)                        Ratio between food calorie demand and intake for the historical time step of EAT Lancet diets (1)
+ p15_foodwaste_growth(t,i)                             Increase in food waste over time relative to the historical time step of EAT Lancet diets (1)
+ i15_demand2intake_detailed_ref(i,kfo)                 Historical ratio between food calorie demand and intake for different food commodities (1)
+ i15_kcal_pc_scen_target(t,i,kfo)                      Target for per capita food consumption according to an exogenous diet scenario (kcal per capita per day)
+ i15_exo_foodscen_fader(t,i)                           Fader that converges per capita food consumption to an exogenous diet scenario (1)
+
 * country-specific scenario switch
- p15_country_dummy(iso)                       Dummy parameter indicating whether country is affected by exogeneous diet scenario (1)
- p15_exo_foodscen_region_shr(t_all,i)         Weighted share of region with regards to exogenous diet scenario of countries (1)
+ p15_country_dummy(iso)                                Dummy parameter indicating whether country is affected by exogeneous diet scenario (1)
+ p15_exo_foodscen_region_shr(t_all,i)                  Weighted share of region with regards to exogenous diet scenario of countries (1)
 
 * calculate diet iteration breakpoint
  p15_income_pc_real_ppp(t,i)                 Regional per capita income after price shock on regional level (USD05PPP per capita)

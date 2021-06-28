@@ -85,6 +85,8 @@ scalar s15_waste_scen Scenario target for the ratio between food demand and inta
 
 scalar s15_exo_diet Switch for transition to EAT Lancet diet scenarios (0=endogenous 1=EATLancet_exo 2=EATLancet_mag  / 0 /;
 
+scalar s15_alc_scen Scenario target for the inclusion of alcohol in the EAT-Lancet diet (1)  / 0.014 /;
+
 scalar s15_rum_share_fadeout_india_strong 	switch for stronger ruminant fadeout in India (binary) / 1 /;
 
 scalar s15_milk_share_fadeout_india 		switch for milk fadeout in India (binary) / 1 /;
@@ -223,12 +225,17 @@ $include "./modules/15_food/input/f15_calib_factor_FAOfsupply.cs4"
 $offdelim
 /;
 
-table f15_targets_EATLancet(i,EAT_targets15,EAT_targettype15)   Minimum and maximum targets for healthy diets recommended by the EAT-Lancet Commission (kcal per capita per day)
+table f15_rec_EATLancet(i,EAT_targets15,EAT_targettype15)   Minimum and maximum targets for healthy diets recommended by the EAT-Lancet Commission (kcal per capita per day)
 $ondelim
 $include "./modules/15_food/input/f15_targets_EATLancet.cs3"
 $offdelim;
 
-table f15_overcons_EAT(i,kfo)   Ratio between food calorie supply and food intake based on EAT Lancet diet data set (1)
+table f15_fruitveg2others_kcal_ratio(t_all,i)   Ratio of calories from fruits and vegetables within the "others" food category (1)
+$ondelim
+$include "./modules/15_food/input/f15_fruitveg2others_kcal_ratio.csv"
+$offdelim;
+
+table f15_overcons_EAT(i,kfo)   Ratio between food calorie supply and food intake consistent with EAT Lancet diet data set (1)
 $ondelim
 *This ratio reflects the food waste assumptions inherent in the diet scenario data set published by the EAT-Lancet Commission (Willett et al., 2019), 
 *where in addition to the FAO food waste shares also conversion factors to isolate the edible parts of food were considered.

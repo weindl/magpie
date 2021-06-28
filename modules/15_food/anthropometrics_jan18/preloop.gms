@@ -101,3 +101,11 @@ else
 * Initialisation of the ratio between food calorie demand and food intake for the
 * historical reference period:
 p15_demand2intake_ratio_ref(i) = 0;
+
+
+* Initialisation of the calibration factor between intake-based estimation of food calorie supply and FAO food supply:
+i15_calib_fsupply(i) = f15_calib_fsupply(i);
+
+
+* Initialisation of the recommendations for healthy food intake:
+i15_rec_EATLancet(i,EAT_targets15,EAT_targettype15) = f15_rec_EATLancet(i,EAT_targets15,EAT_targettype15);

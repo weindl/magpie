@@ -277,7 +277,7 @@ i15_kcal_pc_scen_target(t,i,kfo) = (f15_calib_fsupply(i)*i15_demand2intake_detai
                                     *p15_foodwaste_growth(t,i);
 
 *' In the last step, the regression-based calculation of daily per capita food demand
-*' is faded into the exogenous diet scenario according to a predefined spped of
+*' is faded into the exogenous diet scenario according to a predefined speed of
 *' convergence:
 
 p15_kcal_pc_calibrated_orig(t,i,kfo) = p15_kcal_pc_calibrated(t,i,kfo);

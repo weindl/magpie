@@ -39,5 +39,5 @@ $Ifi "%phase%" == "postsolve" $include "./modules/15_food/anthropometrics_jan18/
 *' the file `standalone/demand_model.gms`.
 *' The model is described in [@bodirsky_starved_nodate]
 *'
-*' @authors Benjamin Leon Bodirsky, Jan Philipp Dietrich
+*' @authors Benjamin Leon Bodirsky, Isabelle Weindl, Jan Philipp Dietrich
 

@@ -10,6 +10,16 @@ if ((sameas(t,"y2010")),
     p15_demand2intake_ratio_ref(i) = p15_demand2intake_ratio(t,i);
 );
 
+* For calculation of food-specific calorie intake:
+* A calibration factor ensures that back-calculation of food calorie supply from model-internal calorie intake 
+* together with food specific FAO waste assumptions for the year 2010 is consistent with FAO food calorie supply in 2010:
+if ((sameas(t,"y2010")),
+    i15_calib_fsupply(i)$(p15_intake_total_calibrated(t,i) >0 ) 
+	= (sum(kfo, p15_kcal_pc_calibrated(t,i,kfo)/i15_demand2intake_detailed_ref(i,kfo) ) 
+	      )/p15_intake_total_calibrated(t,i);
+);
+
+
 *' The calibration parameter is added to the regression value.
 
    o15_bmi_shr(t,iso,sex,age,bmi_group15) =

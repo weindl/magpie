@@ -390,7 +390,6 @@ p15_kcal_pc_calibrated(t,i,kfo_pp) = p15_plant_kcal_structure_orig(t,i,kfo_pp)
 
 
 
-
 *###############################################################################
 * ######  WASTE CALCULATIONS (required for exogenous food waste or diet scenarios)
 
@@ -434,9 +433,12 @@ p15_demand2intake_ratio(t,i)$(p15_intake_total_calibrated(t,i) >0 ) =
 p15_demand2intake_ratio_scen(t,i) =p15_demand2intake_ratio(t,i);
 
 
+
+
+*###############################################################################
 * ###### Exogenous food waste scenario
 
-if(s15_exo_waste = 1,
+if (s15_exo_waste = 1,
 
 * "Downwards convergence" of regional calorie oversupply due to food waste to the
 * waste reduction target, i.e. only for values that are higher than the target:
@@ -452,46 +454,73 @@ p15_kcal_pc_calibrated(t,i,kfo)$(p15_demand2intake_ratio(t,i) >0 ) = p15_kcal_pc
 );
 
 
-* ###### Exogenous EAT Lancet diet scenario
+* Now, a second waste parameter can be calculated, which is needed for the construction  
+* of exogenous diet scenarios on the basis of calorie intake. This parameter describes 
+* the development of food waste over time and reflects either the exogenous food waste 
+* scenario or the original regression-based estimates for food calorie oversupply:
+
+p15_foodwaste_growth(t,i) = ( 1$(p15_demand2intake_ratio_ref(i) = 0)
+            + (p15_demand2intake_ratio_scen(t,i)/p15_demand2intake_ratio_ref(i))$(
+              p15_demand2intake_ratio_ref(i) > 0)
+              );
+
+
+
+
+*###############################################################################
+* ###### Exogenous EAT Lancet diet scenarios
 
 *' @code
 *' Transition to exogenous EAT Lancet diet scenarios:
 *' It is possible to define exogenous diet scenarios that replace the regression-based
 *' calculation of food intake and demand according to a predefined speed of
 *' convergence from `p15_kcal_pc_calibrated(t,i,kfo)` to the scenario-dependent target
-*' `i15_kcal_pc_scen_target(t,i,kfo)` by setting the switch `s15_exo_diet`
-*' to 1.
+*' `i15_kcal_pc_scen_target(t,i,kfo)` by setting the switch `s15_exo_diet` to 1
+*' (exogenous diets parametrized to a food-specific data set published by the 
+*' EAT-Lancet Commission (Willett et al., 2019)) or 2 (MAgPIE-specific realization 
+*' of the EAT Lancet diet, where model-internal diet projections are constraint by 
+*' ranges for intake of food groups).
 
 
-if(s15_exo_diet = 1,
+
+if (s15_exo_diet > 0,
+
+
 
 
 *' 1.) In a first step, the exogenous scenario diets are defined by selecting a
 *' scenario target for total daily per capita food intake and by choosing
-*' food-specific dietary patterns:
+*' a variant of healthy and sustainable dietary patterns:
 
 $ifthen "%c15_kcal_scen%" == "healthy_BMI"
   i15_intake_scen_target(t,i) = sum(i_to_iso(i,iso),
         sum((sex, age), im_demography(t,iso,sex,age)*p15_intake(t,iso,sex,age,"medium") )
-         + i15_kcal_pregnancy(t,iso)
-         ) / sum(i_to_iso(i,iso),
-             sum((sex,age), im_demography(t,iso,sex,age))
-         );
+        + i15_kcal_pregnancy(t,iso)
+        ) / sum(i_to_iso(i,iso),
+            sum((sex,age), im_demography(t,iso,sex,age))
+        );
   i15_intake_EATLancet(i,kfo) =
         f15_intake_EATLancet("%c15_exo_scen_targetyear%",i,"2100kcal","%c15_EAT_scen%",kfo);
 $else
   i15_intake_EATLancet(i,kfo) =
-      f15_intake_EATLancet("%c15_exo_scen_targetyear%",i,"%c15_kcal_scen%","%c15_EAT_scen%",kfo);
-      i15_intake_scen_target(t,i) = sum(kfo,i15_intake_EATLancet(i,kfo));
+        f15_intake_EATLancet("%c15_exo_scen_targetyear%",i,"%c15_kcal_scen%","%c15_EAT_scen%",kfo);
+  i15_intake_scen_target(t,i) = sum(kfo,i15_intake_EATLancet(i,kfo));
 $endif
 
 
-*' 2.) The second step defines the daily per capita intake of different food
-*' commodities by filling up the scenario target for total daily per capita food
-*' intake according to different scenario assumptions on dietary patterns.
-*' In case that total daily calorie intake is not equal to EAT Lancet intake,
-*' only the calories for staple crops are modified and calories for non-staple food
-*' commodities are preserved.
+
+
+*' 2.) The second step defines the daily per capita intake of different food commodities. 
+
+*----------------------------------------------------------------------------------------
+if (s15_exo_diet = 1,
+*' In case of diet scenarios that are parametrized to a food-specific data set published   
+*' by the EAT-Lancet Commission (`s15_exo_diet=1`), this calculation step consists of
+*' filling up the scenario target for total daily per capita food intake according
+*' to the food-specific calorie intake of non-staple crops of this data set. In case 
+*' that the in step 1.) selected total calorie intake is not equal to total intake
+*' of the data set, only the calories for staple crops are modified and calories for  
+*' non-staple food commodities are preserved.
 
 if ( sum(i,(i15_intake_scen_target(t,i) - sum(kfo,i15_intake_EATLancet(i,kfo))**2 ) )  = 0,
     i15_intake_detailed_scen_target(t,i,kfo) = i15_intake_EATLancet(i,kfo);
@@ -502,26 +531,145 @@ else
             i15_intake_EATLancet(i,EAT_staples)/sum(EAT_staples2,i15_intake_EATLancet(i,EAT_staples2)) );
 );
 
+*----------------------------------------------------------------------------------------
+
+elseif s15_exo_diet = 2,
+*' In case of a MAgPIE-specific realization of the EAT Lancet diet (`s15_exo_diet=2`),    
+*' model-internal diet projections are constraint by recommended ranges for intake 
+*' (`i15_rec_EATLancet`) of different food groups to ensure healthy and sustainable 
+*' diets according to the EAT-Lancet Commission. After all calorie recommendations
+*' for non-staple food groups are satisfied, intake of staple crops is modified such 
+*' that the in step 1.) selected total calorie intake is met.
+
+
+* Set maximum for foods that are not restricted by EAT-Lancet recommendations to total scenario food intake:
+i15_rec_EATLancet(i,EAT_targets15,"max")$(i15_rec_EATLancet(i,EAT_targets15,"max")=0) = i15_intake_scen_target(t,i);
+* Switch off maximum target for roots, since they will, as staples, later be treated as balancing post
+* to meet total calorie intake:
+i15_rec_EATLancet(i,"t_roots","max") = i15_intake_scen_target(t,i);
+ 
+
+* ### Food-specific calorie intake
+* For calculating model-internal diet projections, food-specific calorie intake is 
+* estimated from daily per capita food calorie demand, using food-specific ratios
+* between food calorie supply and food intake:
+p15_intake_detailed_regr(t,i,kfo) = p15_kcal_pc_calibrated(t,i,kfo)
+	 	/(i15_calib_fsupply(i)*i15_demand2intake_detailed_ref(i,kfo)*p15_foodwaste_growth(t,i));
+i15_intake_detailed_scen_target(t,i,kfo) = p15_intake_detailed_regr(t,i,kfo); 
+* Note: brans are the only food commodity that will not be affected by the following calculations.
+
+
+* ###Minimum recommendations:
+* If projected food intake is below minimum, increase it to recommendations:
+i15_intake_detailed_scen_target(t,i,kfo)$(sum(EATtar_kfo15(EAT_mtargets15_2,kfo),sum(EATtar_kfo15_2(EAT_mtargets15_2,kfo2),p15_intake_detailed_regr(t,i,kfo2)))
+	< sum(EATtar_kfo15(EAT_mtargets15,kfo),i15_rec_EATLancet(i,EAT_mtargets15,"min")))
+	= (p15_intake_detailed_regr(t,i,kfo)/sum(EATtar_kfo15(EAT_mtargets15_2,kfo),sum(EATtar_kfo15_2(EAT_mtargets15_2,kfo2),p15_intake_detailed_regr(t,i,kfo2))))
+	* sum(EATtar_kfo15(EAT_mtargets15,kfo),i15_rec_EATLancet(i,EAT_mtargets15,"min"));
+
+display p15_intake_detailed_regr;
+display i15_intake_detailed_scen_target;
+
+
+* ###Maximum recommendations:
+* If projected food intake is above maximum, decrease it to recommendations:
+i15_intake_detailed_scen_target(t,i,kfo)$(sum(EATtar_kfo15(EAT_mtargets15_2,kfo),sum(EATtar_kfo15_2(EAT_mtargets15_2,kfo2),p15_intake_detailed_regr(t,i,kfo2)))
+	> sum(EATtar_kfo15(EAT_mtargets15,kfo),i15_rec_EATLancet(i,EAT_mtargets15,"max")))
+	= (p15_intake_detailed_regr(t,i,kfo)/sum(EATtar_kfo15(EAT_mtargets15_2,kfo),sum(EATtar_kfo15_2(EAT_mtargets15_2,kfo2),p15_intake_detailed_regr(t,i,kfo2))))
+	* sum(EATtar_kfo15(EAT_mtargets15,kfo),i15_rec_EATLancet(i,EAT_mtargets15,"max"));
+
+display p15_intake_detailed_regr;
+display i15_intake_detailed_scen_target;
+
+
+* ### Minimum recommendations for fruits, vegetables, nuts and seeds (targets available for "t_nutseeds" and "t_fruitveg"):
+if (sum(sameas(t_past,t),1) = 1,
+   i15_fruitveg2others_kcal_ratio(t,i) = f15_fruitveg2others_kcal_ratio(t,i);
+else
+   i15_fruitveg2others_kcal_ratio(t,i) = f15_fruitveg2others_kcal_ratio(t-1,i);
+);
+
+* Split "others" into fruits plus vegetables, and those nuts and seeds that are not included in "rapeseed", "groundnut", and "sunflower": 
+p15_intake_detailed_regr_fruitveg(t,i) = i15_fruitveg2others_kcal_ratio(t,i)*p15_intake_detailed_regr(t,i,"others");
+p15_intake_detailed_regr_nsothers(t,i) = (1-i15_fruitveg2others_kcal_ratio(t,i))*p15_intake_detailed_regr(t,i,"others");
+i15_intake_detailed_scen_fruitveg(t,i) = p15_intake_detailed_regr_fruitveg(t,i);
+i15_intake_detailed_scen_nsothers(t,i) = p15_intake_detailed_regr_nsothers(t,i);
+
+* Minimum recommendation for fruits and vegetables:
+i15_intake_detailed_scen_fruitveg(t,i)$(p15_intake_detailed_regr_fruitveg(t,i) < i15_rec_EATLancet(i,"t_fruitveg","min"))
+	= i15_rec_EATLancet(i,"t_fruitveg","min");
+
+* Minimum recommendation for nuts and seeds included in "others"
+i15_intake_detailed_scen_nsothers(t,i)$( (sum(kfo_ns,p15_intake_detailed_regr(t,i,kfo_ns)) + p15_intake_detailed_regr_nsothers(t,i) )
+	< i15_rec_EATLancet(i,"t_nutseeds","min") )
+	= (p15_intake_detailed_regr_nsothers(t,i)
+	/(sum(kfo_ns,p15_intake_detailed_regr(t,i,kfo_ns)) + p15_intake_detailed_regr_nsothers(t,i)) )
+	* i15_rec_EATLancet(i,"t_nutseeds","min");
+
+* Minimum recommendation for rapeseed,groundnut,sunflower:
+i15_intake_detailed_scen_target(t,i,kfo_ns)$( (sum(kfo_ns2,p15_intake_detailed_regr(t,i,kfo_ns2)) + p15_intake_detailed_regr_nsothers(t,i) )
+	< i15_rec_EATLancet(i,"t_nutseeds","min") )
+	= (p15_intake_detailed_regr(t,i,kfo_ns)
+	/(sum(kfo_ns2,p15_intake_detailed_regr(t,i,kfo_ns2)) + p15_intake_detailed_regr_nsothers(t,i)) )
+	* i15_rec_EATLancet(i,"t_nutseeds","min");
+
+* Calculate resulting intake of "others":
+i15_intake_detailed_scen_target(t,i,"others") = i15_intake_detailed_scen_fruitveg(t,i) + i15_intake_detailed_scen_nsothers(t,i);
+
+* Update of the ratio of fruits and vegetables within the "others" category:
+i15_fruitveg2others_kcal_ratio_scen(t,i)$(i15_intake_detailed_scen_target(t,i,"others")>0) 
+	= i15_intake_detailed_scen_fruitveg(t,i)/i15_intake_detailed_scen_target(t,i,"others");
+
+display p15_intake_detailed_regr;
+display i15_intake_detailed_scen_target;
+
+
+* ### Food commodities that are not included in diet recommendations are set to Zero: 
+i15_intake_detailed_scen_target(t,i,kfo_norec) = 0;
+
+
+* ### Alcohol:
+* The EAT-Lancet diet only allows for added sugars, but does not include processed food or alcohol.
+* Via 's15_alc_scen' a maximum target for alcohol consumption can be defined, e.g. according to Lassen et al., (2020).
+if(s15_alc_scen>0,
+*first, reduce projected alcohol consumption by a quarter:
+i15_intake_detailed_scen_target(t,i,"alcohol") = p15_intake_detailed_regr(t,i,"alcohol")*3/4;
+*if still above target, set to maximum:
+i15_intake_detailed_scen_target(t,i,"alcohol")$(i15_intake_detailed_scen_target(t,i,"alcohol") > s15_alc_scen*i15_intake_scen_target(t,i))
+	= s15_alc_scen*i15_intake_scen_target(t,i);
+);
+
+
+* ### Staple crops:
+* After all calorie recommendations for non-staple food groups are satisfied, intake of staple crops is 
+* now modified such that the in step 1.) selected total calorie intake is met:
+i15_intake_detailed_scen_target(t,i,EAT_staples) = (
+            i15_intake_scen_target(t,i) - sum(EAT_nonstaples,i15_intake_detailed_scen_target(t,i,EAT_nonstaples)) )*(
+            p15_intake_detailed_regr(t,i,EAT_staples)/sum(EAT_staples2,p15_intake_detailed_regr(t,i,EAT_staples2)) );
+);
+
+display p15_intake_detailed_regr;
+display i15_intake_detailed_scen_target;
+
+*----------------------------------------------------------------------------------------
+
+
+
+
 *' 3.) The third step estimates the calorie availability at household level by multiplying
 *' daily per capita calorie intake with a food-specific ratio  of calorie availability 
 *' to intake (`i15_demand2intake_detailed_ref(i,kfo)`), based on FAO estimates on 
 *' historical food waste at consumption level, and with a calibration factor 
-*' `f15_calib_fsupply(i)`. This factor ensures that the resulting estimated food
+*' `i15_calib_fsupply(i)`. This factor ensures that the resulting estimated food
 *' supply (based on MAgPIE calorie intake and food waste assumptions) is calibrated to 
-*' FAO food supply for available historical time steps. A multiplicative factor accounts
-*' for increases in food waste over time, relative to the only historical time slice
-*' of the EAT Lancet diet scenarios, according to the regression-based approach.
+*' FAO food supply for available historical time steps. A multiplicative factor 
+*' (`p15_foodwaste_growth(t,i)`) accounts for increases in food waste over time.
 
-* In case, no exogenous waste scenario is selceted, the original regression-
-* based estimates for food calorie oversupply are used as waste scenario:
-p15_foodwaste_growth(t,i) = ( 1$(p15_demand2intake_ratio_ref(i) = 0)
-            + (p15_demand2intake_ratio_scen(t,i)/p15_demand2intake_ratio_ref(i))$(
-              p15_demand2intake_ratio_ref(i) > 0)
-              );
-
-i15_kcal_pc_scen_target(t,i,kfo) = (f15_calib_fsupply(i)*i15_demand2intake_detailed_ref(i,kfo)
+i15_kcal_pc_scen_target(t,i,kfo) = (i15_calib_fsupply(i)*i15_demand2intake_detailed_ref(i,kfo)
                                     *i15_intake_detailed_scen_target(t,i,kfo))
                                     *p15_foodwaste_growth(t,i);
+
+
+
 
 *' 4.) In the last step, the regression-based calculation of daily per capita food demand
 *' is faded into the exogenous diet scenario according to a predefined speed of
@@ -531,6 +679,7 @@ i15_kcal_pc_scen_target(t,i,kfo) = (f15_calib_fsupply(i)*i15_demand2intake_detai
 p15_kcal_pc_calibrated_orig(t,i,kfo) = p15_kcal_pc_calibrated(t,i,kfo);
 p15_kcal_pc_calibrated(t,i,kfo) = p15_kcal_pc_calibrated_orig(t,i,kfo) * (1-i15_exo_foodscen_fader(t,i))
                         + i15_kcal_pc_scen_target(t,i,kfo) * i15_exo_foodscen_fader(t,i);
+
 
 
 );

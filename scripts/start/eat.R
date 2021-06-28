@@ -25,17 +25,20 @@ cfg$force_download <- TRUE
 #cfg$results_folder <- "output/:title:"
 cfg$results_folder <- "output/:title::date:"
 
+cfg$gms$s15_elastic_demand <- 0 
 
-cfg$title <- "SSP2"
+
+#### Simulation runs ####
+cfg$title <- "SSP2_inel"
 cfg <- setScenario(cfg,c("SSP2"))
 start_run(cfg,codeCheck=FALSE)
 
-cfg$title <- "SSP2_EAT1"
+cfg$title <- "SSP2_EAT1_inel"
 cfg$gms$s15_exo_diet <- 1
 cfg <- setScenario(cfg,c("SSP2"))
 start_run(cfg,codeCheck=FALSE)
 
-cfg$title <- "SSP2_EAT2"
+cfg$title <- "SSP2_EAT2_inel"
 cfg$gms$s15_exo_diet <- 2
 cfg <- setScenario(cfg,c("SSP2"))
 start_run(cfg,codeCheck=FALSE)
@@ -43,4 +46,5 @@ start_run(cfg,codeCheck=FALSE)
 
 
 #reset:
+cfg$gms$s15_elastic_demand <- 1 
 cfg$gms$s15_exo_diet <- 0

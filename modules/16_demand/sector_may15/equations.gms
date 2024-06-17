@@ -23,6 +23,7 @@ q16_supply_crops(i2,kcr) ..
                           + vm_dem_processing(i2,kcr)
                           + vm_dem_material(i2,kcr)
                           + vm_dem_bioen(i2,kcr)
+                          + vm_dem_biochar(i2,kcr)
                           + vm_dem_seed(i2,kcr)
                           + v16_dem_waste(i2,kcr)
                           + sum(ct, f16_domestic_balanceflow(ct,i2,kcr))
@@ -45,6 +46,7 @@ q16_supply_secondary(i2,ksd) ..
                           + v16_dem_waste(i2,ksd)
                           + vm_dem_material(i2,ksd)
                           + vm_dem_bioen(i2,ksd)
+                          + vm_dem_biochar(i2,ksd)
                           + sum(ct, f16_domestic_balanceflow(ct,i2,ksd))
                           ;
 
@@ -53,6 +55,7 @@ q16_supply_residues(i2,kres)..
                           sum(kap4, vm_dem_feed(i2,kap4,kres))
                           + vm_dem_material(i2,kres)
                           + vm_dem_bioen(i2,kres)
+                          + vm_dem_biochar(i2,kres)
                           + v16_dem_waste(i2,kres)
                           + sum(ct, f16_domestic_balanceflow(ct,i2,kres))
                           ;

@@ -6,7 +6,8 @@
 *** |  Contact: magpie@pik-potsdam.de
 
 sets
-  scen_countries60(iso) countries to be affected by 2nd generation bionergy demand scenario / ABW,AFG,AGO,AIA,ALA,ALB,AND,ARE,ARG,ARM,
+  scen_countries60(iso) countries to be affected by 2nd generation bionergy demand scenario
+                    / ABW,AFG,AGO,AIA,ALA,ALB,AND,ARE,ARG,ARM,
                       ASM,ATA,ATF,ATG,AUS,AUT,AZE,BDI,BEL,BEN,
                       BES,BFA,BGD,BGR,BHR,BHS,BIH,BLM,BLR,BLZ,
                       BMU,BOL,BRA,BRB,BRN,BTN,BVT,BWA,CAF,CAN,
@@ -34,9 +35,9 @@ sets
 ;
 
 scalars
-  c60_biodem_level  bioenergy demand level indicator 1 for regional and 0 for global demand   (1)   / 1 /
-  c60_bioenergy_subsidy first generation bioenergy subsidy (USD17MER per ton) / 200 /
-  s60_2ndgen_bioenergy_dem_min Minimum dedicated 2nd generation bioenergy demand assumed in each region (mio. GJ per yr) / 1 /
+  c60_biodem_level  bioenergy demand level indicator 1 for regional and 0 for global demand (1) / 1 /
+  c60_bioenergy_subsidy  first generation bioenergy subsidy (USD17MER per ton) / 200 /
+  s60_2ndgen_bioenergy_dem_min  Minimum dedicated 2nd generation bioenergy demand assumed in each region (mio. GJ per yr) / 1 /
 ;
 
 $setglobal c60_2ndgen_biodem  R32M46-SSP2EU-NPi

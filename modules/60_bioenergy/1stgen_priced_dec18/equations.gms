@@ -8,12 +8,12 @@
 *' @equations
 *' Total demand for bioenergy comes from different origins
 *' 1st generation bioenergy demand is a fixed trajectory of minimum production
-*' requirements. Second generation bioenergy splits into a Demand
+*' requirements. Second generation bioenergy splits into a demand
 *' for dedicated bioenergy crops, which are fully substitutable based on their
 *' energy content, and residues which are also fully substitutable based on
 *' their energy content.
 
-q60_bioenergy(i2,kall) ..
+q60_bioenergy(i2,kall)..
       vm_dem_bioen(i2,kall) * fm_attributes("ge",kall) =g=
       sum(ct, i60_1stgen_bioenergy_dem(ct,i2,kall)) +
       v60_2ndgen_bioenergy_dem_dedicated(i2,kall) +
@@ -47,9 +47,9 @@ q60_bioenergy_reg(i2).. sum(kbe60, v60_2ndgen_bioenergy_dem_dedicated(i2,kbe60))
                     =g= sum(ct,i60_bioenergy_dem(ct,i2))*c60_biodem_level;
 
 *' Except the implementation of the switches and the fact that in the first
-*' equation the bioenergy demand is summed up to a global demand both equations
+*' equation the bioenergy demand is summed up to a global demand, both equations
 *' act the same way: In both cases the equation just makes sure that the sum
-*' over all second generation energy crop of the bioenergy demand is greater or
+*' over all second generation energy crops of the bioenergy demand is greater or
 *' equal to the demand actually given by the input file $i60\_bioenergy\_dem$.
 
 *' There is additionally some demand of residues for second generation bioenergy
@@ -58,7 +58,7 @@ q60_bioenergy_reg(i2).. sum(kbe60, v60_2ndgen_bioenergy_dem_dedicated(i2,kbe60))
 *' generation bioenergy depending on the SSP scenario, since residue stock and use
 *' is mainly driven by population and GDP.
 
-q60_res_2ndgenBE(i2) ..
+q60_res_2ndgenBE(i2)..
   sum(kres, v60_2ndgen_bioenergy_dem_residues(i2,kres))
   =g=
   sum(ct,i60_res_2ndgenBE_dem(ct,i2));

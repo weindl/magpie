@@ -6,6 +6,8 @@
 *** |  Contact: magpie@pik-potsdam.de
 
 
+pc70_dem_feed_pasture(i,kli_rum) = vm_dem_feed.l(i,kli_rum,"pasture");
+
 
 *#################### R SECTION START (OUTPUT DEFINITIONS) #####################
  ov_feed_intake(t,i,kap,kall,"marginal")    = vm_feed_intake.m(i,kap,kall);

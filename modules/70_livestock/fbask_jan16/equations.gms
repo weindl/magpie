@@ -26,7 +26,7 @@ q70_feed_balanceflow(i2,kli_rum) ..
  vm_feed_balanceflow(i2,kli_rum,"pasture") =e=
      (sum(ct,fm_feed_balanceflow(ct,i2,kli_rum,"pasture")))$(p70_balanceflow2pasture(i2,kli_rum)=0)
      - (vm_prod_reg(i2,kli_rum)*sum(ct,im_feed_baskets(ct,i2,kli_rum,"pasture"))
-     *p70_balanceflow2pasture(i2,kli_rum))$(p70_balanceflow2pasture(i2,kli_rum)>0)
+     *s70_scavenging_ratio)$(p70_balanceflow2pasture(i2,kli_rum)>0)
      ;
 
 

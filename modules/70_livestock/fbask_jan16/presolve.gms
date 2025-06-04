@@ -14,14 +14,15 @@ vm_feed_balanceflow.lo(i,kli_rum,"pasture") = -Inf;
 
 if (sum(sameas(t_past,t),1) = 1,
    p70_balanceflow2pasture(i,kli_rum) = 0;
-   if (ord(t) = smax(t2, ord(t2)$(t_past(t2))),
+
+elseif ord(t) = smax(t2, ord(t2)$(t_past(t2))) + 1,
       p70_balanceflow2pasture(i,kli_rum) = - fm_feed_balanceflow(t-1,i,kli_rum,"pasture")/pc70_dem_feed_pasture(i,kli_rum);
-display p70_balanceflow2pasture;
+
+                                display p70_balanceflow2pasture;
 
       p70_balanceflow2pasture(i,kli_rum)$(p70_balanceflow2pasture(i,kli_rum) < 0.33) = 0;
-display p70_balanceflow2pasture;
 
-   );
+                              display p70_balanceflow2pasture;
 );
 
 display p70_balanceflow2pasture;

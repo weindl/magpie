@@ -6,7 +6,7 @@
 *** |  Contact: magpie@pik-potsdam.de
 
 *' @equations
-*' Total demand for bioenergy comes from different origins
+*' Total demand for bioenergy comes from different origins.
 *' 1st generation bioenergy demand is a fixed trajectory of minimum production
 *' requirements. Second generation bioenergy splits into a demand
 *' for dedicated bioenergy crops, which are fully substitutable based on their
@@ -61,7 +61,7 @@ q60_bioenergy_reg(i2).. sum(kbe60, v60_2ndgen_bioenergy_dem_dedicated(i2,kbe60))
 q60_res_2ndgenBE(i2)..
   sum(kres, v60_2ndgen_bioenergy_dem_residues(i2,kres))
   =g=
-  sum(ct,i60_res_2ndgenBE_dem(ct,i2));
+  sum(ct,im_res_2ndgenBE_dem(ct,i2));
 
 *' Finally, an incentive is provided for the production of 1st generation
 *' bioenergy from oils and ethanol even beyond the exogeneous minimum demand.

@@ -6,12 +6,13 @@
 *** |  Contact: magpie@pik-potsdam.de
 
 *' @equations
-*' Total demand for bioenergy comes from different origins
-*' 1st generation bioenergy demand is a fixed trajectory of minimum production
-*' requirements. Second generation bioenergy splits into a demand
-*' for dedicated bioenergy crops, which are fully substitutable based on their
-*' energy content, and residues which are also fully substitutable based on
-*' their energy content.
+*' Total demand for energy from biomass comes from different sources.
+*' Demand for 1st generation bioenergy crops is based on a fixed trajectory of
+*' regional minimum 1st generation bioenergy requirements based on currently
+*' established and planned bioenergy policies. Demand for 2nd generation
+*' biomass splits into an energy demand from dedicated bioenergy crops, which are
+*' fully substitutable based on their energy content, and an energy demand from
+*' residues which are also fully substitutable based on their energy content.
 
 q60_bioenergy(i2,kall)..
       vm_dem_bioen(i2,kall) * fm_attributes("ge",kall) =g=
@@ -20,48 +21,69 @@ q60_bioenergy(i2,kall)..
       v60_2ndgen_bioenergy_dem_residues(i2,kall)
       ;
 
-*' The used first generation bioenergy trajectory contains demand until 2050
-*' based on currently established and planned bioenergy policies
-*' (@lotze-campen_impacts_2014). For the time
-*' after 2050 it is assumed that bioenergy production will be fully transformed
-*' to 2nd generation bioenergy crops and residues because of their higher
-*' estimated efficiency respectively their low costs.
-*'
-*' For second generation bioenergy from dedicated bioenergy crops
-*' (`kbe60` = bioenergy grasses and bioenergy
-*' trees), input is given either on regional or global level (defined via switch
-*' $c60\_biodem\_level$). As the bioenergy demand for all crop types was fixed in the
-*' first step it now has to be released again for second generation bioenergy
-*' crops (`kbe60`).
-*'
-*' The bioenergy demand calculation for second generation bioenergy is based on
-*' the following two equations from which always only one is active:
-*' If $c60\_biodem\_level$ is 1 (regional) the right hand side of the first equation
-*' is set to 0, if it is 0 (global) the right hand side of the second equation
-*' is set to 0.
+
+*' The calculation of energy demand from dedicated bioenergy crops is based on
+*' the following two equations, where only one is active at a time, depending on
+*' whether the demand is defined at the regional or global level:
+*' If switch `c60_biodem_level` = 1 (regional), the right-hand side of the first
+*' equation is set to 0.
+*' If switch `c60_biodem_level` = 0 (global), the right-hand side of the second
+*' equation is set to 0.
 
 q60_bioenergy_glo.. sum((kbe60,i2), v60_2ndgen_bioenergy_dem_dedicated(i2,kbe60))
-                    =g= sum((ct,i2),i60_bioenergy_dem(ct,i2))*(1-c60_biodem_level);
+                    =g=
+                    (sum((ct,i2),i60_bioenergy_dem(ct,i2))
+                    + sum(i2,vm_biochar_feedstock_mag(i2,"dedicated"))
+                    + sum(i2,v60_res_substitution_bioen(i2)))
+                    *(1-c60_biodem_level);
 
 q60_bioenergy_reg(i2).. sum(kbe60, v60_2ndgen_bioenergy_dem_dedicated(i2,kbe60))
-                    =g= sum(ct,i60_bioenergy_dem(ct,i2))*c60_biodem_level;
+                    =g=
+                    (sum(ct,i60_bioenergy_dem(ct,i2))
+                    + vm_biochar_feedstock_mag(i2,"dedicated")
+                    + v60_res_substitution_bioen(i2))
+                    *c60_biodem_level;
 
-*' Except the implementation of the switches and the fact that in the first
-*' equation the bioenergy demand is summed up to a global demand, both equations
-*' act the same way: In both cases the equation just makes sure that the sum
-*' over all second generation energy crops of the bioenergy demand is greater or
-*' equal to the demand actually given by the input file $i60\_bioenergy\_dem$.
+*' Apart from the summation to a global demand in the first equation, both
+*' equations function identically:
+*' - They ensure that the total energy demand from dedicated bioenergy crops
+*'   is greater than or equal to the aggregated demand, which consists of
+*'   `i60_bioenergy_dem` (defined by input data), `vm_biochar_feedstock_mag`
+*'   and `v60_res_substitution_bioen`.
+*' - The interface `vm_biochar_feedstock_mag` represents additional demand for
+*'   dedicated bioenergy crops to produce biochar, and `v60_res_substitution_bioen`
+*'   represents additional demand due to residues being substituted by dedicated
+*'   bioenergy crops in bioenergy production. Both variables only take effects (`>0`)
+*'   in the `mag` simulation mode (`c63_biochar_simulation_mode = "mag"`).
+*'   When `c63_biochar_simulation_mode` is set to `rem-mag`, these variables are
+*'   set to zero. In this case the feedstock demand for biochar is already
+*'   accounted for by REMIND and included in `i60_bioenergy_dem`.
+*' - Dedicated bioenergy crops (`kbe60` = bioenergy grasses and bioenergy trees)
+*'   are assumed to be fully substitutable based on their energy content.
 
-*' There is additionally some demand of residues for second generation bioenergy
-*' $i60\_res\_2ndgenBE\_dem$, which is exogenously provided by the estimation that
-*' roughly 33% of available residues for recycling on cropland can be used for 2nd
-*' generation bioenergy depending on the SSP scenario, since residue stock and use
-*' is mainly driven by population and GDP.
 
-q60_res_2ndgenBE(i2)..
-  sum(kres, v60_2ndgen_bioenergy_dem_residues(i2,kres))
-  =g=
-  sum(ct,i60_res_2ndgenBE_dem(ct,i2));
+*' If `mag` simulation mode (`c63_biochar_simulation_mode = "mag"`) is selected
+*' in the `63_biochar` module, residues already used for biochar cannot be
+*' used to produce bioenergy. They have to be substituted by dedicated
+*' bioenergy crops (on energy basis), or result in lower bioenergy production
+*' if only partly replaced ('s60_res_substitution_factor <1').
+
+q60_res_to_BEcrops_subs_bioen(i2).. v60_res_substitution_bioen(i2)
+                       =g=
+                       s60_res_substitution_factor
+                       * vm_biochar_feedstock_mag(i2,"residues");
+
+
+*' The residue potential `i60_res_2ndgenBE_dem` as 2nd generation biomass feedstock
+*' is provided exogenously, based on the assumption that approximately 33% of
+*' available residues for recycling on cropland can be used for other purposes.
+*' The availability of residues depends on the SSP scenario, since residue stock
+*' and use is mainly driven by population and GDP.
+
+q60_res_2ndgenBE(i2).. sum(kres, v60_2ndgen_bioenergy_dem_residues(i2,kres))
+                       =e=
+                       sum(ct,im_res_2ndgenBE_dem(ct,i2));
+
 
 *' Finally, an incentive is provided for the production of 1st and 2nd generation
 *' bioenergy beyond the exogeneous minimum demand. 1st generation bioenergy can be incentivized

@@ -36,6 +36,7 @@ sets
 
 scalars
   c60_biodem_level  bioenergy demand level indicator 1 for regional and 0 for global demand (1) / 1 /
+  s60_res_substitution_factor  ratio of residues that are substituted by bioenergy crops to produce bioenergy (1) / 1 /
   c60_bioenergy_subsidy_fix_SSP2  first generation bioenergy subsidy during fix_SSP period (USD17MER per ton) / 200 /
   c60_bioenergy_subsidy  first generation bioenergy subsidy (USD17MER per ton) / 200 /
   s60_bioenergy_gj_price_1st  first generation bioenergy per-GJ price (USD17MER per GJ) / 0 /

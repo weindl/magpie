@@ -260,7 +260,7 @@ $setglobal natveg  pot_forest_may24
 
 $setglobal employment  exo_may22
 $setglobal labor_prod  off
-$setglobal factor_costs  per_ton_fao_may22
+$setglobal factor_costs  sticky_feb18
 $setglobal landconversion  calib
 
 $setglobal transport  gtap_nov12
@@ -281,8 +281,9 @@ $setglobal maccs  on_aug22
 $setglobal peatland  v2
 $setglobal som  static_jan19
 
-$setglobal bioenergy  1stgen_priced_dec18
+$setglobal bioenergy  1st2ndgen_biomass_dec24
 $setglobal material  exo_flexreg_apr16
+$setglobal biochar  dec24
 $setglobal livestock  fbask_jan16
 
 $setglobal disagg_lvst  foragebased_jul23

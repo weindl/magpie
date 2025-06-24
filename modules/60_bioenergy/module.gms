@@ -15,7 +15,7 @@
 *' In addition to calculation of bioenergy quantities, the costs associated with
 *' the production are provided to the objective function in the [11_costs] module.
 *'
-*' @authors Jan Philipp Dietrich
+*' @authors Jan Philipp Dietrich, Isabelle Weindl
 
 
 *###################### R SECTION START (MODULETYPES) ##########################

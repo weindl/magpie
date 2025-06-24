@@ -12,9 +12,9 @@ v60_2ndgen_bioenergy_dem_residues.fx(i,kall) = 0;
 v60_2ndgen_bioenergy_dem_residues.up(i,kres) = Inf;
 
 if(m_year(t) <= sm_fix_SSP2,
-  i60_1stgen_bioenergy_dem(t,i,kall) = 
+  i60_1stgen_bioenergy_dem(t,i,kall) =
     f60_1stgen_bioenergy_dem(t,i,"const2020",kall);
-  i60_res_2ndgenBE_dem(t,i) =
+  im_res_2ndgenBE_dem(t,i) =
     f60_res_2ndgenBE_dem(t,i,"ssp2");
   i60_1stgen_bioenergy_subsidy_tdm(t) =
     c60_bioenergy_subsidy_fix_SSP2;
@@ -23,7 +23,7 @@ if(m_year(t) <= sm_fix_SSP2,
 else
   i60_1stgen_bioenergy_dem(t,i,kall) =
     f60_1stgen_bioenergy_dem(t,i,"%c60_1stgen_biodem%",kall);
-  i60_res_2ndgenBE_dem(t,i) =
+  im_res_2ndgenBE_dem(t,i) =
     f60_res_2ndgenBE_dem(t,i,"%c60_res_2ndgenBE_dem%");
   i60_1stgen_bioenergy_subsidy_tdm(t) =
     c60_bioenergy_subsidy;
@@ -32,21 +32,21 @@ else
 
 $ifthen "%c60_price_implementation%" == "exp"
   if(m_year(t) > sm_fix_SSP2,
-    i60_1stgen_bioenergy_subsidy_gj(t) = 
+    i60_1stgen_bioenergy_subsidy_gj(t) =
       (s60_bioenergy_gj_price_1st / 8) * (8 ** (1 / (2100 - sm_fix_SSP2))) ** (m_year(t) - sm_fix_SSP2);
     i60_2ndgen_bioenergy_subsidy(t) =
       (s60_bioenergy_price_2nd / 8) * (8 ** (1 / (2100 - sm_fix_SSP2))) ** (m_year(t) - sm_fix_SSP2);
   );
 $elseif "%c60_price_implementation%" == "const"
   if(m_year(t) > sm_fix_SSP2,
-    i60_1stgen_bioenergy_subsidy_gj(t) = 
+    i60_1stgen_bioenergy_subsidy_gj(t) =
       s60_bioenergy_gj_price_1st;
     i60_2ndgen_bioenergy_subsidy(t) =
       s60_bioenergy_price_2nd;
   );
 $else
   if(m_year(t) > sm_fix_SSP2,
-    i60_1stgen_bioenergy_subsidy_gj(t) = 
+    i60_1stgen_bioenergy_subsidy_gj(t) =
       s60_bioenergy_gj_price_1st / (2100 - sm_fix_SSP2) * (m_year(t) - sm_fix_SSP2);
     i60_2ndgen_bioenergy_subsidy(t) =
       s60_bioenergy_price_2nd / (2100 - sm_fix_SSP2) * (m_year(t) - sm_fix_SSP2);

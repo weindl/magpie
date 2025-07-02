@@ -50,3 +50,23 @@ q63_biochar_simulation_mode(i2,feedstock63) ..
       vm_biochar_feedstock_mag(i2,feedstock63) =e=
           s63_simulation_mode_mag*v63_biochar_feedstock_mag(i2,feedstock63)
           ;
+
+
+*' Only a fraction of the carbon initially contained in the applied biochar is
+*' counted as sequestered carbon and contributes to negative emissions. This is
+*' the durable (or recalcitrant) fraction that remains in the soil after 100 years.
+*' Recalcitrance refers to biochar's resistance to microbial decomposition in soils.
+*' The equation below calculates for each region the amount of carbon removed from
+*' the atmosphere via biochar and still retained in the soil a century later. It
+*' multiplies the carbon content of biochar, the biochar production (expressed in
+*' energy units), converted to tonnes using the energy density, and the 100-year
+*' stability factor `s63_BC100` (i.e., the recalcitrant fraction).
+
+
+q63_c_sequestration_biochar(i2) ..
+      v63_c_stable_biochar(i2) =e=
+          s63_BC100 * sum((bc_sys63,feedstock63),
+          f63_biochar_attributes("c",bc_sys63)
+          * v63_biochar_prod(i2,bc_sys63,feedstock63)
+          / f63_biochar_attributes("ge",bc_sys63))
+          ;

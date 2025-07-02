@@ -7,7 +7,7 @@
 
 
 parameters
- i63_biochar_prod(t,i,biopyr_all63)                   Regional biochar production per biochar production systems (mio. GJ per yr)
+ i63_biochar_prod(t,i,biopyr_all63)               Regional biochar production per biochar production systems (mio. GJ per yr)
  p63_region_BC_shr(t_all,i)                       Biochar demand share of the region derived from country selection (1)
  p63_country_dummy(iso)                           Dummy parameter indicating whether country is selected for biochar demand scenario (1)
 ;
@@ -18,11 +18,16 @@ positive variables
  vm_biochar_feedstock_mag(i,feedstock63)          Additional feedstock demand for biochar per feedstock type (mio. GJ per yr)
 ;
 
+variables
+ v63_c_stable_biochar(i)                           Stable C in soil from biochar after 100 years derived from recalcitrant fraction (mio. tC per yr)
+;
+
 equations
  q63_biochar_feedstock_conversion(i,feedstock63)  Conversion of biomass feedstock to biochar (mio. GJ per yr)
  q63_biochar_production(i,bc_sys63)               Regional biochar production per system (mio. GJ per yr)
  q63_feedstock_availability_residues(i)           Residue availability for biochar production (mio. GJ per yr)
  q63_biochar_simulation_mode(i,feedstock63)       Activation of biochar feedstock demand interface depending on simulation mode (mio. GJ per yr)
+ q63_c_sequestration_biochar(i)                   Carbon removed from the atmosphere via stable biochar C (mio. tC per yr)
 ;
 
 *#################### R SECTION START (OUTPUT DECLARATIONS) ####################

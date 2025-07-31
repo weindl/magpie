@@ -1,4 +1,4 @@
-*** |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
@@ -78,10 +78,13 @@ parameters
  p15_rumdairy_scp_subst_fader(t_all)           Ruminant and dairy substitution with SCP fader (1)
  p15_livestock_threshold_subst_fader(t_all)    Fader for livestock threshold target (1)
  p15_exo_food_scenario_fader(t_all)            Exogenous diet scenario fader (1)
+ p15_shr_fafh(t,iso)                           Share of calories consumed away from home (1)
+ p15_marketing_margin_fah_kcal(t,iso,kfo)      Value of the marketing margin per calorie consumed at home (USD17MER per kcal)
+ p15_marketing_margin_fah(t,iso, kfo)          Value of the marketing margin per tDM consumed  at home (USD17MER per tDM)
+ p15_marketing_margin_fafh_kcal(t,iso,kfo)     Value of the marketing margin per calorie away from home (USD17MER per kcal)
+ p15_marketing_margin_fafh(t,iso, kfo)         Value of the marketing margin per tDM away from home (USD17MER per tDM)
+ p15_value_added_expenditures_pc(t,iso,kfo)    Expenditures on food value-added not including producer expenditures (USD17MER)
 
-* prices
-  p15_prices_kcal(t,iso,kfo,iter15)                 Prices from MAgPIE after optimization (USD17PPP per kcal)
-  i15_prices_initial_kcal(iso,kfo)                  Initial prices that capture the approximate level of prices in 1961-2010 (USD17PPP per kcal)
 
 * anthropometrics
   p15_bodyheight(t,iso,sex,age,estimates15)           Body height (cm per cap)
@@ -136,6 +139,7 @@ parameters
  p15_kcal_pc_iso(t,iso,kfo)                        Per capita consumption in food demand model after price shock on country level (kcal per capita per day)
  p15_kcal_pc(t,i,kfo)                              Per capita consumption in food demand model after price shock on regional level (kcal per capita per day)
  p15_kcal_pc_calibrated(t,i,kfo)                   Calibrated per capita consumption in food demand model after price shock (kcal per capita per day)
+ p15_kcal_pc_calibrated_alliter(t,i,kfo,iter15)    Calibrated per capita consumption in food demand model after each iteration (kcal per capita per day)
  p15_kcal_pc_iso_orig(t,iso,kfo)                   Auxiliary parameter for per capita food consumption - basis for convergence into waste and diet scenarios (kcal per capita per day)
  p15_kcal_pc_iso_livestock_orig(t,iso)             Auxiliary parameter for per capita livestock consumption - basis for scenarios of livestock food substitution (kcal per capita per day)
  p15_kcal_pc_iso_rumdairy_orig(t,iso)              Auxiliary parameter for per capita ruminant and dairy consumption - basis for scenarios of ruminant-based food substitution (kcal per capita per day)
@@ -177,6 +181,11 @@ parameters
 
 * country-specific scenario switch
  p15_country_switch(iso)                       Switch indicating whether country is affected by diet scenarios (1)
+
+* elastic demand
+  p15_tax_recycling(t,iso)                          Tax revenue recycling to households (USD17PPP per capita)
+  p15_prices_kcal(t,iso,kfo,iter15)                 Prices from MAgPIE after optimization (USD17PPP per kcal)
+  i15_prices_initial_kcal(iso,kfo)                  Initial prices that capture the approximate level of prices in 1961-2010 (USD17PPP per kcal)
 
 * calculate diet iteration breakpoint
  p15_income_pc_real_ppp(t,i)                  Regional per capita income after price shock on regional level (USD17PPP per capita)

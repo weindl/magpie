@@ -1,4 +1,4 @@
-*** |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
@@ -12,7 +12,7 @@
 *'
 *' The first equation describes how CH4 emission from enteric fermentation is calculated.
 *' The equation shows that total methane from enteric fermentation depends on
-*' the animal feed demand type (`vm_dem_feed`) and
+*' the animal feed demand type (`vm_feed_intake`) and
 *' the purpose of raising livestock - either for meat (`livst_rum`) and/or milk (`livst_milk`).
 *' The factor 1/55.65 t/GJ in the equation is the energy content of methane.
 *' The other scalars - 0.065 and 0.03 - refer to the share of gross energy (ge) in feed
@@ -20,11 +20,11 @@
 
  q53_emissionbal_ch4_ent_ferm(i2) ..
    vm_emissions_reg(i2,"ent_ferm","ch4") =e= 1/55.65 *
-  (sum(k_conc53, vm_dem_feed(i2,"livst_rum",k_conc53)
+  (sum(k_conc53, vm_feed_intake(i2,"livst_rum",k_conc53)
                 *fm_attributes("ge",k_conc53)*0.03)
-                + sum(k_conc53, vm_dem_feed(i2,"livst_milk",k_conc53)
+                + sum(k_conc53, vm_feed_intake(i2,"livst_milk",k_conc53)
                 *fm_attributes("ge",k_conc53)*0.065)
-                + sum((k_noconc53,k_ruminants53),vm_dem_feed(i2,k_ruminants53,k_noconc53)
+                + sum((k_noconc53,k_ruminants53),vm_feed_intake(i2,k_ruminants53,k_noconc53)
                  *fm_attributes("ge",k_noconc53)*0.065)
   ) * (1-sum(ct, im_maccs_mitigation(ct,i2,"ent_ferm","ch4")));
 

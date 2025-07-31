@@ -1,4 +1,4 @@
-# |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
+# |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 # |  authors, and contributors see CITATION.cff file. This file is part
 # |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 # |  AGPL-3.0, you are granted additional permissions described in the
@@ -92,7 +92,7 @@ if (length(list.files(dirBaseFiles)) == 0) {
 }
 
 ### Path to miniforge installation
-miniforgePath <- "/p/projects/rd3mod/miniforge3/bin/activate"
+miniforgePath <- "/p/projects/rd3mod/miniforge3/v25-3-0_3/bin/activate"
 
 # create output directory
 dirProject <- "./output/seals"
@@ -161,6 +161,19 @@ Sys.chmod(iniLock, mode = "0664")
     sealsCoeff[consvRow, "data_location"] <- sub(
       "WDPA", consv, sealsCoeff[consvRow, "data_location"]
     )
+
+    if (cfg$gms$s29_snv_shr != 0) {
+      if (cfg$gms$s29_snv_shr == 0.2) {
+        # snv policy reallocation incentive
+        snvRow1 <- which(sealsCoeff[, "spatial_regressor_name"] == "snv20_realloc")
+        sealsCoeff[snvRow1, c("forest", "othernat")] <- -100
+        # snv policy expansion constraint
+        snvRow2 <- which(sealsCoeff[, "spatial_regressor_name"] == "snv20_expan")
+        sealsCoeff[snvRow2, "cropland"] <- 0
+      } else {
+        warning("Only if s29_snv_shr is 0.2 can it be explicitly considered at the 1x1km scale during the SEALS allocation.")
+      }
+    }
 
     peatArea <- PeatlandArea(file.path(dir, "fulldata.gdx"))[, as.numeric(sealsYears), ]
     rewetSwitch <- dimSums(peatArea[, , "rewet"], dim = 1) / dimSums(peatArea, dim = c(1, 3)) > 0.01

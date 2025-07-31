@@ -1,4 +1,4 @@
-*** |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
@@ -8,7 +8,7 @@
 sets
 
    iter15 iterations between food demand model and magpie
-   /iter1*iter10/
+   /iter0*iter10/
    curr_iter15(iter15)  currently active iteration
    prev_iter15(iter15)     last active iteration
 
@@ -232,6 +232,15 @@ EATtar_kfo15(EAT_mtargets15,kfo) Mapping between EAT Lancet food targets and MAg
       t_sugar             . (sugar)
       t_oils              . (oils)
     /
+
+fafh food-at-home fah or food-away-from-home fafh pertaining to where food is consumed
+     / fah, fafh /
+
+fafh_regr coefficients for regression of food-at-home fah or food-away-from-home fafh pertaining to where food is consumed
+     / a_fafh, b_fafh /
+
+margincoef added-value margin coefficients 
+     / a, b, c /
 
 ;
 

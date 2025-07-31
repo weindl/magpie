@@ -1,4 +1,4 @@
-*** |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
@@ -17,6 +17,7 @@ parameters
  p56_fader(t_all)                                 GHG policy fader (1)
  p56_fader_reg(t_all,i)                           Regional GHG policy fader (1)
  pcm_carbon_stock(j,land,c_pools,stockType)       Carbon stock in vegetation soil and litter for different land types (mio. tC)
+ p56_fader_cpriceaff(t_all)                       Fader for C price induced afforestation (1)
 ;
 
 equations

@@ -6,7 +6,7 @@
 *** |  Contact: magpie@pik-potsdam.de
 
 *' @equations
-*' Total demand for bioenergy comes from different origins
+*' Total demand for bioenergy comes from different origins.
 *' 1st generation bioenergy demand is a fixed trajectory of minimum production
 *' requirements. Second generation bioenergy splits into a demand
 *' for dedicated bioenergy crops, which are fully substitutable based on their
@@ -40,16 +40,16 @@ q60_bioenergy(i2,kall) ..
 *' is set to 0, if it is 0 (global) the right hand side of the second equation
 *' is set to 0.
 
-q60_bioenergy_glo.. sum((kbe60,i2), v60_2ndgen_bioenergy_dem_dedicated(i2,kbe60))
+q60_bioenergy_glo .. sum((kbe60,i2), v60_2ndgen_bioenergy_dem_dedicated(i2,kbe60))
                     =g= sum((ct,i2),i60_bioenergy_dem(ct,i2))*(1-c60_biodem_level);
 
-q60_bioenergy_reg(i2).. sum(kbe60, v60_2ndgen_bioenergy_dem_dedicated(i2,kbe60))
+q60_bioenergy_reg(i2) .. sum(kbe60, v60_2ndgen_bioenergy_dem_dedicated(i2,kbe60))
                     =g= sum(ct,i60_bioenergy_dem(ct,i2))*c60_biodem_level;
 
 *' Except the implementation of the switches and the fact that in the first
-*' equation the bioenergy demand is summed up to a global demand both equations
+*' equation the bioenergy demand is summed up to a global demand, both equations
 *' act the same way: In both cases the equation just makes sure that the sum
-*' over all second generation energy crop of the bioenergy demand is greater or
+*' over all second generation energy crops of the bioenergy demand is greater or
 *' equal to the demand actually given by the input file $i60\_bioenergy\_dem$.
 
 *' There is additionally some demand of residues for second generation bioenergy
@@ -61,15 +61,15 @@ q60_bioenergy_reg(i2).. sum(kbe60, v60_2ndgen_bioenergy_dem_dedicated(i2,kbe60))
 q60_res_2ndgenBE(i2) ..
   sum(kres, v60_2ndgen_bioenergy_dem_residues(i2,kres))
   =g=
-  sum(ct,i60_res_2ndgenBE_dem(ct,i2));
+  sum(ct,im_res_2ndgenBE_dem(ct,i2));
 
 *' Finally, an incentive is provided for the production of 1st and 2nd generation
 *' bioenergy beyond the exogeneous minimum demand. 1st generation bioenergy can be incentivized
-*' mass- or energy-based.  For comparability, the former is in line with other realizations and constant over time. 
-*' The energy-based incentive can take different forms and is applied to both 1st and 2nd generation. 
+*' mass- or energy-based.  For comparability, the former is in line with other realizations and constant over time.
+*' The energy-based incentive can take different forms and is applied to both 1st and 2nd generation.
 *' Combined with low or fade-out exogenous demands, this is useful to assess bioenergy production potentials, however
 *' the endogenous technological change in [13_tc] may react very strongly and create a positive feedback loop.
 
-q60_bioenergy_incentive(i2).. vm_bioenergy_utility(i2)
+q60_bioenergy_incentive(i2) .. vm_bioenergy_utility(i2)
   =e= sum((ct,k1st60), vm_dem_bioen(i2,k1st60) * fm_attributes("ge",k1st60) * (-i60_1stgen_bioenergy_subsidy(ct)))
   + sum((ct,kbe60), vm_dem_bioen(i2,kbe60) * fm_attributes("ge",kbe60) * (-i60_2ndgen_bioenergy_subsidy(ct)));

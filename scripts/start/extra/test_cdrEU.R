@@ -46,7 +46,7 @@ targetHigh <- 0.3
 miti      <- c("npi", "rcp2p6")
 agfScen   <- c(agfLow = targetLow, agfHigh = targetHigh)
 scmScen   <- c(scmLow = targetLow, scmHigh = targetHigh)
-bcScen    <- c(bcLow = "none",     bcHigh = "R32BC-SSP2-PB650-inclFuelWoolf")
+bcScen    <- c(bcLow = "none",     bcHigh = "R34BC-SSP2-PkBudg650-BCdef-CTS01-BM70")
 regionSet <- c("h12", "h16EU")
 cdrSet    <- c("eu", "glo")
 

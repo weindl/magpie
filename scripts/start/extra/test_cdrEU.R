@@ -12,8 +12,7 @@
 library(magpie4)
 library(magclass)
 
-
-version <- "EUCDR-02"
+version <- "EUCDR-04"
 
 # Load start_run(cfg) function which is needed to start MAgPIE runs
 source("scripts/start_functions.R")
@@ -47,7 +46,7 @@ targetHigh <- 0.3
 miti      <- c("npi", "rcp2p6")
 agfScen   <- c(agfLow = targetLow, agfHigh = targetHigh)
 scmScen   <- c(scmLow = targetLow, scmHigh = targetHigh)
-bcScne    <- c(bcLow = "none",     bcHigh = "R32BC-SSP2-PB650-inclFuelWoolf")
+bcScen    <- c(bcLow = "none",     bcHigh = "R32BC-SSP2-PB650-inclFuelWoolf")
 regionSet <- c("h12", "h16EU")
 cdrSet    <- c("eu", "glo")
 

@@ -12,7 +12,7 @@
 library(magpie4)
 library(magclass)
 
-version <- "EUCDR-04"
+version <- "EUCDR-05"
 
 # Load start_run(cfg) function which is needed to start MAgPIE runs
 source("scripts/start_functions.R")

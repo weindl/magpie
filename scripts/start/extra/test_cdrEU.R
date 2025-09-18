@@ -12,7 +12,7 @@
 library(magpie4)
 library(magclass)
 
-version <- "EUCDR-05"
+version <- "EUCDR-06"
 
 # Load start_run(cfg) function which is needed to start MAgPIE runs
 source("scripts/start_functions.R")
@@ -44,10 +44,10 @@ targetLow  <- 0.05
 targetHigh <- 0.3
 
 miti      <- c("npi", "rcp2p6")
-agfScen   <- c(agfLow = targetLow, agfHigh = targetHigh)
-scmScen   <- c(scmLow = targetLow, scmHigh = targetHigh)
-bcScen    <- c(bcLow = "none",     bcHigh = "R34BC-SSP2-PkBudg650-BCdef-CTS01-BM70")
-regionSet <- c("h12", "h16EU")
+agfScen   <- c(agfZero = 0, agfLow = targetLow, agfHigh = targetHigh)
+scmScen   <- c(scmZero = 0, scmLow = targetLow, scmHigh = targetHigh)
+bcScen    <- c(bcZero = "none", bcLow = "none", bcHigh = "R34BC-SSP2-PkBudg650-BCdef-CTS01-BM70")
+regionSet <- c("h12")
 cdrSet    <- c("eu", "glo")
 
 .title <- function(version = NULL, miti = NULL, agf = NULL, scm = NULL, bc = NULL, regions = NULL, cdr = NULL){
@@ -91,24 +91,31 @@ for(scen in miti){
 
       } else {stop("wrong regions setup")}
       
-      for(agf in names(agfScen)) {
-        for(scm in names(scmScen)) {
-          for(bc in names(bcScen)) {      
-    
-            cfg$gms$policy_countries29   <- cdrRegions[[cdrReg]]
-            cfg$gms$s29_treecover_target <- agfScen[agf] / 10      # devided by 10 to go from agf to treecover target
-          
-            cfg$gms$policy_countries59  <- cdrRegions[[cdrReg]]
-            cfg$gms$s59_scm_target      <- scmScen[scm]      # def = 0
-          
-            cfg$gms$scen_countries63    <- cdrRegions[[cdrReg]]
-            cfg$gms$c63_biochar_prod    <- bcScen[bc] 
-            
-            cfg$title <- .title(version, scen, agf, scm, bc, regions, cdrReg)
-            start_run(cfg, codeCheck = FALSE)
-          }
-        }
-      }
+      .startRun <- function(agf, scm, bc) {
+        cfg$gms$policy_countries29   <- cdrRegions[[cdrReg]]
+        cfg$gms$s29_treecover_target <- agfScen[agf] / 10      # devided by 10 to go from agf to treecover target
+
+        cfg$gms$policy_countries59  <- cdrRegions[[cdrReg]]
+        cfg$gms$s59_scm_target      <- scmScen[scm]      # def = 0
+
+        cfg$gms$scen_countries63    <- cdrRegions[[cdrReg]]
+        cfg$gms$c63_biochar_prod    <- bcScen[bc]
+
+        cfg$title <- .title(version, scen, agf, scm, bc, regions, cdrReg)
+        start_run(cfg, codeCheck = FALSE)
+      } 
+
+      #ZeroZeroZero
+      .startRun("agfZero", "scmZero", "bcZero")
+      #ZeroZeroHigh      
+      .startRun("agfZero", "scmZero", "bcHigh")
+      #ZeroHighZero
+      .startRun("agfZero", "scmHigh", "bcZero")
+      #HighLowLow
+      .startRun("agfHigh", "scmZero", "bcZero")
+      #HighHighHigh
+      .startRun("agfHigh", "scmHigh", "bcHigh")
+      
     }
   }
 }

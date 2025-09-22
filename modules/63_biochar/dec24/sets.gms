@@ -13,9 +13,23 @@
 sets
 
   scenBC63 biochar scenarios
-    / R2M41-SSP2-Budg600,R2M41-SSP2-Budg950,R2M41-SSP2-Budg1300,R2M41-SSP2-NDC,R2M41-SSP2-NPi,
-      R32BC-SSP2-PB650-inclFuelWoolf,R32BC-SSP2-PB650-noFuel-CHP17
-    /
+   / R21M42-SDP-NDC, R21M42-SDP-NPi, R21M42-SDP-PkBudg1000, R21M42-SDP-PkBudg1100, 
+     R21M42-SDP-PkBudg900, R21M42-SSP1-NDC, R21M42-SSP1-NPi, R21M42-SSP1-PkBudg1100, 
+     R21M42-SSP1-PkBudg1300, R21M42-SSP1-PkBudg900, R21M42-SSP2-NDC, R21M42-SSP2-NPi, 
+     R21M42-SSP2-PkBudg1100, R21M42-SSP2-PkBudg1300, R21M42-SSP2-PkBudg900, 
+     R21M42-SSP5-NDC, R21M42-SSP5-NPi, R21M42-SSP5-PkBudg1100, R21M42-SSP5-PkBudg1300, 
+     R21M42-SSP5-PkBudg900, R2M41-SSP2-Budg1300, R2M41-SSP2-Budg600, R2M41-SSP2-Budg950, 
+     R2M41-SSP2-NDC, R2M41-SSP2-NPi, R32M46-SDP_MC-NDC, R32M46-SDP_MC-NPi, 
+     R32M46-SDP_MC-PkBudg650, R32M46-SSP1-NDC, R32M46-SSP1-NPi, R32M46-SSP1-PkBudg1050, 
+     R32M46-SSP1-PkBudg650, R32M46-SSP2EU-NDC, R32M46-SSP2EU-NPi, R32M46-SSP2EU-PkBudg1050, 
+     R32M46-SSP2EU-PkBudg650, R32M46-SSP5-NDC, R32M46-SSP5-NPi, R32M46-SSP5-PkBudg1050, 
+     R32M46-SSP5-PkBudg650, R34BC-SSP2-PkBudg650-BCdef, R34BC-SSP2-PkBudg650-BCdef-CTS01, 
+     R34BC-SSP2-PkBudg650-BCdef-CTS01-BM70, R34BC-SSP2-PkBudg650-BCpess-CTS01-BM70, 
+     R34M410-SSP1-NPi2025, R34M410-SSP1-PkBudg1000, R34M410-SSP1-PkBudg650, 
+     R34M410-SSP2_lowEn-NPi2025, R34M410-SSP2_lowEn-PkBudg1000, R34M410-SSP2_lowEn-PkBudg650, 
+     R34M410-SSP2-NPi2025, R34M410-SSP2-PkBudg1000, R34M410-SSP2-PkBudg650, R34M410-SSP3-NPi2025, 
+     R34M410-SSP3-PkBudg1000, R34M410-SSP3-rollBack, R34M410-SSP5-NPi2025, 
+     R34M410-SSP5-PkBudg1000, R34M410-SSP5-PkBudg650 /
 
 * !!!!TODO: Ideas for biochar scenarios (for later)
 *    / BC-SSP2-NPi-REMIND
@@ -34,40 +48,40 @@ sets
          dedicated /
 
    type63 Types of biochar characterisation and efficincy of biomass-to-biochar conversion
-       / HC_ratio,
-         dm_yield,
+       / dm_yield,
          en_yield,
          c_yield /
 
    biopyr_all63 Available pyrolysis plant set-ups including different co-products
        / KonTiki,
+         biopyrOnly400,
          biopyrCHP,
          biopyrElec,
          biopyrHeat,
-         biopyrCHP850,
-         biopyrBC400,
-         biopyrBC500,
+         biopyrOnly,
+         biopyrOnly650,
+         biopyrOnly800,
          biopyrFAST500,
-         biopyrCofuelExp /
+         biopyrFuel /
 
    biopyr63(biopyr_all63) Selected pyrolysis plant set-ups including different co-products
        / KonTiki,
          biopyrCHP,
          biopyrElec,
+         biopyrFuel,
          biopyrHeat,
-         biopyrCHP850 /
+         biopyrOnly /
 
    bc_sys63 Biochar production systems
-       / P_Kontiki, SP_400, SP_500, SP_650, SP_800, FP_500, Co_fuel /
+      / SP-400, SP-500, SP-650, SP-800, FP-500, P-Woolf, P-KonTiki /  
 
    sys_pyr(bc_sys63, biopyr_all63) Mapping of pyrolysis plant set-ups to biochar systems
-       / P_Kontiki   . (KonTiki)
-         SP_400      . (biopyrBC400)
-         SP_500      . (biopyrBC500)
-         SP_650      . (biopyrCHP, biopyrElec, biopyrHeat)
-         SP_800      . (biopyrCHP850)
-         FP_500      . (biopyrFAST500)
-         Co_fuel     . (biopyrCofuelExp)
+       / P-KonTiki     . (KonTiki)
+         SP-400        . (biopyrOnly400)
+         SP-500        . (biopyrCHP, biopyrElec, biopyrHeat, biopyrOnly)
+         SP-650        . (biopyrOnly650)
+         SP-800        . (biopyrOnly800)
+         FP-500        . (biopyrFAST500)
+         P-Woolf       . (biopyrFuel)
        /
-
 ;

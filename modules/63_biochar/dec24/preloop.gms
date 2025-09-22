@@ -23,12 +23,14 @@ $elseif "%c63_biochar_prod%" == "emulator"
   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod_emulator(t,biopyr_all63)/card(i);
 $elseif "%c63_biochar_prod%" == "none"
   i63_biochar_prod(t,i,biopyr_all63) = 0;
+$elseif "%c63_biochar_prod_noselect%" == "none"
+  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%") * p63_region_BC_shr(t,i);
 $else
   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%") * p63_region_BC_shr(t,i)
                          + f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod_noselect%") * (1-p63_region_BC_shr(t,i));
 ** Harmonize until predefined time step if not applied in coupled or emulator set-up
 loop(t$(m_year(t) <= sm_fix_SSP2),
-  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"BC-SSP2-NPi-REMIND");
+  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"R2M41-SSP2-NPi");
 );
 $endif
 

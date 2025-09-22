@@ -1,4 +1,4 @@
-*** |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
@@ -13,16 +13,17 @@
 
 *' The direct costs for timber plantations and re/afforestation `vm_cost_fore` include
 *' establishment cost for new forests, recurring maintenance and monitoring
-*' costs for standing forests as well as harvesting costs for timber plantations. 
+*' costs for standing forests as well as harvesting costs for timber plantations.
 *' In addition, this type of forest management
 *' (including re/afforestation) may cause costs in other parts of the model such as costs
-*' for technological change [13_tc] or land expansion [39_landconversion]. 
+*' for technological change [13_tc] or land expansion [39_landconversion].
 
 q32_cost_total(i2) .. vm_cost_fore(i2) =e=
                    v32_cost_recur(i2)
                    + v32_cost_establishment(i2)
                    + v32_cost_hvarea(i2)
                    + sum(cell(i2,j2), v32_land_missing(j2)) * s32_free_land_cost
+                   + sum(cell(i2,j2), v32_ndc_area_missing(j2)) * s32_free_land_cost
                    ;
 
 *-----------------------------------------------
@@ -30,7 +31,7 @@ q32_cost_total(i2) .. vm_cost_fore(i2) =e=
 *-----------------------------------------------
 *' The interface `vm_cdr_aff` provides the projected biogeochemical (bgc) carbon sequestration
 *' and the local biophysical (bph) warming/cooling effects of an afforestation
-*' activity for a planning horizon of 50 years `s32_planing_horizon` to the [56_ghg_policy] module.
+*' activity for a planning horizon of 50 years `s32_planning_horizon` to the [56_ghg_policy] module.
 
 q32_cdr_aff(j2,ac) ..
 vm_cdr_aff(j2,ac,"bgc") =e=
@@ -68,10 +69,21 @@ sum(ac_est, v32_land(j2,"aff",ac_est)) =l= sum(ac, v32_land(j2,"aff",ac)) - sum(
   =e=
   sum(ac_sub, v32_hvarea_forestry(j2,ac_sub)) * sum(cell(i2,j2), min(1, sum(ct, p32_future_to_current_demand_ratio(ct,i2))))$s32_establishment_dynamic;
 
-*' The constraint `q32_aff_pol` accounts for the exogenous afforestation prescribed by NPI/NDC policies.
+*' The constraint `q32_aff_pol` accounts for the exogenous re/afforestation prescribed by NPI/NDC policies.
 
  q32_aff_pol(j2) ..
- sum(ac_est, v32_land(j2,"ndc",ac_est)) =e= sum(ct, p32_aff_pol_timestep(ct,j2));
+ sum(ac_est, v32_land(j2,"ndc",ac_est)) + v32_ndc_area_missing(j2) =e= sum(ct, p32_aff_pol_timestep(ct,j2));
+
+*' The constraint `q32_ndc_aff_limit` makes sure that NPI/NDC re/afforestation does not happen at the cost of forests and other natural vegetation.
+
+ q32_ndc_aff_limit(j2) ..
+ sum(ct, p32_aff_pol_timestep(ct,j2)) * vm_natforest_reduction(j2) =e= 0;
+
+*' The annual upper limit for re-afforestation is based on an annual share (`s32_annual_aff_limit`) of the overall forest establishment potential (`pm_max_forest_est`).
+
+ q32_co2p_aff_limit(j2) ..
+  vm_landexpansion_forestry(j2,"aff") / m_timestep_length =l=
+  s32_annual_aff_limit * sum(ct, pm_max_forest_est(ct,j2));
 
 *' The constraint `q32_max_aff` accounts for the allowed maximum global endogenous
 *' afforestation defined in `i32_max_aff_area_glo`.
@@ -81,11 +93,11 @@ sum(ac_est, v32_land(j2,"aff",ac_est)) =l= sum(ac, v32_land(j2,"aff",ac)) - sum(
 
  q32_max_aff$(s32_max_aff_area_glo=1) ..
   sum((j2,ac), v32_land(j2,"aff",ac))
-      =l= sum(ct, i32_max_aff_area_glo(ct));
+      =l= sum(ct, p32_max_aff_area_glo(ct));
 
  q32_max_aff_reg(i2)$(s32_max_aff_area_glo=0) ..
   sum((cell(i2,j2),ac), v32_land(j2,"aff",ac))
-        =l= sum(ct, i32_max_aff_area_reg(ct,i2));
+        =l= sum(ct, p32_max_aff_area_reg(ct,i2));
 
 *-----------------------------------------------
 ************** Carbon stock ********************
@@ -165,18 +177,18 @@ q32_cost_recur(i2) .. v32_cost_recur(i2) =e=
 *------------------------------
 *' New plantations are established in the optimization step based on a certain
 *' percentage (`p32_plant_contr`) of expected future demand (`p32_demand_forestry_future`).
-*' As plantation establishment decisions should 
+*' As plantation establishment decisions should
 *' also know some indication of expected future yields, we calculate how much yield
 *' newly established plantation can realize based on rotation lengths. This is defined as
 *' the expected future yield (`p32_yield_forestry_future`) at harvest.
 
-*' Future expected production is calculated for the establishment decision below and the costs above 
-*' based on newly established areas and expected future yields. 
+*' Future expected production is calculated for the establishment decision below and the costs above
+*' based on newly established areas and expected future yields.
 
 q32_prod_forestry_future(i2) ..
               v32_prod_forestry_future(i2)
               =e=
-              sum(cell(i2,j2), (sum(ac_est, v32_land(j2,"plant",ac_est)) + v32_land_missing(j2)) * sum(ct, p32_yield_forestry_future(ct,j2))) / m_timestep_length_forestry 
+              sum(cell(i2,j2), (sum(ac_est, v32_land(j2,"plant",ac_est)) + v32_land_missing(j2)) * sum(ct, p32_yield_forestry_future(ct,j2))) / m_timestep_length_forestry
               ;
 
 *' Future expected production has to be equal or larger than future demand multiplied with the plantation contribution factor.

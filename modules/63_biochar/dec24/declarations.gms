@@ -35,9 +35,11 @@ parameters
  ov63_biochar_prod(t,i,bc_sys63,feedstock63,type)        Regional biochar production per biochar production system and feedstock (mio. GJ per yr)
  ov63_biochar_feedstock_mag(t,i,feedstock63,type)        Regional biomass feedstock demand for biochar per feedstock type (mio. GJ per yr)
  ov_biochar_feedstock_mag(t,i,feedstock63,type)          Additional feedstock demand for biochar per feedstock type (mio. GJ per yr)
+ ov63_c_stable_biochar(t,i,type)                         Stable C in soil from biochar after 100 years derived from recalcitrant fraction (mio. tC per yr)
  oq63_biochar_feedstock_conversion(t,i,feedstock63,type) Conversion of biomass feedstock to biochar (mio. GJ per yr)
  oq63_biochar_production(t,i,bc_sys63,type)              Regional biochar production per system (mio. GJ per yr)
  oq63_feedstock_availability_residues(t,i,type)          Residue availability for biochar production (mio. GJ per yr)
  oq63_biochar_simulation_mode(t,i,feedstock63,type)      Activation of biochar feedstock demand interface depending on simulation mode (mio. GJ per yr)
+ oq63_c_sequestration_biochar(t,i,type)                  Carbon removed from the atmosphere via stable biochar C (mio. tC per yr)
 ;
 *##################### R SECTION END (OUTPUT DECLARATIONS) #####################

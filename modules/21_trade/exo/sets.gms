@@ -1,4 +1,4 @@
-*** |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
@@ -6,9 +6,12 @@
 *** |  Contact: magpie@pik-potsdam.de
 
 sets
-*sets should be in sync with default trade realisation; currently selfsuff_reduced 
+  tstart21(t_all) Historic time steps
+    / y1995, y2000, y2005, y2010 /
+
+*sets need to be adopted to new categories
    k_notrade(kall) Production activities of non-tradable commodites
-       / oilpalm, foddr, pasture, res_cereals, res_fibrous, res_nonfibrous, begr,betr /
+       / oilpalm, foddr, pasture, res_cereals, res_fibrous, res_nonfibrous,begr,betr /
 * oilpalm not traded, only its oil and oilcake due to FAOSTAT complications, and as trade is little
 * foddr is not traded as too bulky
 * pasture it not traded as too bulky

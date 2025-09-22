@@ -1,4 +1,4 @@
-*** |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
@@ -31,35 +31,33 @@ p32_carbon_density_ac_marg(t_all,j,"ac0") = 0;
 p32_IGR(t_all,j,ac) =   (p32_carbon_density_ac_marg(t_all,j,ac)/p32_carbon_density_ac_forestry(t_all,j,ac))$(p32_carbon_density_ac_forestry(t_all,j,ac)>0)
                       + 1$(p32_carbon_density_ac_forestry(t_all,j,ac)=0);
 
-** For each cluster in MAgPIE ("j") we calculate how long the prevailing interest rates stay lower than the IGR.
-** As long as the prevailing interest rates are lower than IGR, plantations shall be kept standing.
-** As long as the prevailing interest rate becomes higher than IGR, it is assumed that the forest owner would rather
-** keep his/her investment in bank rather than in keeping the forest standing.
-** The easiest way to do this calculation is to count a value of 1 for IGR>interest rate and a value of 0 for IGR<interest rate.
-$ifthen "%c32_interest_rate%" == "regional"
+** Rotation length can be calculated based on Instantaneous Growth Rates (regional and global), current_annual_increment and mean_annual_increment.
+** The binary parameter p32_rot_flg indicates if a plantation should be kept (1) or harvested (0).
+** Example for Instantaneous Growth Rates (IGR):
+** If IGR > interest rate, plantations should be kept (1).
+** If IGR < interest rate, plantations should be harvested (0).
+
+$ifthen "%c32_rot_calc_type%" == "instantaneous_growth_rate_reg"
   p32_rot_flg(t_all,j,ac) = 1$(p32_IGR(t_all,j,ac) - sum(cell(i,j),pm_interest("y1995",i)) >  0)
                           + 0$(p32_IGR(t_all,j,ac) - sum(cell(i,j),pm_interest("y1995",i)) <= 0);
   display "Rotation lengths are calculated based on equating instantaneous growth rate to regional interest rate.";
-$elseif "%c32_interest_rate%" == "global"
+
+$elseif "%c32_rot_calc_type%" == "instantaneous_growth_rate_glo"
   p32_rot_flg(t_all,j,ac) = 1$(p32_IGR(t_all,j,ac) - s32_forestry_int_rate  >  0)
                           + 0$(p32_IGR(t_all,j,ac) - s32_forestry_int_rate <= 0);
   display "Rotation lengths are calculated based on equating instantaneous growth rate to global interest rate.";
-$endif
 
-$ifthen "%c32_rot_calc_type%" == "current_annual_increment"
+$elseif "%c32_rot_calc_type%" == "current_annual_increment"
   p32_rot_flg(t_all,j,ac) = 1$(p32_carbon_density_ac_marg(t_all,j,ac) - p32_carbon_density_ac_marg(t_all,j,ac-1) >  0)
                           + 0$(p32_carbon_density_ac_marg(t_all,j,ac) - p32_carbon_density_ac_marg(t_all,j,ac-1) <= 0);
   display "Rotation lengths are calculated based on maximizing current annual increment in this run.";
-$endif
 
-$ifthen "%c32_rot_calc_type%" == "mean_annual_increment"
+$elseif "%c32_rot_calc_type%" == "mean_annual_increment"
   p32_avg_increment(t_all,j,ac) = pm_carbon_density_plantation_ac(t_all,j,ac,"vegc") / ((ord(ac)+1)*5);
   p32_rot_flg(t_all,j,ac) = 1$(p32_carbon_density_ac_marg(t_all,j,ac) - p32_avg_increment(t_all,j,ac) >  0)
                           + 0$(p32_carbon_density_ac_marg(t_all,j,ac) - p32_avg_increment(t_all,j,ac) <= 0);
   display "Rotation lengths are calculated based on maximizing mean annual increment in this run.";
 $endif
-
-** From the above calculation, now it is easier to count how many age-classes can be sustained before IGR falls below interest rate.
 
 *********************************************************************************
 
@@ -148,18 +146,21 @@ p32_cdr_ac(t,j,ac) = 0;
 ini32(j,ac) = no;
 ini32(j,ac) = yes$(ord(ac) >= 1 AND ac.off < p32_rotation_cellular_harvesting("y1995",j));
 
-** divide initial forestry area by number of age classes within ini32
+** Set minimum share of plantations in planted forest
+p32_plantedforest(i) = f32_plantedforest(i);
+p32_plantedforest(i)$(p32_plantedforest(i) < s32_min_plant_shr) = s32_min_plant_shr;
+
 ** divide initial forestry area by number of age classes within ini32
 if(s32_initial_distribution = 0,
 ** Initialize with highest age class
-  p32_land_start_ac(j,"plant","acx") = pcm_land(j,"forestry") * sum(cell(i,j),f32_plantedforest(i));
-  p32_land_start_ac(j,"ndc","acx")   = pcm_land(j,"forestry") * sum(cell(i,j),1-f32_plantedforest(i));
+  p32_land_start_ac(j,"plant","acx") = pcm_land(j,"forestry") * sum(cell(i,j),p32_plantedforest(i));
+  p32_land_start_ac(j,"ndc","acx")   = pcm_land(j,"forestry") * sum(cell(i,j),1-p32_plantedforest(i));
 
 elseif s32_initial_distribution = 1,
 ** Initialize with equal distribution among rotation age classes
 ** Plantated forest area is divided into ndcs (other planted forest) and plantations
-    p32_land_start_ac(j,"plant",ac)$(ini32(j,ac)) = pm_land_start(j,"forestry") * sum(cell(i,j),f32_plantedforest(i))/p32_rotation_cellular_harvesting("y1995",j);
-    p32_land_start_ac(j,"ndc",ac)$(ini32(j,ac))   = pm_land_start(j,"forestry") * sum(cell(i,j),1- f32_plantedforest(i))/p32_rotation_cellular_harvesting("y1995",j);
+  p32_land_start_ac(j,"plant",ac)$(ini32(j,ac)) = pm_land_start(j,"forestry") * sum(cell(i,j),p32_plantedforest(i))/p32_rotation_cellular_harvesting("y1995",j);
+  p32_land_start_ac(j,"ndc",ac)$(ini32(j,ac))   = pm_land_start(j,"forestry") * sum(cell(i,j),1- p32_plantedforest(i))/p32_rotation_cellular_harvesting("y1995",j);
 
 );
 
@@ -171,32 +172,12 @@ loop(j,
     );
 );
 
-** Initialize forestry land types 
+** Initialize forestry land types
 pc32_land(j,type32,ac) = p32_land_start_ac(j,type32,ac);
 
-*** NPI/NDC policies BEGIN
 ** Afforestation policies NPI and NDCs
 p32_aff_pol(t,j) = round(f32_aff_pol(t,j,"%c32_aff_policy%"),6);
 
-* Calculate the remaining exogenous afforestation with respect to the maximum exogenous target over time.
-* `p32_aff_togo` is used to adjust `s32_max_aff_area` in the constraint `q32_max_aff`.
-p32_aff_togo(t,i) = smax(t2, sum(cell(i,j), p32_aff_pol(t2,j))) - sum(cell(i,j), p32_aff_pol(t,j));
-
-* Calculate the limit for endogenous afforestation
-* The global (`s32_max_aff_area`) and regional limit (`f32_max_aff_area`) for total afforestation (sum of endogenous and exogenous) is reduced by exogenous NPI/NDC afforestation (`p32_aff_pol`).
-if(s32_max_aff_area_glo = 1,
-  i32_max_aff_area_glo(t) = s32_max_aff_area - smax(t2, sum(j, p32_aff_pol(t2,j)));
-  i32_max_aff_area_glo(t)$(i32_max_aff_area_glo(t) < 1e-6) = 0;
-  i32_max_aff_area_glo(t)$(m_year(t) <= sm_fix_SSP2) = Inf;
-  i32_max_aff_area_reg(t,i) = 0;
-elseif s32_max_aff_area_glo = 0,
-  i32_max_aff_area_reg(t,i) = f32_max_aff_area(i) - smax(t2, sum(cell(i,j), p32_aff_pol(t2,j)));
-  i32_max_aff_area_reg(t,i)$(i32_max_aff_area_reg(t,i) < 1e-6) = 0;
-  i32_max_aff_area_reg(t,i)$(m_year(t) <= sm_fix_SSP2) = Inf;
-  i32_max_aff_area_glo(t) = 0;
-);
-
-*** NPI/NDC policies END
 
 *fix bph effect to zero for all age classes except the ac that is chosen for the bph effect to occur after planting (e.g. canopy closure)
 *fade-in from ac10 to ac30. First effect in ac10 (ord 3), last effect in ac30 (ord 7).
@@ -231,14 +212,14 @@ p32_land(t,j,type32,ac) = 0;
 p32_disturbance_loss_ftype32(t,j,"aff",ac) = 0;
 
 * Initialize biodiversity value
-vm_bv.l(j,"aff_co2p",potnatveg) = 
+vm_bv.l(j,"aff_co2p",potnatveg) =
   sum(bii_class_secd, sum(ac_to_bii_class_secd(ac,bii_class_secd), pc32_land(j,"aff",ac)) *
   p32_bii_coeff("aff",bii_class_secd,potnatveg)) * fm_luh2_side_layers(j,potnatveg);
 
-vm_bv.l(j,"aff_ndc",potnatveg) = 
+vm_bv.l(j,"aff_ndc",potnatveg) =
   sum(bii_class_secd, sum(ac_to_bii_class_secd(ac,bii_class_secd), pc32_land(j,"ndc",ac)) *
   p32_bii_coeff("ndc",bii_class_secd,potnatveg)) * fm_luh2_side_layers(j,potnatveg);
 
-vm_bv.l(j,"plant",potnatveg) = 
+vm_bv.l(j,"plant",potnatveg) =
   sum(bii_class_secd, sum(ac_to_bii_class_secd(ac,bii_class_secd), pc32_land(j,"plant",ac)) *
   p32_bii_coeff("plant",bii_class_secd,potnatveg)) * fm_luh2_side_layers(j,potnatveg);

@@ -1,4 +1,4 @@
-*** |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
@@ -23,6 +23,12 @@ $elseif "%c60_2ndgen_biodem%" == "emulator"
 $elseif "%c60_2ndgen_biodem%" == "none"
   i60_bioenergy_dem(t,i) = 0;
 ** Harmonize till 2020 if not coupled or emulator
+loop(t$(m_year(t) <= sm_fix_SSP2),
+  i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"R32M46-SSP2EU-NPi");
+);
+$elseif "%c60_2ndgen_biodem_noselect%" == "none"
+  i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"%c60_2ndgen_biodem%") * p60_region_BE_shr(t,i);
+** Harmonize till 2020 if not coupled or emulator 
 loop(t$(m_year(t) <= sm_fix_SSP2),
   i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"R32M46-SSP2EU-NPi");
 );

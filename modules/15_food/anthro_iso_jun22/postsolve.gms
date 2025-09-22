@@ -1,9 +1,34 @@
-*** |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
 *** |  MAgPIE License Exception, version 1.0 (see LICENSE file).
 *** |  Contact: magpie@pik-potsdam.de
+
+
+*' The following equations calculate the value of the marketing 
+*' (value-added used equivalently) price margin
+*' along with consumer expenditures including the margins.
+*' fah and fafh refer to food-(consumed)-at-home and food-away-from-home
+*' Regression coefficients from "Chen et al. 2025 Future food prices 
+*' will become less sensitive to agricultural market prices and mitigation costs"
+
+
+p15_shr_fafh(t,iso) = f15_fafh_coef("a_fafh") + f15_fafh_coef("b_fafh") * im_gdp_pc_mer_iso(t,iso);
+p15_shr_fafh(t,iso)$(p15_shr_fafh(t,iso) > 1) = 1;
+p15_shr_fafh(t,iso)$(p15_shr_fafh(t, iso) < 0) = 0;
+
+p15_marketing_margin_fah(t,iso,kfo) = (f15_markup_coef(kfo,"fah","a") * (f15_markup_coef(kfo, "fah", "b")**log(im_gdp_pc_mer_iso(t,iso))) +
+                                                                     f15_markup_coef(kfo, "fah", "c")) * fm_attributes("wm", kfo);
+p15_marketing_margin_fah_kcal(t,iso,kfo) = p15_marketing_margin_fah(t,iso,kfo) / (fm_nutrition_attributes(t,kfo,"kcal")*10**6);
+
+p15_marketing_margin_fafh(t,iso,kfo) = (f15_markup_coef(kfo,"fafh","a") * (f15_markup_coef(kfo, "fafh", "b")**log(im_gdp_pc_mer_iso(t,iso))) +
+                                                                     f15_markup_coef(kfo, "fafh", "c")) * fm_attributes("wm", kfo);
+p15_marketing_margin_fafh_kcal(t,iso,kfo) = p15_marketing_margin_fafh(t,iso,kfo)  / (fm_nutrition_attributes(t,kfo,"kcal")*10**6);
+
+p15_value_added_expenditures_pc(t,iso,kfo) = p15_shr_fafh(t,iso) * p15_kcal_pc_iso(t,iso,kfo)*p15_marketing_margin_fafh_kcal(t,iso,kfo)
+                                         + (1-p15_shr_fafh(t,iso)) * p15_kcal_pc_iso(t,iso,kfo)*p15_marketing_margin_fah_kcal(t,iso,kfo);
+
 
 
 if(ord(t)>1,

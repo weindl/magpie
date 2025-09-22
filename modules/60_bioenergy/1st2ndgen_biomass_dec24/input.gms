@@ -1,4 +1,4 @@
-*** |  (C) 2008-2023 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
@@ -6,8 +6,7 @@
 *** |  Contact: magpie@pik-potsdam.de
 
 sets
-  scen_countries60(iso) countries to be affected by 2nd generation bionergy demand scenario
-                    / ABW,AFG,AGO,AIA,ALA,ALB,AND,ARE,ARG,ARM,
+  scen_countries60(iso) countries to be affected by 2nd generation bionergy demand scenario / ABW,AFG,AGO,AIA,ALA,ALB,AND,ARE,ARG,ARM,
                       ASM,ATA,ATF,ATG,AUS,AUT,AZE,BDI,BEL,BEN,
                       BES,BFA,BGD,BGR,BHR,BHS,BIH,BLM,BLR,BLZ,
                       BMU,BOL,BRA,BRB,BRN,BTN,BVT,BWA,CAF,CAN,
@@ -35,19 +34,17 @@ sets
 ;
 
 scalars
-  c60_biodem_level  bioenergy demand level indicator 1 for regional and 0 for global demand (1) / 1 /
+  c60_biodem_level  bioenergy demand level indicator 1 for regional and 0 for global demand   (1)   / 1 /
   s60_res_substitution_factor  ratio of residues that are substituted by bioenergy crops to produce bioenergy (1) / 1 /
-  c60_bioenergy_subsidy_fix_SSP2  first generation bioenergy subsidy during fix_SSP period (USD17MER per ton) / 200 /
-  c60_bioenergy_subsidy  first generation bioenergy subsidy (USD17MER per ton) / 200 /
-  s60_bioenergy_gj_price_1st  first generation bioenergy per-GJ price (USD17MER per GJ) / 0 /
-  s60_bioenergy_price_2nd  second generation bioenergy price (USD17MER per GJ) / 0 /
-  s60_2ndgen_bioenergy_dem_min  Minimum dedicated 2nd generation bioenergy demand assumed in each region during SSP2-fix (mio. GJ per yr) / 1 /
-  s60_2ndgen_bioenergy_dem_min_post_fix  Minimum dedicated 2nd generation bioenergy demand assumed in each region after SSP2-fix (mio. GJ per yr) / 1 /
+  s60_bioenergy_1st_subsidy first generation bioenergy subsidy (USD17MER per GJ) / 6.5 /
+  s60_bioenergy_1st_price first generation bioenergy per-GJ price (USD17MER per GJ) / 0 /
+  s60_bioenergy_2nd_price second generation bioenergy price (USD17MER per GJ) / 0 /
+  s60_2ndgen_bioenergy_dem_min Minimum dedicated 2nd generation bioenergy demand assumed in each region during SSP2-fix (mio. GJ per yr) / 1 /
 ;
 
 $setglobal c60_price_implementation  lin
-$setglobal c60_2ndgen_biodem  R32M46-SSP2EU-NPi
-$setglobal c60_2ndgen_biodem_noselect  R32M46-SSP2EU-NPi
+$setglobal c60_2ndgen_biodem  R34M410-SSP2-NPi2025
+$setglobal c60_2ndgen_biodem_noselect  R34M410-SSP2-NPi2025
 
 
 $if "%c60_2ndgen_biodem%" == "coupling" table f60_bioenergy_dem_coupling(t_all,i) Bioenergy demand (regional) (mio. GJ per yr)

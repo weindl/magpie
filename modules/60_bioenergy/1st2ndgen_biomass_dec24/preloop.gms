@@ -5,7 +5,7 @@
 *** |  MAgPIE License Exception, version 1.0 (see LICENSE file).
 *** |  Contact: magpie@pik-potsdam.de
 
-****** Region price share for 2nd generation bioenergy demand scenario:
+****** Region share for 2nd generation bioenergy demand scenario:
 * Country switch to determine countries for which scenario shall be applied.
 * In the default case, the selected scenario (c60_2ndgen_biodem) affects
 * all countries.

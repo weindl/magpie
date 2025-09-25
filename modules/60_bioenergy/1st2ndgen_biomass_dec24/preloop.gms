@@ -22,7 +22,7 @@ $elseif "%c60_2ndgen_biodem%" == "emulator"
   i60_bioenergy_dem(t,i) = f60_bioenergy_dem_emulator(t)/card(i);
 $elseif "%c60_2ndgen_biodem%" == "none"
   i60_bioenergy_dem(t,i) = 0;
-** Harmonize until sm_fix_SSP2 if not coupled or emulator 
+** Harmonize till 2020 if not coupled or emulator 
 loop(t$(m_year(t) <= sm_fix_SSP2),
   i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"R34M410-SSP2-NPi2025");
 );
@@ -30,12 +30,12 @@ $elseif "%c60_2ndgen_biodem_noselect%" == "none"
   i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"%c60_2ndgen_biodem%") * p60_region_BE_shr(t,i);
 ** Harmonize till 2020 if not coupled or emulator 
 loop(t$(m_year(t) <= sm_fix_SSP2),
-  i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"R32M46-SSP2EU-NPi");
+  i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"R34M410-SSP2-NPi2025");
 );
 $else
   i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"%c60_2ndgen_biodem%") * p60_region_BE_shr(t,i)
                          + f60_bioenergy_dem(t,i,"%c60_2ndgen_biodem_noselect%") * (1-p60_region_BE_shr(t,i));
-** Harmonize until sm_fix_SSP2 if not coupled or emulator 
+** Harmonize till 2020 if not coupled or emulator
 loop(t$(m_year(t) <= sm_fix_SSP2),
   i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"R34M410-SSP2-NPi2025");
 );

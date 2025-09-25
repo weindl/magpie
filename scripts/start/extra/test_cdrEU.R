@@ -12,7 +12,7 @@
 library(magpie4)
 library(magclass)
 
-version <- "EUCDR-08"
+version <- "EUCDR-09"
 
 # Load start_run(cfg) function which is needed to start MAgPIE runs
 source("scripts/start_functions.R")
@@ -61,7 +61,7 @@ for(scen in miti){
       if(scen == "npi") {
 
         # NDC - BAU
-        cfg <- gms::setScenario(cfg, c("SSP2", "NDC", "rcp4p5"))
+        cfg <- gms::setScenario(cfg, c("SSP2", "NDC", "rcp2p6"))
 
       } else if (scen == "rcp2p6") {
 

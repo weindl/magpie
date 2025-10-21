@@ -6,31 +6,51 @@
 *** |  Contact: magpie@pik-potsdam.de
 
 ****** Regional adoption of biochar scenario, derived from country selection:
-* Country switch to determine countries for which scenario shall be applied.
+* Country switch to determipm_avl_cropland_isone countries for which scenario shall be applied.
 * In the default case, the selected scenario (c63_biochar_prod) affects
 * all countries.
 p63_country_dummy(iso) = 0;
 p63_country_dummy(scen_countries63) = 1;
 * Because MAgPIE is not run at country-level, but at region level, a region
 * share is calculated that translates the countries' influence to regional level.
-* Countries are weighted by their population size.
-p63_region_BC_shr(t_all,i) = sum(i_to_iso(i,iso), p63_country_dummy(iso) * im_pop_iso(t_all,iso)) / sum(i_to_iso(i,iso), im_pop_iso(t_all,iso));
+* Countries are weighted by available cropland area `pm_avl_cropland_iso`
+p63_region_BC_shr(t_all,i) =  sum(i_to_iso(i,iso), p63_country_dummy(iso) *
+  pm_avl_cropland_iso(iso)) / sum(i_to_iso(i,iso), pm_avl_cropland_iso(iso));
 
-
+** Trajectory for stylized biochar scenarios
+* linear or sigmoidal interpolation between start year and target year
+if (s63_bcScen_stylized_functional_form = 1,
+  m_linear_time_interpol(i63_bcScen_stylized_fader,s63_bcScen_stylized_startyear,s63_bcScen_stylized_targetyear,0,1);
+elseif s63_bcScen_stylized_functional_form = 2,
+  m_sigmoid_time_interpol(i63_bcScen_stylized_fader,s63_bcScen_stylized_startyear,s63_bcScen_stylized_targetyear,0,1);
+);
+    
 $ifthen "%c63_biochar_prod%" == "coupling"
   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod_coupling(t,i,biopyr_all63);
+
 $elseif "%c63_biochar_prod%" == "emulator"
   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod_emulator(t,biopyr_all63)/card(i);
+
 $elseif "%c63_biochar_prod%" == "none"
   i63_biochar_prod(t,i,biopyr_all63) = 0;
-$elseif "%c63_biochar_prod_noselect%" == "none"
-  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%") * p63_region_BC_shr(t,i);
+
+$elseif "%c63_biochar_prod%" == "stylized"
+ i63_biochar_prod(t,i,biopyr_all63) = 0;
+ i63_biochar_prod(t,i,"biopyrCHP") = i63_bcScen_stylized_fader(t) * p63_region_BC_shr(i) *
+  s63_bcScen_stylized_target * sum(cell(i,j), pm_land_start(j,"crop"));
+
 $else
+  
+ $ifthen "%c63_biochar_prod_noselect%" == "none"
+  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%") * p63_region_BC_shr(t,i);
+ $else
   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%") * p63_region_BC_shr(t,i)
                          + f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod_noselect%") * (1-p63_region_BC_shr(t,i));
-** Harmonize until predefined time step if not applied in coupled or emulator set-up
-loop(t$(m_year(t) <= sm_fix_SSP2),
-  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"R2M41-SSP2-NPi");
+ $endif
+ 
+  ** Harmonize until predefined time step if not applied in coupled or emulator set-up
+  loop(t$(m_year(t) <= sm_fix_SSP2),
+    i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"R2M41-SSP2-NPi");
 );
 $endif
 

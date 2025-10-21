@@ -38,6 +38,10 @@ scalars
   s63_BC100  Fraction of biochar carbon remaining in the soil after 100 years   (1)   / 0.8 /
   s63_simulation_mode_mag  Biochar simulation mode (1 for "mag" and 0 for "rem-mag" simulation mode) / 0 /
   s63_biochar_min  Minimum biochar demand assumed in each region (mio. GJ per yr) / 0 /
+  s63_bcScen_stylized_startyear  Biochar stylized scenario start year       / 2025 /
+  s63_bcScen_stylized_targetyear Biochar stylized scenario target year      / 2050 /
+  s63_bcScen_stylized_target Biochar production target per ha initial cropland (GJ per ha per yr) / 0 /
+  s63_bcScen_stylized_functional_form Switch for functional form of faders (1) / 1 /
 ;
 
 $setglobal c63_biochar_simulation_mode  rem-mag
@@ -46,14 +50,14 @@ $setglobal c63_biochar_prod_noselect  none
 
 $if "%c63_biochar_prod%" == "coupling" table f63_biochar_prod_coupling(t_all,i,biopyr_all63) Annual biochar production (regional) (mio. GJ per yr)
 $if "%c63_biochar_prod%" == "coupling" $ondelim
-$if "%c63_biochar_prod%" == "coupling" $include "./modules/63_biochar/input/reg.biochar_production.csv"
+$if "%c63_biochar_prod%" == "coupling" $include "./modules/63_biochar/input/f63_biochar_prod_coupling.cs3"
 $if "%c63_biochar_prod%" == "coupling" $offdelim
 $if "%c63_biochar_prod%" == "coupling" ;
 
 $if "%c63_biochar_prod%" == "emulator" parameter f63_biochar_prod_emulator(t_all,biopyr_all63) Annual biochar production (global) (mio. GJ per yr)
 $if "%c63_biochar_prod%" == "emulator" /
 $if "%c63_biochar_prod%" == "emulator" $ondelim
-$if "%c63_biochar_prod%" == "emulator" $include "./modules/63_biochar/input/glo.biochar_production.csv"
+$if "%c63_biochar_prod%" == "emulator" $include "./modules/63_biochar/input/f63_biochar_prod_emulator.cs3"
 $if "%c63_biochar_prod%" == "emulator" $offdelim
 $if "%c63_biochar_prod%" == "emulator" /
 $if "%c63_biochar_prod%" == "emulator" ;

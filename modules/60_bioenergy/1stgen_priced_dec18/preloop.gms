@@ -5,7 +5,7 @@
 *** |  MAgPIE License Exception, version 1.0 (see LICENSE file).
 *** |  Contact: magpie@pik-potsdam.de
 
-****** Region price share for 2nd generation bioenergy demand scenario:
+****** Region share for 2nd generation bioenergy demand scenario:
 * Country switch to determine countries for which scenario shall be applied.
 * In the default case, the selected scenario (c60_2ndgen_biodem) affects
 * all countries.
@@ -22,21 +22,21 @@ $elseif "%c60_2ndgen_biodem%" == "emulator"
   i60_bioenergy_dem(t,i) = f60_bioenergy_dem_emulator(t)/card(i);
 $elseif "%c60_2ndgen_biodem%" == "none"
   i60_bioenergy_dem(t,i) = 0;
-** Harmonize till 2020 if not coupled or emulator
+** Harmonize until sm_fix_SSP2 if not coupled or emulator
 loop(t$(m_year(t) <= sm_fix_SSP2),
-  i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"R32M46-SSP2EU-NPi");
+  i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"R34M410-SSP2-NPi2025");
 );
 $elseif "%c60_2ndgen_biodem_noselect%" == "none"
   i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"%c60_2ndgen_biodem%") * p60_region_BE_shr(t,i);
-** Harmonize till 2020 if not coupled or emulator 
+** Harmonize until sm_fix_SSP2 if not coupled or emulator 
 loop(t$(m_year(t) <= sm_fix_SSP2),
-  i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"R32M46-SSP2EU-NPi");
+  i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"R34M410-SSP2-NPi2025");
 );
 $else
   i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"%c60_2ndgen_biodem%") * p60_region_BE_shr(t,i)
                          + f60_bioenergy_dem(t,i,"%c60_2ndgen_biodem_noselect%") * (1-p60_region_BE_shr(t,i));
-** Harmonize till 2020 if not coupled or emulator
+** Harmonize until sm_fix_SSP2 if not coupled or emulator
 loop(t$(m_year(t) <= sm_fix_SSP2),
-  i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"R32M46-SSP2EU-NPi");
+  i60_bioenergy_dem(t,i) = f60_bioenergy_dem(t,i,"R34M410-SSP2-NPi2025");
 );
 $endif

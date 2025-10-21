@@ -209,7 +209,7 @@ $setglobal land_conservation  area_based_apr22
 
 $setglobal ageclass  oct24
 
-$setglobal cropland  simple_apr24
+$setglobal cropland  detail_apr24
 $setglobal croparea  simple_apr24
 $setglobal past  endo_jun13
 

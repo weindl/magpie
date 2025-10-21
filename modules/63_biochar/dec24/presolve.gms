@@ -7,6 +7,3 @@
 
 * Add minimal biochar production in case of zero demand or very small demand to avoid zero prices
 i63_biochar_prod(t,i,biopyr_all63)$(i63_biochar_prod(t,i,biopyr_all63) < s63_biochar_min) = s63_biochar_min;
-*Fix to bring down biochar areas to arounf 3 percent of cropland area
-i63_biochar_prod(t,i,biopyr_all63) = i63_biochar_prod(t,i,biopyr_all63) * 0.4;
-

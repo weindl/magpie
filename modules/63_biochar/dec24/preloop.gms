@@ -14,7 +14,7 @@ p63_country_dummy(scen_countries63) = 1;
 * Because MAgPIE is not run at country-level, but at region level, a region
 * share is calculated that translates the countries' influence to regional level.
 * Countries are weighted by available cropland area `pm_avl_cropland_iso`
-p63_region_BC_shr(t_all,i) =  sum(i_to_iso(i,iso), p63_country_dummy(iso) *
+p63_region_BC_shr(i) =  sum(i_to_iso(i,iso), p63_country_dummy(iso) *
   pm_avl_cropland_iso(iso)) / sum(i_to_iso(i,iso), pm_avl_cropland_iso(iso));
 
 ** Trajectory for stylized biochar scenarios

@@ -100,6 +100,17 @@
 
   gms::writeSets(sets , "modules/60_bioenergy/1stgen_priced_dec18/sets.gms")
   gms::writeSets(sets , "modules/60_bioenergy/1st2ndgen_priced_feb24/sets.gms")
+  gms::writeSets(sets , "modules/60_bioenergy/1st2ndgen_biomass_dec24/sets.gms")
+
+  ### 63_biochar
+  scenBC63 <- magclass::read.magpie("modules/63_biochar/input/f63_biochar_prod.cs3")
+  scenBC63 <- magclass::getNames(scenBC63,dim=2)
+
+  sets <- list(list(name = "scenBC63",
+                    desc = "biochar scenarios",
+                    items = scenBC63))
+
+  gms::writeSets(sets , "modules/63_biochar/dec24/sets.gms")
 }
 
 # Function to extract information from info.txt

@@ -12,7 +12,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **60_bioenergy** extended set of available second generation bioenergy scenarios
 
 ### added
--
+- **60_bioenergy** automatic sets for bioenergy scenarios for new `1st2ndgen_biomass_dec24` realization
+- **63_biochar** automatic sets for biochar scenarios
+- **scripts** added automatic set writer for new bioenergy realization (`1st2ndgen_biomass_dec24`) to `start_functions`
+- **scripts** added automatic set writer for biochar module to `start_functions`
 
 ### removed
 -
@@ -42,7 +45,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **55_awms** Manure excretion is now calculated using `vm_feed_intake`
 - **70_livestock** pasture feed balance flows dynamically linked to pasture demand in regions with high historical scavenged feed use
 - **default.cfg** input data upgraded from rev4.118 to rev4.119 (minor update population and GDP)
-- **README** added forestry to model description 
+- **README** added forestry to model description
 - **readme** added setup instruction specifics for Linux/macOS
 - **scenario_config** update of VLLO scenario to EAT-Lancet 2
 - **scripts** changed setting in the 'mitigation and conservation' start script.

@@ -12,12 +12,11 @@
 library(magpie4)
 library(magclass)
 
-version <- "EUCDR-09"
+version <- "EUCDR-11"
 
 # Load start_run(cfg) function which is needed to start MAgPIE runs
 source("scripts/start_functions.R")
 source("config/default.cfg")
-backupInputH12 <- cfg$input
 
 EU_countries <- c("ALA", "AUT", "BEL", "BGR", "CYP", "CZE", "DEU", "DNK", "ESP", 
                   "EST", "FIN", "FRA", "FRO", "GBR", "GGY", "GIB", "GRC", "HRV", 
@@ -39,14 +38,14 @@ cfg$gms$s59_scm_scenario_target <- 2050   # def = 2050
 
 ### biochar settings
 cfg$gms$c63_biochar_simulation_mode <- "mag"
-
-targetLow  <- 0.05
-targetHigh <- 0.3
+cfg$gms$c63_biochar_prod <- "stylized"
+cfg$gms$s63_bcScen_stylized_startyear <- 2025
+cfg$gms$s63_bcScen_stylized_targetyear <- 2050
 
 miti      <- c("npi", "rcp2p6")
-agfScen   <- c(agfZero = 0, agfLow = targetLow, agfHigh = targetHigh)
-scmScen   <- c(scmZero = 0, scmLow = targetLow, scmHigh = targetHigh)
-bcScen    <- c(bcZero = "none", bcLow = "none", bcHigh = "R34BC-SSP2-PkBudg650-BCdef-CTS01-BM70")
+agfScen   <- c(agfZero = 0, agfHigh = 0.03) # 3% cropland share treecover
+scmScen   <- c(scmZero = 0, scmHigh = 0.3)  # 30% cropland SOCM share
+bcScen    <- c(bcZero = 0 , bcHigh = 550)   # 550 PJ biochar prod ~ +3% cropland share for be crops
 regionSet <- c("h12")
 cdrSet    <- c("eu", "glo")
 
@@ -55,67 +54,47 @@ cdrSet    <- c("eu", "glo")
 }
 
 for(scen in miti){
-  for (regions in regionSet){
-    for (cdrReg in c("eu", "glo")){     
-      
-      if(scen == "npi") {
+  for (cdrReg in c("eu", "glo")){     
+    
+    if(scen == "npi") {
 
-        # NDC - BAU
-        cfg <- gms::setScenario(cfg, c("SSP2", "NDC", "rcp2p6"))
+      # NDC - BAU
+      cfg <- gms::setScenario(cfg, c("SSP2", "NDC", "rcp2p6"))
 
-      } else if (scen == "rcp2p6") {
+    } else if (scen == "rcp2p6") {
 
-        # 2° - MAU
-        cfg <- gms::setScenario(cfg, c("SSP2", "NDC", "rcp2p6"))
-        cfg$gms$c56_mute_ghgprices_until <- "y2030"
-        cfg$gms$c56_pollutant_prices <- paste0("R34M410-SSP2-PkBudg1000")
-        cfg$gms$c60_2ndgen_biodem    <- paste0("R34M410-SSP2-PkBudg1000")
+      # 2° - MAU
+      cfg <- gms::setScenario(cfg, c("SSP2", "NDC", "rcp2p6"))
+      cfg$gms$c56_mute_ghgprices_until <- "y2030"
+      cfg$gms$c56_pollutant_prices <- paste0("R34M410-SSP2-PkBudg1000")
+      cfg$gms$c60_2ndgen_biodem    <- paste0("R34M410-SSP2-PkBudg1000")
 
-      } else {stop("wrong miti setup")}
+    } else {stop("wrong miti setup")}
  
-      if(regions == "h12") {
-        
-        cfg$input <- backupInputH12
-        
-      } else if (regions == "h16EU") {
-        
-        cfg$input['regional']    <- "rev4.121_36f73207_magpie.tgz"
-        cfg$input['validation']  <- "rev4.121_36f73207_validation.tgz" 
-        cfg$input['calibration'] <- "calibration_H16_FAO_20Jun25.tgz"
- 
-        if(scen == "rcp2p6") {
-          cfg$input['cellular']    <- "rev4.121_36f73207_b62ca1de_cellularmagpie_c200_MRI-ESM2-0-ssp126_lpjml-8e6c5eb1_clusterweight-ba4466a8.tgz" 
-        } else if (scen == "npi") {
-          cfg$input['cellular']    <- "rev4.121_36f73207_582d657c_cellularmagpie_c200_MRI-ESM2-0-ssp245_lpjml-8e6c5eb1_clusterweight-ba4466a8.tgz"
-        } else {stop("wrong scen setup")}
-
-      } else {stop("wrong regions setup")}
-      
       .startRun <- function(agf, scm, bc) {
-        cfg$gms$policy_countries29   <- cdrRegions[[cdrReg]]
-        cfg$gms$s29_treecover_target <- agfScen[agf] / 10      # devided by 10 to go from agf to treecover target
+      cfg$gms$policy_countries29   <- cdrRegions[[cdrReg]]
+      cfg$gms$s29_treecover_target <- agfScen[agf]
 
-        cfg$gms$policy_countries59  <- cdrRegions[[cdrReg]]
-        cfg$gms$s59_scm_target      <- scmScen[scm]      # def = 0
+      cfg$gms$policy_countries59  <- cdrRegions[[cdrReg]]
+      cfg$gms$s59_scm_target      <- scmScen[scm]
 
-        cfg$gms$scen_countries63    <- cdrRegions[[cdrReg]]
-        cfg$gms$c63_biochar_prod    <- bcScen[bc]
+      cfg$gms$scen_countries63    <- cdrRegions[[cdrReg]]
+      cfg$gms$s63_bcScen_stylized_target <- bcScen[bc]
 
-        cfg$title <- .title(version, scen, agf, scm, bc, regions, cdrReg)
-        start_run(cfg, codeCheck = FALSE)
-      } 
+      cfg$title <- .title(version, scen, agf, scm, bc, regions, cdrReg)
+      start_run(cfg, codeCheck = FALSE)
+    } 
 
-      #ZeroZeroZero
-      .startRun("agfZero", "scmZero", "bcZero")
-      #ZeroZeroHigh      
-      .startRun("agfZero", "scmZero", "bcHigh")
-      #ZeroHighZero
-      .startRun("agfZero", "scmHigh", "bcZero")
-      #HighLowLow
-      .startRun("agfHigh", "scmZero", "bcZero")
-      #HighHighHigh
-      .startRun("agfHigh", "scmHigh", "bcHigh")
+    #ZeroZeroZero
+    .startRun("agfZero", "scmZero", "bcZero")
+    #ZeroZeroHigh      
+    .startRun("agfZero", "scmZero", "bcHigh")
+    #ZeroHighZero
+    .startRun("agfZero", "scmHigh", "bcZero")
+    #HighLowLow
+    .startRun("agfHigh", "scmZero", "bcZero")
+    #HighHighHigh
+    .startRun("agfHigh", "scmHigh", "bcHigh")
       
-    }
   }
 }

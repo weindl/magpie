@@ -12,7 +12,7 @@
 library(magpie4)
 library(magclass)
 
-version <- "BCtest-01"
+version <- "BCtest-02"
 
 # Load start_run(cfg) function which is needed to start MAgPIE runs
 source("scripts/start_functions.R")
@@ -32,7 +32,7 @@ cfg$gms$c63_biochar_prod <- "stylized"
 cfg$gms$s63_bcScen_stylized_startyear <- 2025
 cfg$gms$s63_bcScen_stylized_targetyear <- 2050
 
-miti      <- c("npi", "rcp2p6")
+miti      <- c("rcp2p6", "npi")
 regionSet <- c("h12")
 cdrSet    <- c("eu")
 
@@ -68,7 +68,7 @@ for(scen in miti){
         start_run(cfg, codeCheck = FALSE)
       } 
   
-      test <- c(2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6)
+      test <- c(0, 400, 500, 550, 600, 650, 700, 750, 800, 900)
       for(i in test) {.startRun(i)}
       
     }

@@ -6,7 +6,7 @@
 *** |  Contact: magpie@pik-potsdam.de
 
 ****** Regional adoption of biochar scenario, derived from country selection:
-* Country switch to determipm_avl_cropland_isone countries for which scenario shall be applied.
+* Country switch to determine countries for which scenario shall be applied.
 * In the default case, the selected scenario (c63_biochar_prod) affects
 * all countries.
 p63_country_dummy(iso) = 0;
@@ -16,6 +16,9 @@ p63_country_dummy(scen_countries63) = 1;
 * Countries are weighted by available cropland area `pm_avl_cropland_iso`
 p63_region_BC_shr(i) =  sum(i_to_iso(i,iso), p63_country_dummy(iso) *
   pm_avl_cropland_iso(iso)) / sum(i_to_iso(i,iso), pm_avl_cropland_iso(iso));
+p63_effective_land_share(i) = p63_region_BC_shr(i) * sum(cell(i,j), pm_land_start(j,"crop"));
+p63_effective_land_share(i) = p63_effective_land_share(i) / sum(i2, p63_effective_land_share(i2));
+
 
 ** Trajectory for stylized biochar scenarios
 * linear or sigmoidal interpolation between start year and target year
@@ -36,8 +39,8 @@ $elseif "%c63_biochar_prod%" == "none"
 
 $elseif "%c63_biochar_prod%" == "stylized"
  i63_biochar_prod(t,i,biopyr_all63) = 0;
- i63_biochar_prod(t,i,"biopyrCHP") = i63_bcScen_stylized_fader(t) * p63_region_BC_shr(i) *
-  s63_bcScen_stylized_target * sum(cell(i,j), pm_land_start(j,"crop"));
+ i63_biochar_prod(t,i,"biopyrCHP") = i63_bcScen_stylized_fader(t) * 
+   p63_effective_land_share(i) * s63_bcScen_stylized_target;
 
 $else
   

@@ -19,20 +19,18 @@ p63_region_BC_shr(t_all,i) = sum(i_to_iso(i,iso), p63_country_dummy(iso) * im_po
 
 $ifthen "%c63_biochar_prod%" == "coupling"
   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod_coupling(t,i,biopyr_all63);
-$elseif "%c63_biochar_prod%" == "emulator"
-  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod_emulator(t,biopyr_all63)/card(i);
 $elseif "%c63_biochar_prod%" == "none"
   i63_biochar_prod(t,i,biopyr_all63) = 0;
 $elseif "%c63_biochar_prod_noselect%" == "none"
   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%") * p63_region_BC_shr(t,i);
-** Harmonize until predefined time step if not applied in coupled or emulator set-up
+** Harmonize until predefined time step if not applied in coupled set-up
 loop(t$(m_year(t) <= sm_fix_SSP2),
   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"R2M41-SSP2-NPi");
 );
 $else
   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%") * p63_region_BC_shr(t,i)
                          + f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod_noselect%") * (1-p63_region_BC_shr(t,i));
-** Harmonize until predefined time step if not applied in coupled or emulator set-up
+** Harmonize until predefined time step if not applied in coupled set-up
 loop(t$(m_year(t) <= sm_fix_SSP2),
   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"R2M41-SSP2-NPi");
 );

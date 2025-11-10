@@ -50,14 +50,6 @@ $if "%c63_biochar_prod%" == "coupling" $include "./modules/63_biochar/input/f63_
 $if "%c63_biochar_prod%" == "coupling" $offdelim
 $if "%c63_biochar_prod%" == "coupling" ;
 
-$if "%c63_biochar_prod%" == "emulator" parameter f63_biochar_prod_emulator(t_all,biopyr_all63) Annual biochar production (global) (mio. GJ per yr)
-$if "%c63_biochar_prod%" == "emulator" /
-$if "%c63_biochar_prod%" == "emulator" $ondelim
-$if "%c63_biochar_prod%" == "emulator" $include "./modules/63_biochar/input/f63_biochar_prod_emulator.cs3"
-$if "%c63_biochar_prod%" == "emulator" $offdelim
-$if "%c63_biochar_prod%" == "emulator" /
-$if "%c63_biochar_prod%" == "emulator" ;
-
 table f63_biochar_prod(t_all,i,biopyr_all63,scenBC63) Annual biochar production on energy basis (regional) (mio. GJ per yr)
 $ondelim
 $include "./modules/63_biochar/input/f63_biochar_prod.cs3"

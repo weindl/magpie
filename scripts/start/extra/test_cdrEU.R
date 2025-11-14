@@ -12,7 +12,7 @@
 library(magpie4)
 library(magclass)
 
-version <- "EUCDR-11"
+version <- "EUCDR-12"
 
 # Load start_run(cfg) function which is needed to start MAgPIE runs
 source("scripts/start_functions.R")
@@ -49,8 +49,8 @@ bcScen    <- c(bcZero = 0 , bcHigh = 550)   # 550 PJ biochar prod ~ +3% cropland
 regionSet <- c("h12")
 cdrSet    <- c("eu", "glo")
 
-.title <- function(version = NULL, miti = NULL, agf = NULL, scm = NULL, bc = NULL, regions = NULL, cdr = NULL){
-  return(paste(version, miti, agf, scm, bc, regions, cdr, sep = "_"))
+.title <- function(version = NULL, miti = NULL, agf = NULL, scm = NULL, bc = NULL, cdr = NULL){
+  return(paste(version, miti, agf, scm, bc, cdr, sep = "_"))
 }
 
 for(scen in miti){
@@ -58,8 +58,8 @@ for(scen in miti){
     
     if(scen == "npi") {
 
-      # NDC - BAU
-      cfg <- gms::setScenario(cfg, c("SSP2", "NDC", "rcp2p6"))
+      # NPi - BAU
+      cfg <- gms::setScenario(cfg, c("SSP2", "NPI", "rcp2p6"))
 
     } else if (scen == "rcp2p6") {
 
@@ -81,7 +81,7 @@ for(scen in miti){
       cfg$gms$scen_countries63    <- cdrRegions[[cdrReg]]
       cfg$gms$s63_bcScen_stylized_target <- bcScen[bc]
 
-      cfg$title <- .title(version, scen, agf, scm, bc, regions, cdrReg)
+      cfg$title <- .title(version, scen, agf, scm, bc, cdrReg)
       start_run(cfg, codeCheck = FALSE)
     } 
 

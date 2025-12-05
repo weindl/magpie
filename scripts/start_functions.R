@@ -582,27 +582,17 @@ getReportData <- function(path_to_report_bioenergy, path_to_report_ghgprices = N
     allVars <- getNames(mag)
     biocharVars <- grep("^SE\\|Biochar\\|.*\\(EJ/yr\\)$", allVars, value = TRUE)
 
-    if (length(biocharVars) == 0) {
-      # No 'SE|Biochar|. (EJ/yr)' variables found in REMIND report.
-      # Create file with zero biochar production to keep interface shape stable.
-      out <- mag[,,"Primary Energy Production|Biomass|Energy Crops (EJ/yr)"]
-      out[, , ] <- 0
-      dimnames(out)[[3]] <- "biopyrOnly"
+    # Build per-technology blocks, convert EJ -> PJ, and attach technologies as dim 3.1
+    out <- NULL
+    for (v in biocharVars) {
+      # Extract technology key: remove prefix and unit suffix
+      # e.g. "SE|Biochar|biopyrCHP (EJ/yr)" -> "biopyrCHP"
+      tech <- sub("^SE\\|Biochar\\|", "", v)
+      tech <- sub(" \\(EJ/yr\\)$", "", tech)
 
-    } else {
-
-      # Build per-technology blocks, convert EJ -> PJ, and attach technologies as dim 3.1
-      out <- NULL
-      for (v in biocharVars) {
-        # Extract technology key: remove prefix and unit suffix
-        # e.g. "SE|Biochar|biopyrCHP (EJ/yr)" -> "biopyrCHP"
-        tech <- sub("^SE\\|Biochar\\|", "", v)
-        tech <- sub(" \\(EJ/yr\\)$", "", tech)
-
-        tmp <- mag[, , v] * 10^3  # EJ/yr -> PJ/yr
-        dimnames(tmp)[[3]] <- tech
-        out <- mbind(out, tmp)
-      }
+      tmp <- mag[, , v] * 10^3  # EJ/yr -> PJ/yr
+      dimnames(tmp)[[3]] <- tech
+      out <- mbind(out, tmp)
     }
 
     # Remove GLO region

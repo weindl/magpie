@@ -581,14 +581,33 @@ getReportData <- function(path_to_report_bioenergy, path_to_report_ghgprices = N
     # Discover all technology-specific biochar production variables in the REMIND report (unit EJ/yr)
     allVars <- getNames(mag)
     biocharVars <- grep("^SE\\|Biochar\\|.*\\(EJ/yr\\)$", allVars, value = TRUE)
+    
+    # Mapping from REMIND reporting names to model-internal names
+    mapping <- c(
+      "w/ heat"           = "biopyrhe",
+      "w/ heat and power" = "biopyrchp",
+      "w/ liquids"        = "biopyrliq",
+      "w/o co-product"    = "biopyronly"
+    )
 
-    # Build per-technology blocks, convert EJ -> PJ, and attach technologies as dim 3.1
+    # Build per-technology blocks, convert EJ -> PJ
     out <- NULL
     for (v in biocharVars) {
       # Extract technology key: remove prefix and unit suffix
-      # e.g. "SE|Biochar|biopyrCHP (EJ/yr)" -> "biopyrCHP"
-      tech <- sub("^SE\\|Biochar\\|", "", v)
-      tech <- sub(" \\(EJ/yr\\)$", "", tech)
+      # e.g. "SE|Biochar|+|w/ heat (EJ/yr)" -> "w/ heat"
+      rawTech <- sub("^SE\\|Biochar\\|\\+\\|", "", v)
+      rawTech <- sub(" \\(EJ/yr\\)$", "", rawTech)
+      
+      # Map to short internal technology name
+      if (rawTech %in% names(mapping)) {
+        tech <- mapping[[rawTech]]
+      } else {
+        stop(
+          "ERROR in .biocharProduction(): Unknown REMIND biochar technology '", rawTech, 
+          "' extracted from variable '", v, "'.\n",
+          "Please add it to the mapping in start_functions.R and adapt sets in MAgPIE accordingly."
+        )
+      }
 
       tmp <- mag[, , v] * 10^3  # EJ/yr -> PJ/yr
       dimnames(tmp)[[3]] <- tech

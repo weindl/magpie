@@ -89,35 +89,35 @@ sets
          c_yield /
 
    biopyr_all63 Available pyrolysis plant set-ups including different co-products
-       / KonTiki,
-         biopyrOnly400,
-         biopyrCHP,
-         biopyrElec,
-         biopyrHeat,
-         biopyrOnly,
-         biopyrOnly650,
-         biopyrOnly800,
-         biopyrFAST500,
-         biopyrFuel /
+       / kontiki,
+         biopyrchp,
+         biopyrelec,
+         biopyrhe,
+         biopyrliq,
+         biopyronly,
+         biopyronly400,
+         biopyronly650,
+         biopyronly800,
+         biopyrfast500 /
 
    biopyr63(biopyr_all63) Selected pyrolysis plant set-ups including different co-products
-       / KonTiki,
-         biopyrCHP,
-         biopyrElec,
-         biopyrFuel,
-         biopyrHeat,
-         biopyrOnly /
+       / kontiki,
+         biopyrchp,
+         biopyrelec,
+         biopyrhe,
+         biopyrliq,
+         biopyronly /
 
    bc_sys63 Biochar production systems
-      / SP-400, SP-500, SP-650, SP-800, FP-500, P-Woolf, P-KonTiki /  
+      / SP-400, SP-500, SP-650, SP-800, FP-500, P-Woolf, P-KonTiki /
 
    sys_pyr(bc_sys63, biopyr_all63) Mapping of pyrolysis plant set-ups to biochar systems
-       / P-KonTiki     . (KonTiki)
-         SP-400        . (biopyrOnly400)
-         SP-500        . (biopyrCHP, biopyrElec, biopyrHeat, biopyrOnly)
-         SP-650        . (biopyrOnly650)
-         SP-800        . (biopyrOnly800)
-         FP-500        . (biopyrFAST500)
-         P-Woolf       . (biopyrFuel)
+       / SP-400        . (biopyronly400)
+         SP-500        . (biopyrchp, biopyrelec, biopyrhe, biopyronly)
+         SP-650        . (biopyronly650)
+         SP-800        . (biopyronly800)
+         FP-500        . (biopyrfast500)
+         P-Woolf       . (biopyrliq)
+         P-KonTiki     . (kontiki)
        /
 ;

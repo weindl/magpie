@@ -100,6 +100,17 @@
 
   gms::writeSets(sets , "modules/60_bioenergy/1stgen_priced_dec18/sets.gms")
   gms::writeSets(sets , "modules/60_bioenergy/1st2ndgen_priced_feb24/sets.gms")
+  gms::writeSets(sets , "modules/60_bioenergy/1st2ndgen_biomass_dec24/sets.gms")
+
+  ### 63_biochar
+  scenBC63 <- magclass::read.magpie("modules/63_biochar/input/f63_biochar_prod.cs3")
+  scenBC63 <- magclass::getNames(scenBC63,dim=2)
+
+  sets <- list(list(name = "scenBC63",
+                    desc = "biochar scenarios",
+                    items = scenBC63))
+
+  gms::writeSets(sets , "modules/63_biochar/dec24/sets.gms")
 }
 
 # Function to extract information from info.txt
@@ -175,7 +186,7 @@
                     paste(format(ijn[["n"]], width = 5), collapse = ""),
                     '',
                     paste('Regionscode:', regionscode))
-  
+
   gms::replace_in_file("main.gms",paste('*',contentShort),subject)
 }
 
@@ -198,7 +209,7 @@ download_and_update <- function(cfg) {
   # are manipulated. Therefore some information about the number of cells per
   # region is required (CPR). This information is gained by extracting it from
   # the avl_land.cs3 input file (any other cellular file could be used as well).
-  # This information is then transfered to .update_info, which is
+  # This information is then transferred to .update_info, which is
   # updating the general information in magpie.gms and input/info.txt
   # and .update_sets, which is updating the resolution- and region-depending
   # sets in core/sets.gms
@@ -318,11 +329,11 @@ start_run <- function(cfg, scenario = NULL, codeCheck = TRUE, lock_model = TRUE,
     message("done.")
   }
 
-  # If available (i.e. paths are set) extract bioenergy and/or GHG prices 
+  # If available (i.e. paths are set) extract bioenergy and/or GHG prices
   # from REMIND report and save them to the respective input folders
   # Please note: For them to be used by the model, either the 'coupling' scenario
   # must be selected or the corresponding switches must be set individually.
-  getReportData(cfg$path_to_report_bioenergy, cfg$path_to_report_ghgprices)
+  getReportData(cfg$path_to_report_bioenergy, cfg$path_to_report_ghgprices, cfg$path_to_report_biochar)
 
   # update all parameters which contain the levels and marginals
   # of all variables and equations
@@ -440,7 +451,7 @@ start_run <- function(cfg, scenario = NULL, codeCheck = TRUE, lock_model = TRUE,
       && cfg$gms$s14_use_yield_calib == 0) {
     stop("The combination of the switch configurations `cfg$recalibrate <- TRUE/ifneeded`
           and `cfg$gms$s14_use_yield_calib <- 0` is inconsistent.
-          Please check the config and set `cfg$gms$s14_use_yield_calib <- 1` 
+          Please check the config and set `cfg$gms$s14_use_yield_calib <- 1`
           if yield calibration is desired, or `cfg$recalibrate <- FALSE` if not.
           Note that the current default is to not use yield calibration.")
   }
@@ -556,7 +567,7 @@ start_run <- function(cfg, scenario = NULL, codeCheck = TRUE, lock_model = TRUE,
   return(cfg$results_folder)
 }
 
-getReportData <- function(path_to_report_bioenergy, path_to_report_ghgprices = NA) {
+getReportData <- function(path_to_report_bioenergy, path_to_report_ghgprices = NA, path_to_report_biochar = NA) {
 
   if (!requireNamespace("magclass", quietly = TRUE)) {
     stop("Package \"magclass\" needed for this function to work. Please install it.",
@@ -571,6 +582,51 @@ getReportData <- function(path_to_report_bioenergy, path_to_report_ghgprices = N
     f <- "./modules/60_bioenergy/input/reg.2ndgen_bioenergy_demand.csv"
     suppressWarnings(unlink(f))
     write.magpie(out[notGLO,,],f)
+  }
+
+  .biocharProduction <- function(mag) {
+    # Discover all technology-specific biochar production variables in the REMIND report (unit EJ/yr)
+    allVars <- getNames(mag)
+    biocharVars <- grep("^SE\\|Biochar\\|.*\\(EJ/yr\\)$", allVars, value = TRUE)
+    
+    # Mapping from REMIND reporting names to model-internal names
+    mapping <- c(
+      "w/ heat"           = "biopyrhe",
+      "w/ heat and power" = "biopyrchp",
+      "w/ liquids"        = "biopyrliq",
+      "w/o co-product"    = "biopyronly"
+    )
+
+    # Build per-technology blocks, convert EJ -> PJ
+    out <- NULL
+    for (v in biocharVars) {
+      # Extract technology key: remove prefix and unit suffix
+      # e.g. "SE|Biochar|+|w/ heat (EJ/yr)" -> "w/ heat"
+      rawTech <- sub("^SE\\|Biochar\\|\\+\\|", "", v)
+      rawTech <- sub(" \\(EJ/yr\\)$", "", rawTech)
+      
+      # Map to short internal technology name
+      if (rawTech %in% names(mapping)) {
+        tech <- mapping[[rawTech]]
+      } else {
+        stop(
+          "ERROR in .biocharProduction(): Unknown REMIND biochar technology '", rawTech, 
+          "' extracted from variable '", v, "'.\n",
+          "Please add it to the mapping in start_functions.R and adapt sets in MAgPIE accordingly."
+        )
+      }
+
+      tmp <- mag[, , v] * 10^3  # EJ/yr -> PJ/yr
+      dimnames(tmp)[[3]] <- tech
+      out <- mbind(out, tmp)
+    }
+
+    # Remove GLO region
+    notGLO <- getRegions(mag)[!(getRegions(mag)=="GLO")]
+    # delete old input file before updating it
+    f <- "./modules/63_biochar/input/f63_biochar_prod_coupling.cs3"
+    suppressWarnings(unlink(f))
+    write.magpie(out[notGLO, , ], f)
   }
 
   .emissionPrices <- function(mag){
@@ -613,24 +669,37 @@ getReportData <- function(path_to_report_bioenergy, path_to_report_ghgprices = N
     return(mag)
   }
 
-  # if paths are provided, read bioenergy demand and ghg prices from REMIND reports 
+  # if paths are provided, read bioenergy demand, ghg prices, and biochar production from REMIND reports
   if (!is.na(path_to_report_bioenergy)) {
     message("Reading bioenergy_demand from ", path_to_report_bioenergy)
     mag <- .readAndPrepare(path_to_report_bioenergy)
     .bioenergyDemand(mag)
-  
+
     if (path_to_report_ghgprices %in% path_to_report_bioenergy) {
       message("Reading ghg prices from the same file (", path_to_report_bioenergy, ")")
       .emissionPrices(mag)
     }
+
+    if (path_to_report_biochar %in% path_to_report_bioenergy) {
+      message("Reading biochar production from the same file (", path_to_report_bioenergy, ")")
+      .biocharProduction(mag)
+    }
   }
-  
+
   # read ghg prices from another REMIND report because path_to_report_bioenergy
   # is different from path_to_report_ghgprices (including NA)
-  if (!is.na(path_to_report_ghgprices) && ! path_to_report_ghgprices %in% path_to_report_bioenergy) {
+  if (!is.na(path_to_report_ghgprices) && !path_to_report_ghgprices %in% path_to_report_bioenergy) {
     message("Reading ghg prices from ", path_to_report_ghgprices)
     ghgmag <- .readAndPrepare(path_to_report_ghgprices)
     .emissionPrices(ghgmag)
+  }
+
+  # read biochar production from another REMIND report because path_to_report_bioenergy
+  # is different from path_to_report_biochar (including NA)
+  if (!is.na(path_to_report_biochar) && !path_to_report_biochar %in% path_to_report_bioenergy) {
+    message("Reading biochar production from ", path_to_report_biochar)
+    bcmag <- .readAndPrepare(path_to_report_biochar)
+    .biocharProduction(bcmag)
   }
 }
 

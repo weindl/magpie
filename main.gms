@@ -241,8 +241,9 @@ $setglobal maccs  on_aug22
 $setglobal peatland  v2
 $setglobal som  cellpool_jan23
 
-$setglobal bioenergy  1st2ndgen_priced_feb24
+$setglobal bioenergy  1st2ndgen_biomass_dec24
 $setglobal material  exo_flexreg_apr16
+$setglobal biochar  dec24
 $setglobal livestock  fbask_jan16
 
 $setglobal disagg_lvst  foragebased_jul23

@@ -13,7 +13,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 ### added
--
+- **60_bioenergy** automatic sets for bioenergy scenarios for new `1st2ndgen_biomass_dec24` realization
+- **63_biochar** automatic sets for biochar scenarios
+- **scripts** added automatic set writer for new bioenergy realization (`1st2ndgen_biomass_dec24`) to `start_functions`
+- **scripts** added automatic set writer for biochar module to `start_functions`
 
 ### removed
 -

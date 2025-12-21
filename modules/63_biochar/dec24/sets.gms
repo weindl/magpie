@@ -1,4 +1,4 @@
-*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
@@ -12,15 +12,8 @@
 
 sets
 
-  scen2nd60 second generation bioenergy scenarios
-    / PIK_GDP,
-      PIK_H2C,
-      PIK_HBL,
-      PIK_HOS,
-      PIK_LIN,
-      PIK_NPI,
-      PIK_OPT,
-      R21M42-SDP-NDC,
+  scenBC63 biochar scenarios
+    / R21M42-SDP-NDC,
       R21M42-SDP-NPi,
       R21M42-SDP-PkBudg1000,
       R21M42-SDP-PkBudg1100,
@@ -78,29 +71,7 @@ sets
       R34M410-SSP3-rollBack,
       R34M410-SSP5-NPi2025,
       R34M410-SSP5-PkBudg1000,
-      R34M410-SSP5-PkBudg650,
-      SSPDB-SSP1-19-IMAGE,
-      SSPDB-SSP1-19-REMIND-MAGPIE,
-      SSPDB-SSP1-26-IMAGE,
-      SSPDB-SSP1-26-REMIND-MAGPIE,
-      SSPDB-SSP1-34-IMAGE,
-      SSPDB-SSP1-34-REMIND-MAGPIE,
-      SSPDB-SSP1-45-IMAGE,
-      SSPDB-SSP1-45-REMIND-MAGPIE,
-      SSPDB-SSP1-Ref-IMAGE,
-      SSPDB-SSP1-Ref-REMIND-MAGPIE,
-      SSPDB-SSP2-19-REMIND-MAGPIE,
-      SSPDB-SSP2-26-REMIND-MAGPIE,
-      SSPDB-SSP2-34-REMIND-MAGPIE,
-      SSPDB-SSP2-45-REMIND-MAGPIE,
-      SSPDB-SSP2-60-REMIND-MAGPIE,
-      SSPDB-SSP2-Ref-REMIND-MAGPIE,
-      SSPDB-SSP5-19-REMIND-MAGPIE,
-      SSPDB-SSP5-26-REMIND-MAGPIE,
-      SSPDB-SSP5-34-REMIND-MAGPIE,
-      SSPDB-SSP5-45-REMIND-MAGPIE,
-      SSPDB-SSP5-60-REMIND-MAGPIE,
-      SSPDB-SSP5-Ref-REMIND-MAGPIE /
+      R34M410-SSP5-PkBudg650 /
 
 ;
 *######################### R SECTION END (SETS) ################################
@@ -108,16 +79,45 @@ sets
 
 sets
 
-   kbe60(kall) bioenergy activities
-        / betr, begr /
+   feedstock63 Available types of feedstock to produce biochar
+       / residues,
+         dedicated /
 
-   k1st60(kall) 1st generation bioenergy carriers
-        / oils, ethanol /
+   type63 Types of biochar characterisation and efficincy of biomass-to-biochar conversion
+       / dm_yield,
+         en_yield,
+         c_yield /
 
-   scen1st60 first generation bioenergy scenarios
-       / const2020, const2030, phaseout2020 /
+   biopyr_all63 Available pyrolysis plant set-ups including different co-products
+       / kontiki,
+         biopyrchp,
+         biopyrelec,
+         biopyrhe,
+         biopyrliq,
+         biopyronly,
+         biopyronly400,
+         biopyronly650,
+         biopyronly800,
+         biopyrfast500 /
 
-   scen2ndres60 residues for second generation bioenergy scenarios
-       / ssp1, ssp2, ssp3, ssp4, ssp5, sdp, off /
+   biopyr63(biopyr_all63) Selected pyrolysis plant set-ups including different co-products
+       / kontiki,
+         biopyrchp,
+         biopyrelec,
+         biopyrhe,
+         biopyrliq,
+         biopyronly /
 
+   bc_sys63 Biochar production systems
+      / SP-400, SP-500, SP-650, SP-800, FP-500, P-Woolf, P-KonTiki /
+
+   sys_pyr(bc_sys63, biopyr_all63) Mapping of pyrolysis plant set-ups to biochar systems
+       / SP-400        . (biopyronly400)
+         SP-500        . (biopyrchp, biopyrelec, biopyrhe, biopyronly)
+         SP-650        . (biopyronly650)
+         SP-800        . (biopyronly800)
+         FP-500        . (biopyrfast500)
+         P-Woolf       . (biopyrliq)
+         P-KonTiki     . (kontiki)
+       /
 ;

@@ -62,11 +62,68 @@ q63_biochar_simulation_mode(i2,feedstock63) ..
 *' energy units), converted to tonnes using the energy density, and the 100-year
 *' stability factor `s63_BC100` (i.e., the recalcitrant fraction).
 
-
 q63_c_sequestration_biochar(i2) ..
       v63_c_stable_biochar(i2) =e=
           s63_BC100 * sum((bc_sys63,feedstock63),
           f63_biochar_attributes("c",bc_sys63)
           * v63_biochar_prod(i2,bc_sys63,feedstock63)
           / f63_biochar_attributes("ge",bc_sys63))
+          ;
+
+
+*' Mass balance ensures that applied biochar is less or equal to produced biochar.
+q63_biochar_application_land(i2) ..
+      sum(cell(i2,j2), sum(land, v63_biochar_app_rate_area(j2,land) * vm_land(j2,land))) =l=
+          sum((bc_sys63,feedstock63),
+          f63_biochar_attributes("dm",bc_sys63)
+          * v63_biochar_prod(i,bc_sys63,feedstock63)
+          / f63_biochar_attributes("ge",bc_sys63))
+          ;
+
+
+*' Annual biochar application per area is capped by a maximum rate.
+q63_biochar_app_rate_limit(j2,land) ..
+      v63_biochar_app_rate_area(j2,land) =l=
+          i63_max_app_rate_area(j2,land)
+          ;
+
+
+*' Cumulate biochar application per area is capped by a maximum biochar soil stock.
+q63_biochar_stock_limit(j2,land) ..
+      v63_biochar_stock_area(j2,land) =l=
+          i63_max_biochar_stock_area(j2,land)
+          ;
+
+
+*' Biochar soil stock depends on the build-up from biochar application of
+*' previous time steps and the annual biochar application rate over the lenght
+*' of the current time step.
+q63_biochar_stock_area(j2,land) ..
+      v63_biochar_stock_area(j2,land) =e=
+          pc63_biochar_stock_area(j2,land)
+          + v63_biochar_app_rate_area(j2,land) * m_timestep_length
+          ;
+
+
+*' Effective biochar soil stock that determines agronomic benefits of biochar
+*' application is derived as weighted aggregation over the time step lenght,
+*' using the scalar `s63_BC_app_timestep_weight` as temporal aggregation weight.
+q63_biochar_stock_effective(j2) ..
+      v63_biochar_stock_effective(j2) =e=
+          pc63_biochar_stock_area(j2,"cropland")
+          + s63_BC_app_timestep_weight * m_timestep_length
+          * v63_biochar_app_rate_area(j2,"cropland")
+          ;
+
+
+*' The yield response to the effective biochar soil stock is represented by a
+*' Michaelis–Menten (rectangular hyperbolic) saturation function:
+*' `y_response = 1 + y_max * BC_stock_eff / (BC_stock_eff + y_k)`,
+*' where `y_max` is the maximum achievable relative yield gain (`i63_yield_response_max`)
+*' and `y_k` is the biochar stock level at which half the maximum gain is realized
+*' (`i63_yield_response_k`).
+q63_yld_response_biochar(j2) ..
+      (vm_yld_response_biochar(j2) - 1)
+      * (v63_biochar_stock_effective(j2) + i63_yield_response_k(j2)) =e=
+          i63_yield_response_max(j2) * v63_biochar_stock_effective(j2)
           ;

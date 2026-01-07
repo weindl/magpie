@@ -13,7 +13,8 @@
 
 q14_yield_crop(j2,kcr,w) ..
  vm_yld(j2,kcr,w) =e= sum(ct,i14_yields_calib(ct,j2,kcr,w)) *
-                        sum((cell(i2,j2), supreg(h2,i2)), vm_tau(h2,"crop") / fm_tau1995(h2));
+                        sum((cell(i2,j2), supreg(h2,i2)), vm_tau(h2,"crop") / fm_tau1995(h2))
+                        * vm_yld_response_biochar(j2);
 
 *' For the current time step of the optimization, cellular yields of irrigated
 *' and rainfed crops are calculated by multiplying calibrated input yields from

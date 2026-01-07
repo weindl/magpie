@@ -5,6 +5,12 @@
 *** |  MAgPIE License Exception, version 1.0 (see LICENSE file).
 *** |  Contact: magpie@pik-potsdam.de
 
+* Biochar soil stocks per area are transferred to the next timestep as
+* boundary stocks. All biochar present at the end of the current timestep
+* is assumed to decay over the elapsed period between timesteps. The
+* resulting post-decay stock is used as the initial stock in the next
+* timestep.
+pc63_biochar_stock_area(j,land) = v63_biochar_stock_area.l(j,land) * p63_biochar_stock_decay_step(t);
 
 
 *#################### R SECTION START (OUTPUT DEFINITIONS) #####################

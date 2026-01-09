@@ -76,7 +76,7 @@ q63_biochar_application_land(i2) ..
       sum(cell(i2,j2), sum(land, v63_biochar_app_rate_area(j2,land) * vm_land(j2,land))) =l=
           sum((bc_sys63,feedstock63),
           f63_biochar_attributes("dm",bc_sys63)
-          * v63_biochar_prod(i,bc_sys63,feedstock63)
+          * v63_biochar_prod(i2,bc_sys63,feedstock63)
           / f63_biochar_attributes("ge",bc_sys63))
           ;
 
@@ -110,9 +110,9 @@ q63_biochar_stock_area(j2,land) ..
 *' using the scalar `s63_BC_app_timestep_weight` as temporal aggregation weight.
 q63_biochar_stock_effective(j2) ..
       v63_biochar_stock_effective(j2) =e=
-          pc63_biochar_stock_area(j2,"cropland")
+          pc63_biochar_stock_area(j2,"crop")
           + s63_BC_app_timestep_weight * m_timestep_length
-          * v63_biochar_app_rate_area(j2,"cropland")
+          * v63_biochar_app_rate_area(j2,"crop")
           ;
 
 

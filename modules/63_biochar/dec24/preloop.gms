@@ -51,9 +51,6 @@ $endif
 pc63_biochar_stock_area(j,land) = 0;
 
 
-* Calculate decay of biochar soil stocks over time, depending on the time-step m_timestep_length
-p63_biochar_stock_decay_step(t_all) = s63_biochar_stock_decay_yr**m_timestep_length(t_all);
-
 
 
 ****** Preliminary parametrization of inputs:
@@ -63,11 +60,11 @@ p63_biochar_stock_decay_step(t_all) = s63_biochar_stock_decay_yr**m_timestep_len
 * Regulatory schemes can be far lower (example in EBC-related documentation:
 * 1 t per ha per yr and cumulative limits in a Swiss annex).
 i63_max_app_rate_area(j,land) = 0;
-i63_max_app_rate_area(j,"cropland") = 5;
+i63_max_app_rate_area(j,"crop") = 5;
 
 * 50 tDM per ha on cropland allows multi-step build-up but prevents 100+ everywhere.
 i63_max_biochar_stock_area(j,land) = 0;
-i63_max_biochar_stock_area(j,"cropland") = 50;
+i63_max_biochar_stock_area(j,"crop") = 50;
 
 * Reviews/meta-analyses report high variability and often average yield increases
 * in the order of 10% (sometimes more in low-fertility acidic soils, smaller or

@@ -48,7 +48,7 @@ q63_feedstock_availability_residues(i2) ..
 
 q63_biochar_simulation_mode(i2,feedstock63) ..
       vm_biochar_feedstock_mag(i2,feedstock63) =e=
-          s63_simulation_mode_mag*v63_biochar_feedstock_mag(i2,feedstock63)
+          s63_simulation_mode_mag * v63_biochar_feedstock_mag(i2,feedstock63)
           ;
 
 

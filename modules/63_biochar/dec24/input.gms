@@ -37,7 +37,11 @@ sets
 scalars
   s63_BC100  Fraction of biochar carbon remaining in the soil after 100 years   (1)   / 0.8 /
   s63_biochar_stock_decay_yr  Annual persistence factor of yield-relevant biochar stock   (1)   / 0.9995 /
-  s63_BC_app_timestep_weight  Share of biochar applied over current time step lenght contributing to same-period yield response   (1)   / 0.5 /
+  s63_BC_app_timestep_weight  Share of biochar applied over current time step length contributing to same-period yield response   (1)   / 0.5 /
+  s63_bc_max_app_rate_crop  Maximum annual biochar application rate on cropland   (tDM/ha/yr) / 5 /
+  s63_bc_max_stock_crop  Maximum cumulative biochar soil stock on cropland   (tDM/ha) / 50 /
+  s63_bc_yield_response_max  Maximum relative yield response at saturation   (1) / 0.10 /
+  s63_bc_yield_response_k  Half-saturation stock for yield response   (tDM/ha) / 10 /
   s63_simulation_mode_mag  Biochar simulation mode (1 for "mag" and 0 for "rem-mag" simulation mode) / 0 /
   s63_biochar_min  Minimum biochar demand assumed in each region (mio. GJ per yr) / 0 /
 ;

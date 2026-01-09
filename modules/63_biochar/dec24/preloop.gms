@@ -51,25 +51,14 @@ $endif
 pc63_biochar_stock_area(j,land) = 0;
 
 
-
-
-****** Preliminary parametrization of inputs:
-* Practical field guidance often mentions 5–50 t per ha as overall application
-* magnitudes (often one-off or split), with logistics often limiting real-world
-* annual rates.
-* Regulatory schemes can be far lower (example in EBC-related documentation:
-* 1 t per ha per yr and cumulative limits in a Swiss annex).
+* Set biochar application limits according to configuration:
 i63_max_app_rate_area(j,land) = 0;
-i63_max_app_rate_area(j,"crop") = 5;
+i63_max_app_rate_area(j,"crop") = s63_bc_max_app_rate_crop;
 
-* 50 tDM per ha on cropland allows multi-step build-up but prevents 100+ everywhere.
 i63_max_biochar_stock_area(j,land) = 0;
-i63_max_biochar_stock_area(j,"crop") = 50;
+i63_max_biochar_stock_area(j,"crop") = s63_bc_max_stock_crop;
 
-* Reviews/meta-analyses report high variability and often average yield increases
-* in the order of 10% (sometimes more in low-fertility acidic soils, smaller or
-* negligible in temperate/high-input settings).
-i63_yield_response_max(j) = 0.1;
-* As conservative approach, we assume that 67% of the maximum benefit is achived
-* at 20 t per ha.
-i63_yield_response_k(j) = 10;
+
+* Set agronomic yield response parameters according to configuration:
+i63_yield_response_max(j) = s63_bc_yield_response_max;
+i63_yield_response_k(j) = s63_bc_yield_response_k;

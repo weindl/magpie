@@ -49,6 +49,7 @@ scalars
 $setglobal c63_biochar_simulation_mode  rem-mag
 $setglobal c63_biochar_prod  none
 $setglobal c63_biochar_prod_noselect  none
+$setglobal c63_BCcost_scen  central
 
 $if "%c63_biochar_prod%" == "coupling" table f63_biochar_prod_coupling(t_all,i,biopyr_all63) Annual biochar production (regional) (mio. GJ per yr)
 $if "%c63_biochar_prod%" == "coupling" $ondelim
@@ -71,5 +72,11 @@ $offdelim
 table f63_biochar_attributes(attributes,bc_sys63) Conversion factors where X is Mt C or Mt DM or PJ lcv (X per Mt DM)
 $ondelim
 $include "./modules/63_biochar/input/f63_biochar_attributes.cs3"
+$offdelim
+;
+
+table f63_biochar_gate_price(t_all,bc_sys63,scenCost63) Conversion-only biochar gate prices (feedstock excluded) (USD17MER per GJ)
+$ondelim
+$include "./modules/63_biochar/input/f63_biochar_gate_price.cs3"
 $offdelim
 ;

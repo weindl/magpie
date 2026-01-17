@@ -62,3 +62,16 @@ i63_max_biochar_stock_area(j,"crop") = s63_bc_max_stock_crop;
 * Set agronomic yield response parameters according to configuration:
 i63_yield_response_max(j) = s63_bc_yield_response_max;
 i63_yield_response_k(j) = s63_bc_yield_response_k;
+
+
+* Set biochar-related prices and costs according to configuration:
+i63_cost_transport(i) = s63_bc_cost_transport;
+i63_cost_application(i,land) = s63_bc_cost_application;
+
+loop(t,
+ if(m_year(t) <= sm_fix_SSP2,
+  i63_price_biochar_gate(t,i,bc_sys63) = f63_biochar_gate_price(t_all,bc_sys63,"central");
+ else
+  i63_price_biochar_gate(t,i,bc_sys63) = f63_biochar_gate_price(t_all,bc_sys63,"%c63_BCcost_scen%");
+ );
+);

@@ -35,6 +35,7 @@
                    + sum(cell(i2,j2), vm_cost_scm(j2))
                    + vm_bioenergy_utility(i2)
                    + vm_processing_substitution_cost(i2)
+                   + vm_cost_biochar(i2)
                    + vm_costs_additional_mon(i2)
                    + sum(cell(i2,j2), vm_cost_land_transition(j2))
                    + sum(cell(i2,j2), vm_peatland_cost(j2))

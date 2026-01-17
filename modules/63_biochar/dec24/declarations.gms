@@ -17,12 +17,19 @@ parameters
  pc63_biochar_stock_area(j,land)                  Cumulative biochar soil stock per area of the previous time step (tDM per ha)
  i63_yield_response_max(j)                        Maximum relative yield increase from biochar at saturation (1)
  i63_yield_response_k(j)                          Half-saturation biochar soil stock for yield response (tDM per ha)
+
+ i63_price_biochar_gate(t_all,i,bc_sys63)         Biochar gate price (levelized unit cost excluding feedstock cost) (USD17MER per GJ)
+ i63_cost_transport(i)                            Biochar transport and logistics cost (USD17MER per tDM)
+ i63_cost_application(i,land)                     Biochar application cost for different land types (USD17MER per tDM)
 ;
 
 positive variables
  v63_biochar_prod(i,bc_sys63,feedstock63)         Regional biochar production per biochar production system and feedstock (mio. GJ per yr)
+ v63_biochar_notapplied(i)                        Regional biochar balance term for produced and not applied biochar (mio. GJ per yr)
 
  v63_biochar_app_rate_area(j,land)                Annual biochar application rate per area on cluster level (tDM per ha per yr)
+
+ vm_cost_biochar(i)                               Biochar supply chain costs per region (mio. USD17MER per yr)
 ;
 
 variables
@@ -48,6 +55,8 @@ equations
  q63_biochar_stock_area(j,land)                   Biochar soil stock per area at cluster level (tDM per ha)
  q63_biochar_stock_effective(j)                   Effective biochar soil stock for agronomic benefits at cluster level (tDM per ha)
  q63_yld_response_biochar(j)                      Yield response determined from effective biochar stock (1)
+
+ q63_cost_biochar(i)                              Regional biochar cost accounting
 ;
 
 *#################### R SECTION START (OUTPUT DECLARATIONS) ####################

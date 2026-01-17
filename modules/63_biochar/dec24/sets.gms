@@ -120,4 +120,9 @@ sets
          P-Woolf       . (biopyrliq)
          P-KonTiki     . (kontiki)
        /
+
+   scenCost63 Variants to capture uncertainty range of biochar cost assumptions
+       / low,
+         central,
+         high /
 ;

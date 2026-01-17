@@ -76,7 +76,7 @@ q63_biochar_application_land(i2) ..
       sum(cell(i2,j2), sum(land, v63_biochar_app_rate_area(j2,land) * vm_land(j2,land)))
       + v63_biochar_notapplied(i2) =e=
           sum((bc_sys63,feedstock63),
-          * v63_biochar_prod(i2,bc_sys63,feedstock63)
+          v63_biochar_prod(i2,bc_sys63,feedstock63)
           / f63_biochar_attributes("ge",bc_sys63))
           ;
 

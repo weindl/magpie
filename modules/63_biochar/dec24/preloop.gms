@@ -70,8 +70,8 @@ i63_cost_application(i,land) = s63_bc_cost_application;
 
 loop(t,
  if(m_year(t) <= sm_fix_SSP2,
-  i63_price_biochar_gate(t,i,bc_sys63) = f63_biochar_gate_price(t_all,bc_sys63,"central");
+  i63_price_biochar_gate(t,i,bc_sys63) = f63_biochar_gate_price(t,bc_sys63,"central");
  else
-  i63_price_biochar_gate(t,i,bc_sys63) = f63_biochar_gate_price(t_all,bc_sys63,"%c63_BCcost_scen%");
+  i63_price_biochar_gate(t,i,bc_sys63) = f63_biochar_gate_price(t,bc_sys63,"%c63_BCcost_scen%");
  );
 );

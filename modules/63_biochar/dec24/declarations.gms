@@ -62,7 +62,9 @@ equations
 *#################### R SECTION START (OUTPUT DECLARATIONS) ####################
 parameters
  ov63_biochar_prod(t,i,bc_sys63,feedstock63,type)        Regional biochar production per biochar production system and feedstock (mio. GJ per yr)
+ ov63_biochar_notapplied(t,i,type)                       Regional biochar balance term for produced and not applied biochar (mio. GJ per yr)
  ov63_biochar_app_rate_area(t,j,land,type)               Annual biochar application rate per area on cluster level (tDM per ha per yr)
+ ov_cost_biochar(t,i,type)                               Biochar supply chain costs per region (mio. USD17MER per yr)
  ov63_c_stable_biochar(t,i,type)                         Annual stable C in soil from biochar after 100 years derived from recalcitrant fraction (mio. tC per yr)
  ov63_biochar_feedstock_mag(t,i,feedstock63,type)        Regional biomass feedstock demand for biochar per feedstock type (mio. GJ per yr)
  ov_biochar_feedstock_mag(t,i,feedstock63,type)          Additional feedstock demand for biochar per feedstock type (mio. GJ per yr)
@@ -80,5 +82,6 @@ parameters
  oq63_biochar_stock_area(t,j,land,type)                  Biochar soil stock per area at cluster level (tDM per ha)
  oq63_biochar_stock_effective(t,j,type)                  Effective biochar soil stock for agronomic benefits at cluster level (tDM per ha)
  oq63_yld_response_biochar(t,j,type)                     Yield response determined from effective biochar stock (1)
+ oq63_cost_biochar(t,i,type)                             Regional biochar cost accounting
 ;
 *##################### R SECTION END (OUTPUT DECLARATIONS) #####################

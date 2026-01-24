@@ -43,12 +43,14 @@ scalars
   s63_bc_yield_response_max  Maximum relative yield response at saturation   (1)   / 0.1 /
   s63_bc_yield_response_k  Half-saturation stock for yield response   (tDM per ha)   / 10 /
   s63_simulation_mode_mag  Biochar simulation mode   (1 for "mag" and 0 for "rem-mag" simulation mode)   / 0 /
+  s63_biochar_prod_endo  Biochar production decision mode   (0 for "exo" and 1 for "endo" decision mode)   / 0 /
   s63_bc_cost_transport  Biochar transport and logistics cost   (USD17MER per tDM)   / 80 /
   s63_bc_cost_application  Biochar application cost   (USD17MER per tDM)   / 10 /
   s63_biochar_min  Minimum biochar demand assumed in each region   (mio. GJ per yr)   / 0 /
 ;
 
 $setglobal c63_biochar_simulation_mode  rem-mag
+$setglobal c63_biochar_prod_mode  exo
 $setglobal c63_biochar_prod  none
 $setglobal c63_biochar_prod_noselect  none
 $setglobal c63_BCcost_scen  central

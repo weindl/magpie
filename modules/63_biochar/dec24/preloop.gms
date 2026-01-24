@@ -49,13 +49,10 @@ $endif
 * Set decision mode flag, reflecting if biochar production is determined
 * exogenously or endogenously (the endogenous mode can only be used in the
 * MAgPIE-standalone mode):
-$ifthen "%c63_biochar_prod_mode%" == "exo"
-  s63_biochar_prod_endo = 0;
-$elseif "%c63_biochar_prod_mode%" == "endo"
+s63_biochar_prod_endo = 0;
+$ifthen "%c63_biochar_prod_mode%" == "endo" AND "%c63_biochar_simulation_mode%" == "mag"
   s63_biochar_prod_endo = 1;
 $endif
-$ifthen "%c63_biochar_simulation_mode%" == "rem-mag"
-  s63_biochar_prod_endo = 0;
 
 
 * Biochar soil stock per area is intitialized, assuming that no biochar was applied

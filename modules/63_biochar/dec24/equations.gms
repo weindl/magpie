@@ -26,7 +26,7 @@ q63_biochar_feedstock_conversion(i2,feedstock63) ..
 *' constraint is not active and MAgPIE can endogenously optimize biochar production
 *' based on costs and benefits.
 
-q63_biochar_production(i2,bc_sys63)$(s63_biochar_prod_endo == 0) ..
+q63_biochar_production(i2,bc_sys63)$(s63_biochar_prod_endo = 0) ..
       sum(feedstock63, v63_biochar_prod(i2,bc_sys63,feedstock63)) =e=
           sum((ct, sys_pyr(bc_sys63, biopyr63)), i63_biochar_prod(ct,i2,biopyr63))
           ;

@@ -80,6 +80,9 @@ i63_yield_response_k(j) = s63_bc_yield_response_k;
 i63_cost_transport(i) = s63_bc_cost_transport;
 i63_cost_application(i,land) = s63_bc_cost_application;
 
+$ifthen "%c63_BCcost_scen%" == "none"
+  i63_price_biochar_gate(t,i,bc_sys63) = 0;
+$else
 loop(t,
  if(m_year(t) <= sm_fix_SSP2,
   i63_price_biochar_gate(t,i,bc_sys63) = f63_biochar_gate_price(t,bc_sys63,"central");
@@ -87,3 +90,4 @@ loop(t,
   i63_price_biochar_gate(t,i,bc_sys63) = f63_biochar_gate_price(t,bc_sys63,"%c63_BCcost_scen%");
  );
 );
+$endif

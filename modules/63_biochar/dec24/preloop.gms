@@ -21,6 +21,10 @@ $ifthen "%c63_biochar_prod%" == "coupling"
   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod_coupling(t,i,biopyr_all63);
 $elseif "%c63_biochar_prod%" == "none"
   i63_biochar_prod(t,i,biopyr_all63) = 0;
+** Harmonize until predefined time step if not applied in coupled set-up
+loop(t$(m_year(t) <= sm_fix_SSP2),
+  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"R2M41-SSP2-NPi");
+);
 $elseif "%c63_biochar_prod_noselect%" == "none"
   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%") * p63_region_BC_shr(t,i);
 ** Harmonize until predefined time step if not applied in coupled set-up

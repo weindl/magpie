@@ -6,6 +6,10 @@
 *** |  Contact: magpie@pik-potsdam.de
 
 
+scalars
+  s63_fixed_year                                  Flag characterizing the current year as part of the harmonization period (1)
+;
+
 parameters
  i63_biochar_prod(t,i,biopyr_all63)               Regional biochar production per biochar production systems (mio. GJ per yr)
  p63_region_BC_shr(t_all,i)                       Biochar demand share of the region derived from country selection (1)

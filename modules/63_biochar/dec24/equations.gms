@@ -20,13 +20,13 @@ q63_biochar_feedstock_conversion(i2,feedstock63) ..
           ;
 
 *' If exogenous biochar production mode is selected (`s63_biochar_prod_endo` is
-*' set to 0) the regional level of biochar production is exogenously specified
-*' for the different biochar production systems, but does not distinguish between
-*' the types of biomass feedstock. If `s63_biochar_prod_endo` is set to 1, the
-*' constraint is not active and MAgPIE can endogenously optimize biochar production
-*' based on costs and benefits.
+*' set to 0) the regional level of biochar production is exogenously specified for
+*' the different biochar production systems, but does not distinguish between the
+*' types of biomass feedstock. If `s63_biochar_prod_endo` is set to 1, the constraint
+*' is not active for years after `sm_fix_SSP2` and MAgPIE can endogenously optimize
+*' biochar production based on costs and benefits.
 
-q63_biochar_production(i2,bc_sys63)$(s63_biochar_prod_endo = 0) ..
+q63_biochar_production(i2,bc_sys63)$((s63_biochar_prod_endo = 0) or (s63_fixed_year = 1)) ..
       sum(feedstock63, v63_biochar_prod(i2,bc_sys63,feedstock63)) =e=
           sum((ct, sys_pyr(bc_sys63, biopyr63)), i63_biochar_prod(ct,i2,biopyr63))
           ;

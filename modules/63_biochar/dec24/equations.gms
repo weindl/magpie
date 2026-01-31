@@ -31,6 +31,12 @@ q63_biochar_production(i2,bc_sys63)$((s63_biochar_prod_endo = 0) or (s63_fixed_y
           sum((ct, sys_pyr(bc_sys63, biopyr63)), i63_biochar_prod(ct,i2,biopyr63))
           ;
 
+*' Total regional biochar production equals sum across biochar production systems and feedstocks.
+q63_biochar_production_total(i2) ..
+      v63_biochar_prod_total(i2) =e=
+          sum((bc_sys63, feedstock63), v63_biochar_prod(i2,bc_sys63,feedstock63))
+          ;
+
 *' Using residues as feedstock to produce biochar is limited by the availability
 *' of residues, which is exogenously provided and calculated based on the
 *' assumption that roughly 33% of agricultural residues recycled on cropland can

@@ -5,5 +5,11 @@
 *** |  MAgPIE License Exception, version 1.0 (see LICENSE file).
 *** |  Contact: magpie@pik-potsdam.de
 
+
+* Calculate decay of biochar soil stocks over time, depending on the time-step m_timestep_length
+p63_biochar_stock_decay_step(t) = s63_biochar_stock_decay_yr**m_timestep_length;
+
+
+
 * Add minimal biochar production in case of zero demand or very small demand to avoid zero prices
 i63_biochar_prod(t,i,biopyr_all63)$(i63_biochar_prod(t,i,biopyr_all63) < s63_biochar_min) = s63_biochar_min;

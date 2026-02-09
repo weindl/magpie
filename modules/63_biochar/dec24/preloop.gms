@@ -31,9 +31,6 @@ elseif s63_bcScen_stylized_functional_form = 2,
 $ifthen "%c63_biochar_prod%" == "coupling"
   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod_coupling(t,i,biopyr_all63);
 
-$elseif "%c63_biochar_prod%" == "emulator"
-  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod_emulator(t,biopyr_all63)/card(i);
-
 $elseif "%c63_biochar_prod%" == "none"
   i63_biochar_prod(t,i,biopyr_all63) = 0;
 
@@ -51,9 +48,9 @@ $else
                          + f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod_noselect%") * (1-p63_region_BC_shr(t,i));
  $endif
  
-  ** Harmonize until predefined time step if not applied in coupled or emulator set-up
-  loop(t$(m_year(t) <= sm_fix_SSP2),
-    i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"R2M41-SSP2-NPi");
+ ** Harmonize until predefined time step if not applied in coupled or emulator set-up
+ loop(t$(m_year(t) <= sm_fix_SSP2),
+   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"R2M41-SSP2-NPi");
 );
 $endif
 
@@ -65,3 +62,34 @@ $ifthen "%c63_biochar_simulation_mode%" == "mag"
 $elseif "%c63_biochar_simulation_mode%" == "rem-mag"
   s63_simulation_mode_mag = 0;
 $endif
+
+
+* Biochar soil stock per area is intitialized, assuming that no biochar was applied
+* before the start of the simulation period.
+pc63_biochar_stock_area(j,land) = 0;
+
+
+* Set biochar application limits according to configuration:
+i63_max_app_rate_area(j,land) = 0;
+i63_max_app_rate_area(j,"crop") = s63_bc_max_app_rate_crop;
+
+i63_max_biochar_stock_area(j,land) = 0;
+i63_max_biochar_stock_area(j,"crop") = s63_bc_max_stock_crop;
+
+
+* Set agronomic yield response parameters according to configuration:
+i63_yield_response_max(j) = s63_bc_yield_response_max;
+i63_yield_response_k(j) = s63_bc_yield_response_k;
+
+
+* Set biochar-related prices and costs according to configuration:
+i63_cost_transport(i) = s63_bc_cost_transport;
+i63_cost_application(i,land) = s63_bc_cost_application;
+
+loop(t,
+ if(m_year(t) <= sm_fix_SSP2,
+  i63_price_biochar_gate(t,i,bc_sys63) = f63_biochar_gate_price(t,bc_sys63,"central");
+ else
+  i63_price_biochar_gate(t,i,bc_sys63) = f63_biochar_gate_price(t,bc_sys63,"%c63_BCcost_scen%");
+ );
+);

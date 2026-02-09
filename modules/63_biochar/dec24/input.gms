@@ -1,4 +1,4 @@
-*** |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
@@ -36,8 +36,16 @@ sets
 
 scalars
   s63_BC100  Fraction of biochar carbon remaining in the soil after 100 years   (1)   / 0.8 /
-  s63_simulation_mode_mag  Biochar simulation mode (1 for "mag" and 0 for "rem-mag" simulation mode) / 0 /
-  s63_biochar_min  Minimum biochar demand assumed in each region (mio. GJ per yr) / 0 /
+  s63_biochar_stock_decay_yr  Annual persistence factor of yield-relevant biochar stock   (1)   / 0.9995 /
+  s63_BC_app_timestep_weight  Share of biochar applied over current time step length contributing to same-period yield response   (1)   / 0.5 /
+  s63_bc_max_app_rate_crop  Maximum annual biochar application rate on cropland   (tDM per ha per yr)   / 5 /
+  s63_bc_max_stock_crop  Maximum cumulative biochar soil stock on cropland   (tDM per ha)   / 50 /
+  s63_bc_yield_response_max  Maximum relative yield response at saturation   (1)   / 0.1 /
+  s63_bc_yield_response_k  Half-saturation stock for yield response   (tDM per ha)   / 10 /
+  s63_simulation_mode_mag  Biochar simulation mode   (1 for "mag" and 0 for "rem-mag" simulation mode)   / 0 /
+  s63_bc_cost_transport  Biochar transport and logistics cost   (USD17MER per tDM)   / 80 /
+  s63_bc_cost_application  Biochar application cost   (USD17MER per tDM)   / 10 /
+  s63_biochar_min  Minimum biochar demand assumed in each region   (mio. GJ per yr)   / 0 /
   s63_bcScen_stylized_startyear  Biochar stylized scenario start year       / 2025 /
   s63_bcScen_stylized_targetyear Biochar stylized scenario target year      / 2050 /
   s63_bcScen_stylized_target Biochar production target per ha initial cropland (GJ per ha per yr) / 0 /
@@ -47,20 +55,13 @@ scalars
 $setglobal c63_biochar_simulation_mode  rem-mag
 $setglobal c63_biochar_prod  none
 $setglobal c63_biochar_prod_noselect  none
+$setglobal c63_BCcost_scen  central
 
 $if "%c63_biochar_prod%" == "coupling" table f63_biochar_prod_coupling(t_all,i,biopyr_all63) Annual biochar production (regional) (mio. GJ per yr)
 $if "%c63_biochar_prod%" == "coupling" $ondelim
 $if "%c63_biochar_prod%" == "coupling" $include "./modules/63_biochar/input/f63_biochar_prod_coupling.cs3"
 $if "%c63_biochar_prod%" == "coupling" $offdelim
 $if "%c63_biochar_prod%" == "coupling" ;
-
-$if "%c63_biochar_prod%" == "emulator" parameter f63_biochar_prod_emulator(t_all,biopyr_all63) Annual biochar production (global) (mio. GJ per yr)
-$if "%c63_biochar_prod%" == "emulator" /
-$if "%c63_biochar_prod%" == "emulator" $ondelim
-$if "%c63_biochar_prod%" == "emulator" $include "./modules/63_biochar/input/f63_biochar_prod_emulator.cs3"
-$if "%c63_biochar_prod%" == "emulator" $offdelim
-$if "%c63_biochar_prod%" == "emulator" /
-$if "%c63_biochar_prod%" == "emulator" ;
 
 table f63_biochar_prod(t_all,i,biopyr_all63,scenBC63) Annual biochar production on energy basis (regional) (mio. GJ per yr)
 $ondelim
@@ -77,5 +78,11 @@ $offdelim
 table f63_biochar_attributes(attributes,bc_sys63) Conversion factors where X is Mt C or Mt DM or PJ lcv (X per Mt DM)
 $ondelim
 $include "./modules/63_biochar/input/f63_biochar_attributes.cs3"
+$offdelim
+;
+
+table f63_biochar_gate_price(t_all,bc_sys63,scenCost63) Conversion-only biochar gate prices (feedstock excluded) (USD17MER per GJ)
+$ondelim
+$include "./modules/63_biochar/input/f63_biochar_gate_price.cs3"
 $offdelim
 ;

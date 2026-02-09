@@ -100,6 +100,17 @@
 
   gms::writeSets(sets , "modules/60_bioenergy/1stgen_priced_dec18/sets.gms")
   gms::writeSets(sets , "modules/60_bioenergy/1st2ndgen_priced_feb24/sets.gms")
+  gms::writeSets(sets , "modules/60_bioenergy/1st2ndgen_biomass_dec24/sets.gms")
+
+  ### 63_biochar
+  scenBC63 <- magclass::read.magpie("modules/63_biochar/input/f63_biochar_prod.cs3")
+  scenBC63 <- magclass::getNames(scenBC63,dim=2)
+
+  sets <- list(list(name = "scenBC63",
+                    desc = "biochar scenarios",
+                    items = scenBC63))
+
+  gms::writeSets(sets , "modules/63_biochar/dec24/sets.gms")
 }
 
 # Function to extract information from info.txt
@@ -577,28 +588,37 @@ getReportData <- function(path_to_report_bioenergy, path_to_report_ghgprices = N
     # Discover all technology-specific biochar production variables in the REMIND report (unit EJ/yr)
     allVars <- getNames(mag)
     biocharVars <- grep("^SE\\|Biochar\\|.*\\(EJ/yr\\)$", allVars, value = TRUE)
+    
+    # Mapping from REMIND reporting names to model-internal names
+    mapping <- c(
+      "w/ heat"           = "biopyrhe",
+      "w/ heat and power" = "biopyrchp",
+      "w/ liquids"        = "biopyrliq",
+      "w/o co-product"    = "biopyronly"
+    )
 
-    if (length(biocharVars) == 0) {
-      # No 'SE|Biochar|. (EJ/yr)' variables found in REMIND report.
-      # Create file with zero biochar production to keep interface shape stable.
-      out <- mag[,,"Primary Energy Production|Biomass|Energy Crops (EJ/yr)"]
-      out[, , ] <- 0
-      dimnames(out)[[3]] <- "biopyrOnly"
-
-    } else {
-
-      # Build per-technology blocks, convert EJ -> PJ, and attach technologies as dim 3.1
-      out <- NULL
-      for (v in biocharVars) {
-        # Extract technology key: remove prefix and unit suffix
-        # e.g. "SE|Biochar|biopyrCHP (EJ/yr)" -> "biopyrCHP"
-        tech <- sub("^SE\\|Biochar\\|", "", v)
-        tech <- sub(" \\(EJ/yr\\)$", "", tech)
-
-        tmp <- mag[, , v] * 10^3  # EJ/yr -> PJ/yr
-        dimnames(tmp)[[3]] <- tech
-        out <- mbind(out, tmp)
+    # Build per-technology blocks, convert EJ -> PJ
+    out <- NULL
+    for (v in biocharVars) {
+      # Extract technology key: remove prefix and unit suffix
+      # e.g. "SE|Biochar|+|w/ heat (EJ/yr)" -> "w/ heat"
+      rawTech <- sub("^SE\\|Biochar\\|\\+\\|", "", v)
+      rawTech <- sub(" \\(EJ/yr\\)$", "", rawTech)
+      
+      # Map to short internal technology name
+      if (rawTech %in% names(mapping)) {
+        tech <- mapping[[rawTech]]
+      } else {
+        stop(
+          "ERROR in .biocharProduction(): Unknown REMIND biochar technology '", rawTech, 
+          "' extracted from variable '", v, "'.\n",
+          "Please add it to the mapping in start_functions.R and adapt sets in MAgPIE accordingly."
+        )
       }
+
+      tmp <- mag[, , v] * 10^3  # EJ/yr -> PJ/yr
+      dimnames(tmp)[[3]] <- tech
+      out <- mbind(out, tmp)
     }
 
     # Remove GLO region

@@ -1,4 +1,4 @@
-*** |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
@@ -47,6 +47,10 @@ scalars
   s63_bc_cost_transport  Biochar transport and logistics cost   (USD17MER per tDM)   / 80 /
   s63_bc_cost_application  Biochar application cost   (USD17MER per tDM)   / 10 /
   s63_biochar_min  Minimum biochar demand assumed in each region   (mio. GJ per yr)   / 0 /
+  s63_bcScen_stylized_startyear  Biochar stylized scenario start year       / 2025 /
+  s63_bcScen_stylized_targetyear Biochar stylized scenario target year      / 2050 /
+  s63_bcScen_stylized_target Biochar production target per ha initial cropland (GJ per ha per yr) / 0 /
+  s63_bcScen_stylized_functional_form Switch for functional form of faders (1) / 1 /
 ;
 
 $setglobal c63_biochar_simulation_mode  rem-mag

@@ -12,7 +12,9 @@ scalars
 
 parameters
  i63_biochar_prod(t,i,biopyr_all63)               Regional biochar production per biochar production systems (mio. GJ per yr)
- p63_region_BC_shr(t_all,i)                       Biochar demand share of the region derived from country selection (1)
+ i63_bcScen_stylized_fader(t_all)                 Biochar stylized production fader (1)
+ p63_region_BC_shr(i)                             Biochar demand share of the region derived from country selection (1)
+ p63_effective_land_share(i)                      Effective share of global target based on cropland area in 1995 and country selection (1)
  p63_country_dummy(iso)                           Dummy parameter indicating whether country is selected for biochar demand scenario (1)
 
  i63_max_app_rate_area(j,land)                    Maximum annual biochar application rate per area on cluster level (tDM per ha per yr)

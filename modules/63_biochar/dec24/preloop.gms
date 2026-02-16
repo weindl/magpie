@@ -27,44 +27,31 @@ if (s63_bcScen_stylized_functional_form = 1,
 elseif s63_bcScen_stylized_functional_form = 2,
   m_sigmoid_time_interpol(i63_bcScen_stylized_fader,s63_bcScen_stylized_startyear,s63_bcScen_stylized_targetyear,0,1);
 );
-    
+
+
 $ifthen "%c63_biochar_prod%" == "coupling"
   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod_coupling(t,i,biopyr_all63);
 
-$elseif "%c63_biochar_prod%" == "none"
-  i63_biochar_prod(t,i,biopyr_all63) = 0;
-<<<<<<< f_cdrEU
-
 $elseif "%c63_biochar_prod%" == "stylized"
- i63_biochar_prod(t,i,biopyr_all63) = 0;
- i63_biochar_prod(t,i,"biopyrCHP") = i63_bcScen_stylized_fader(t) * 
-   p63_effective_land_share(i) * s63_bcScen_stylized_target;
+  i63_biochar_prod(t,i,biopyr_all63) = 0;
+  i63_biochar_prod(t,i,"biopyrCHP") = i63_bcScen_stylized_fader(t) * 
+      p63_effective_land_share(i) * s63_bcScen_stylized_target;
 
-=======
-** Harmonize until predefined time step if not applied in coupled set-up
-loop(t$(m_year(t) <= sm_fix_SSP2),
-  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"R2M41-SSP2-NPi");
-);
-$elseif "%c63_biochar_prod_noselect%" == "none"
-  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%") * p63_region_BC_shr(t,i);
-** Harmonize until predefined time step if not applied in coupled set-up
-loop(t$(m_year(t) <= sm_fix_SSP2),
-  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"R2M41-SSP2-NPi");
-);
->>>>>>> f_biochar_newSys
 $else
-  
- $ifthen "%c63_biochar_prod_noselect%" == "none"
-  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%") * p63_region_BC_shr(t,i);
+
+ $ifthen "%c63_biochar_prod%" == "none"
+   i63_biochar_prod(t,i,biopyr_all63) = 0; 
+ $elseif "%c63_biochar_prod_noselect%" == "none"
+   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%") * p63_region_BC_shr(t,i);
  $else
-  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%") * p63_region_BC_shr(t,i)
+   i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%") * p63_region_BC_shr(t,i)
                          + f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod_noselect%") * (1-p63_region_BC_shr(t,i));
  $endif
  
- ** Harmonize until predefined time step if not applied in coupled or emulator set-up
+ ** Harmonize until predefined time step if not applied in coupled set-up
  loop(t$(m_year(t) <= sm_fix_SSP2),
    i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"R2M41-SSP2-NPi");
-);
+ );
 $endif
 
 

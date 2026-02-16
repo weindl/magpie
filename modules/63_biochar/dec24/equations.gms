@@ -19,13 +19,22 @@ q63_biochar_feedstock_conversion(i2,feedstock63) ..
           / f63_biochar_efficiency("en_yield",bc_sys63))
           ;
 
-*' The regional level of biochar production is specified for the different
-*' biochar production systems, but does not distinguish between the types of
-*' biomass feedstock.
+*' If exogenous biochar production mode is selected (`s63_biochar_prod_endo` is
+*' set to 0) the regional level of biochar production is exogenously specified for
+*' the different biochar production systems, but does not distinguish between the
+*' types of biomass feedstock. If `s63_biochar_prod_endo` is set to 1, the constraint
+*' is not active for years after `sm_fix_SSP2` and MAgPIE can endogenously optimize
+*' biochar production based on costs and benefits.
 
-q63_biochar_production(i2,bc_sys63) ..
+q63_biochar_production(i2,bc_sys63)$((s63_biochar_prod_endo = 0) or (s63_fixed_year = 1)) ..
       sum(feedstock63, v63_biochar_prod(i2,bc_sys63,feedstock63)) =e=
           sum((ct, sys_pyr(bc_sys63, biopyr63)), i63_biochar_prod(ct,i2,biopyr63))
+          ;
+
+*' Total regional biochar production equals sum across biochar production systems and feedstocks.
+q63_biochar_production_total(i2) ..
+      v63_biochar_prod_total(i2) =e=
+          sum((bc_sys63, feedstock63), v63_biochar_prod(i2,bc_sys63,feedstock63))
           ;
 
 *' Using residues as feedstock to produce biochar is limited by the availability
@@ -130,21 +139,21 @@ q63_yld_response_biochar(j2) ..
 
 
 *' Regional biochar supply chain costs are accounted for as the sum of
-*' (i) biochar gate prices at the production facility (USD17MER per GJ),
-*' (ii) transport and logistics costs (USD17MER per tDM biochar) and
+*' (i) biochar gate prices at the production facility (USD17MER per GJ produced),
+*' (ii) transport and logistics costs (USD17MER per tDM biochar applied) and
 *' (iii) field application costs on land (USD17MER per tDM biochar applied).
-*' Gate prices and transport costs are proportional to biochar production, on
-*' energy and mass basis, respectively, while application costs are proportional
-*' to biochar actually applied.
+*' Gate prices are only considered in MAgPIE-standalone mode (`mag`)
+*' (`s63_simulation_mode_mag` = 1) to avoid double counting of conversion costs
+*' in the coupled `rem-mag` mode (`s63_simulation_mode_mag` = 0).
 q63_cost_biochar(i2) ..
       vm_cost_biochar(i2) =e=
-          sum((bc_sys63,feedstock63),
+          s63_simulation_mode_mag
+          * sum((bc_sys63,feedstock63),
           v63_biochar_prod(i2,bc_sys63,feedstock63)
           * sum(ct,i63_price_biochar_gate(ct,i2,bc_sys63))
           )
-          + sum((bc_sys63,feedstock63),
-          v63_biochar_prod(i2,bc_sys63,feedstock63)
-          / f63_biochar_attributes("ge",bc_sys63)
+          + sum(land,sum(cell(i2,j2),
+          v63_biochar_app_rate_area(j2,land) * vm_land(j2,land))
           * i63_cost_transport(i2)
           )
           + sum(land,sum(cell(i2,j2),

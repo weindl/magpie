@@ -1,4 +1,4 @@
-*** |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
@@ -11,7 +11,7 @@ p63_biochar_stock_decay_step(t) = s63_biochar_stock_decay_yr**m_timestep_length;
 
 
 ** Harmonize endogenously determined biochar production until sm_fix_SSP2
-* The scalar `s63_fixed_year` flags the years where the equation setting biochar production to 
+* The scalar `s63_fixed_year` flags the years where the equation setting biochar production to
 * harmonized levels should be active. For years after `sm_fix_SSP2`, the equation is not active
 * in the endogenous biochar production mode.
 * Harmonization of exogenous biochar production scenarios in done in the related preloop-file.

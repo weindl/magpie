@@ -1,4 +1,4 @@
-*** |  (C) 2008-2024 Potsdam Institute for Climate Impact Research (PIK)
+*** |  (C) 2008-2025 Potsdam Institute for Climate Impact Research (PIK)
 *** |  authors, and contributors see CITATION.cff file. This file is part
 *** |  of MAgPIE and licensed under AGPL-3.0-or-later. Under Section 7 of
 *** |  AGPL-3.0, you are granted additional permissions described in the
@@ -12,10 +12,11 @@ scalars
 
 parameters
  i63_biochar_prod(t,i,biopyr_all63)               Regional biochar production per biochar production systems (mio. GJ per yr)
- i63_bcScen_stylized_fader(t_all)                 Biochar stylized production fader (1)
- p63_region_BC_shr(i)                             Biochar demand share of the region derived from country selection (1)
+ p63_country_dummy(iso)                           Dummy parameter indicating whether country is selected for biochar production scenario (1)
+ p63_region_BC_shr(t_all,i)                       Regional biochar production share derived from country selection weighted by population size (1)
+ p63_region_BC_avl_land_shr(i)                    Regional biochar production share derived from country selection weighted by available cropland area (1)
  p63_effective_land_share(i)                      Effective share of global target based on cropland area in 1995 and country selection (1)
- p63_country_dummy(iso)                           Dummy parameter indicating whether country is selected for biochar demand scenario (1)
+ i63_bcScen_stylized_fader(t_all)                 Biochar stylized production fader (1)
 
  i63_max_app_rate_area(j,land)                    Maximum annual biochar application rate per area on cluster level (tDM per ha per yr)
  i63_max_biochar_stock_area(j,land)               Maximum cumulative biochar soil stock per area on cluster level (tDM per ha)

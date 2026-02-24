@@ -28,7 +28,7 @@ cfg$results_folder <- "output/:title:"
 #cfg$results_folder <- "output/:title::date:"
 cfg$force_replace <- TRUE
 
-cfg$info$flag <- "PT1"
+cfg$info$flag <- "PT1_PR82"
 cfg$qos <- "standby"
 
 .title <- function(cfg, ...) return(paste(cfg$info$flag, sep="_",...))

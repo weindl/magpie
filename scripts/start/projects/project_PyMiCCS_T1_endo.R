@@ -40,7 +40,9 @@ cfg$qos <- "standby"
 
 ### bioenergy settings
 cfg$gms$bioenergy <- "1st2ndgen_biomass_dec24"
-cfg$gms$s60_res_substitution_factor  <- 1
+# decide very carefully about the value for s60_res_substitution_factor depending on
+# the model configuration, scenario and reserach question
+cfg$gms$s60_res_substitution_factor  <- 0
 
 
 ### biochar settings

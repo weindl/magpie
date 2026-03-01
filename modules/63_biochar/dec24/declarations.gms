@@ -44,6 +44,7 @@ variables
  v63_biochar_feedstock_mag(i,feedstock63)         Regional biomass feedstock demand for biochar per feedstock type (mio. GJ per yr)
  vm_biochar_feedstock_mag(i,feedstock63)          Additional feedstock demand for biochar per feedstock type (mio. GJ per yr)
  v63_c_stable_biochar(i)                          Annual stable C in soil from biochar after 100 years derived from recalcitrant fraction (mio. tC per yr)
+ vm_cdr_bc(i)                                     Expected annual CDR from biochar (mio. tC per yr)
 
  v63_biochar_stock_area(j,land)                   Cumulative biochar soil stock per area on cluster level for different land types (tDM per ha)
  v63_biochar_stock_effective(j)                   Effective cumulative biochar soil stock per area on cropland determining agronomic benefits (tDM per ha)
@@ -57,6 +58,7 @@ equations
  q63_feedstock_availability_residues(i)           Residue availability for biochar production (mio. GJ per yr)
  q63_biochar_simulation_mode(i,feedstock63)       Activation of biochar feedstock demand interface depending on simulation mode (mio. GJ per yr)
  q63_c_sequestration_biochar(i)                   Carbon removed annually from the atmosphere via stable biochar C (mio. tC per yr)
+ q63_cdr_biochar(i)                               Expected annual carbon removal from biochar (mio. tC per yr)
 
  q63_biochar_application_land(i)                  Regional application of produced biochar on land (tDM per yr)
  q63_biochar_app_rate_limit(j,land)               Annual limit for the biochar application rate on land on cluster level (tDM per ha per yr)

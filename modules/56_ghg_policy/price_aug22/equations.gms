@@ -77,3 +77,15 @@
                (sum(aff_effect,(1-s56_buffer_aff)*vm_cdr_aff(j2,ac,aff_effect)) * sum((cell(i2,j2),ct), p56_c_price_aff(ct,i2,ac)))
                / ((1+sum((cell(i2,j2),ct),pm_interest(ct,i2)))**(ac.off*5)))
                  *sum((cell(i2,j2),ct),pm_interest(ct,i2)/(1+pm_interest(ct,i2)));
+
+*' Biochar CDR is valued by multiplying the removal passed through the interface
+*' `vm_cdr_bc` from the 63_biochar module with the carbon price `p56_c_price_bc`.
+*' The resulting reward enters the objective function as negative costs.
+*' The interface `vm_cdr_bc` is active only in the MAgPIE-standalone biochar simulation
+*' mode (`mag`, `s63_simulation_mode_mag = 1`). In the coupled REMIND–MAgPIE biochar
+*' mode(`rem-mag`), `vm_cdr_bc` is set to zero, as biochar CDR is already accounted
+*' for and rewarded within REMIND.
+
+ q56_reward_cdr_bc_reg(i2) ..
+                 vm_reward_cdr_bc(i2) =e=
+                 vm_cdr_bc(i2) * sum(ct, p56_c_price_bc(ct,i2));

@@ -11,6 +11,8 @@
 *' Biochar production drives feedstock demand, which can be fulfilled by
 *' dedicated cultivation of fast-growing biomass as well as by residues.
 *'
+*' The interface `vm_cdr_bc` includes the expected CDR based on stable biochar C.
+*' The reward for CDR is calculated in the [56_ghg_policy] module.
 
 *####################### R SECTION START (PHASES) ##############################
 $Ifi "%phase%" == "sets" $include "./modules/63_biochar/dec24/sets.gms"

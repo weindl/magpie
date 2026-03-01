@@ -81,6 +81,14 @@ im_pollutant_prices(t_all,i,"ch4",emis_source)$(im_pollutant_prices(t_all,i,"ch4
 im_pollutant_prices(t_all,i,"n2o_n_direct",emis_source)$(im_pollutant_prices(t_all,i,"n2o_n_direct",emis_source) > s56_limit_ch4_n2o_price*12/44*265*44/28) = s56_limit_ch4_n2o_price*12/44*265*44/28;
 im_pollutant_prices(t_all,i,"n2o_n_indirect",emis_source)$(im_pollutant_prices(t_all,i,"n2o_n_indirect",emis_source) > s56_limit_ch4_n2o_price*12/44*265*44/28) = s56_limit_ch4_n2o_price*12/44*265*44/28;
 
+*** initialize C price for rewarding CDR from biochar
+* Biochar CDR rewards use a reference CO2-C price derived from `im_pollutant_prices`
+* after general price transformations (such as country selection, dev-state scaling,
+* and faders), but before applying the emission-policy mask in `c56_emis_policy`.
+* This ensures a non-zero biochar price signal even in policy setups that do not
+* price specific LULUCF carbon stock changes (e.g., primary forest loss).
+p56_c_price_bc(t_all,i) = im_pollutant_prices(t_all,i,"co2_c","primforest_vegc");
+
 ***GHG emission policy
 loop(t_all,
  if(m_year(t_all) <= sm_fix_SSP2,

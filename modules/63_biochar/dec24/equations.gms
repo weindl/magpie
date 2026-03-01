@@ -80,6 +80,19 @@ q63_c_sequestration_biochar(i2) ..
           ;
 
 
+*' Information about biochar carbon removal is only passed to the `56_ghg_policy`
+*' module when the standalone mode (`mag`) is active (`s63_simulation_mode_mag`
+*' is set to 1). This is done via the interface `vm_cdr_bc`.
+*' In coupled REMIND–MAgPIE mode (`rem-mag`), biochar-related carbon dioxide
+*' removal is accounted for and rewarded within REMIND, and the interface
+*' `vm_cdr_bc` remains zero to prevent double counting of CDR revenues.
+
+q63_cdr_biochar(i2) ..
+      vm_cdr_bc(i2) =e=
+          s63_simulation_mode_mag * v63_c_stable_biochar(i2)
+          ;
+
+
 *' Mass balance ensures that applied biochar is less or equal to produced biochar.
 q63_biochar_application_land(i2) ..
       sum(cell(i2,j2), sum(land, v63_biochar_app_rate_area(j2,land) * vm_land(j2,land)))

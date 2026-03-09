@@ -29,6 +29,6 @@ i63_biochar_prod(t,i,biopyr63)$(i63_biochar_prod(t,i,biopyr63) < s63_biochar_min
 * If the endogenous biochar production mode is selected, minimal biochar production is ensured via lower bounds
 if(m_year(t) > sm_fix_SSP2,
   if(s63_biochar_prod_endo = 1,
-    v63_biochar_prod_total.lo(i) = s63_biochar_min * card(biopyr63);
+    v63_biochar_prod_total.lo(i,"ge") = s63_biochar_min * card(biopyr63);
   );
 );

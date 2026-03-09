@@ -32,9 +32,12 @@ q63_biochar_production(i2,bc_sys63)$((s63_biochar_prod_endo = 0) or (s63_fixed_y
           ;
 
 *' Total regional biochar production equals sum across biochar production systems and feedstocks.
-q63_biochar_production_total(i2) ..
-      v63_biochar_prod_total(i2) =e=
-          sum((bc_sys63, feedstock63), v63_biochar_prod(i2,bc_sys63,feedstock63))
+q63_biochar_production_total(i2,att_bc) ..
+      v63_biochar_prod_total(i2,att_bc) =e=
+          sum((bc_sys63,feedstock63),
+          f63_biochar_attributes(att_bc,bc_sys63)
+          * v63_biochar_prod(i2,bc_sys63,feedstock63)
+          / f63_biochar_attributes("ge",bc_sys63))
           ;
 
 *' Using residues as feedstock to produce biochar is limited by the availability
@@ -61,22 +64,20 @@ q63_biochar_simulation_mode(i2,feedstock63) ..
           ;
 
 
-*' Only a fraction of the carbon initially contained in the applied biochar is
-*' counted as sequestered carbon and contributes to negative emissions. This is
-*' the durable (or recalcitrant) fraction that remains in the soil after 100 years.
-*' Recalcitrance refers to biochar's resistance to microbial decomposition in soils.
-*' The equation below calculates for each region the amount of carbon removed from
-*' the atmosphere via biochar and still retained in the soil a century later. It
-*' multiplies the carbon content of biochar, the biochar production (expressed in
-*' energy units), converted to tonnes using the energy density, and the 100-year
-*' stability factor `s63_BC100` (i.e., the recalcitrant fraction).
+*' Only a fraction of the carbon in applied biochar is counted as sequestered
+*' carbon and contributes to negative emissions. This is the durable (or
+*' recalcitrant) fraction that remains in the soil after 100 years.
+*' Recalcitrance refers to biochar's resistance to microbial decomposition
+*' in soils. The equation below calculates regional stable carbon sequestration
+*' from system-specific applied biochar in dry matter terms, multiplied by the
+*' corresponding carbon content and the 100-year stability factor `s63_BC100`.
 
 q63_c_sequestration_biochar(i2) ..
       v63_c_stable_biochar(i2) =e=
-          s63_BC100 * sum((bc_sys63,feedstock63),
+          s63_BC100
+          * sum(bc_sys63,
           f63_biochar_attributes("c",bc_sys63)
-          * v63_biochar_prod(i2,bc_sys63,feedstock63)
-          / f63_biochar_attributes("ge",bc_sys63))
+          * v63_biochar_applied_sys(i2,bc_sys63))
           ;
 
 
@@ -93,12 +94,27 @@ q63_cdr_biochar(i2) ..
           ;
 
 
-*' Mass balance ensures that applied biochar is less or equal to produced biochar.
-q63_biochar_application_land(i2) ..
-      sum(cell(i2,j2), sum(land, v63_biochar_app_rate_area(j2,land) * vm_land(j2,land)))
-      + v63_biochar_notapplied(i2) =e=
-          sum((bc_sys63,feedstock63),
-          v63_biochar_prod(i2,bc_sys63,feedstock63)
+*' Regional biochar application on each land type is calculated from annual
+*' biochar application rates per area and the corresponding land area.
+q63_biochar_application_land(i2,land) ..
+      v63_biochar_applied(i2,land) =e=
+          sum(cell(i2,j2), v63_biochar_app_rate_area(j2,land) * vm_land(j2,land))
+          ;
+
+
+*' Aggregation over land types or biochar production systems yields the same
+*' total regional biochar application.
+q63_biochar_application_total(i2) ..
+      sum(land, v63_biochar_applied(i2,land)) =e=
+          sum(bc_sys63, v63_biochar_applied_sys(i2,bc_sys63))
+          ;
+
+
+*' Mass balance ensures that produced biochar in dry matter terms is either
+*' applied to land or remains not applied.
+q63_biochar_application_balance_sys(i2,bc_sys63) ..
+      v63_biochar_applied_sys(i2,bc_sys63) + v63_biochar_notapplied_sys(i2,bc_sys63) =e=
+          sum(feedstock63, v63_biochar_prod(i2,bc_sys63,feedstock63)
           / f63_biochar_attributes("ge",bc_sys63))
           ;
 
@@ -165,11 +181,10 @@ q63_cost_biochar(i2) ..
           v63_biochar_prod(i2,bc_sys63,feedstock63)
           * sum(ct,i63_price_biochar_gate(ct,i2,bc_sys63))
           )
-          + sum(land,sum(cell(i2,j2),
-          v63_biochar_app_rate_area(j2,land) * vm_land(j2,land))
+          + sum(land, v63_biochar_applied(i2,land)
           * i63_cost_transport(i2)
           )
-          + sum(land,sum(cell(i2,j2),
-          v63_biochar_app_rate_area(j2,land) * vm_land(j2,land))
-          * i63_cost_application(i2,land))
+          + sum(land, v63_biochar_applied(i2,land)
+          * i63_cost_application(i2,land)
+          )
           ;

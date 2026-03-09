@@ -88,6 +88,9 @@ sets
          en_yield,
          c_yield /
 
+   att_bc(attributes) Attributes relevant for biochar
+       / dm, ge, c /
+
    biopyr_all63 Available pyrolysis plant set-ups including different co-products
        / kontiki,
          biopyrchp,

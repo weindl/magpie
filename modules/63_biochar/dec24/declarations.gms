@@ -32,7 +32,8 @@ parameters
 
 positive variables
  v63_biochar_prod(i,bc_sys63,feedstock63)         Regional biochar production per biochar production system and feedstock (mio. GJ per yr)
- v63_biochar_notapplied(i)                        Regional biochar balance term for produced and not applied biochar (mio. GJ per yr)
+ v63_biochar_applied_sys(i,bc_sys63)              Regional applied biochar by system (mio. tDM per yr)
+ v63_biochar_notapplied_sys(i,bc_sys63)           Regional biochar mass balance term for produced and not applied biochar by system (mio. tDM per yr)
 
  v63_biochar_app_rate_area(j,land)                Annual biochar application rate per area on cluster level (tDM per ha per yr)
 
@@ -40,9 +41,11 @@ positive variables
 ;
 
 variables
- v63_biochar_prod_total(i)                        Total regional biochar production (mio. GJ per yr)
+ v63_biochar_prod_total(i,att_bc)                 Total regional biochar production (mio. GJ or mio. tDM or mio. tC per yr)
  v63_biochar_feedstock_mag(i,feedstock63)         Regional biomass feedstock demand for biochar per feedstock type (mio. GJ per yr)
  vm_biochar_feedstock_mag(i,feedstock63)          Additional feedstock demand for biochar per feedstock type (mio. GJ per yr)
+ v63_biochar_applied(i,land)                      Regional biochar applied to different land types (mio. tDM per yr)
+
  v63_c_stable_biochar(i)                          Annual stable C in soil from biochar after 100 years derived from recalcitrant fraction (mio. tC per yr)
  vm_cdr_bc(i)                                     Expected annual CDR from biochar (mio. tC per yr)
 
@@ -54,13 +57,15 @@ variables
 equations
  q63_biochar_feedstock_conversion(i,feedstock63)  Conversion of biomass feedstock to biochar (mio. GJ per yr)
  q63_biochar_production(i,bc_sys63)               Regional biochar production per system (mio. GJ per yr)
- q63_biochar_production_total(i)                  Total regional biochar production across systems and feedstocks (mio. GJ per yr)
+ q63_biochar_production_total(i,att_bc)           Total regional biochar production across systems and feedstocks (mio. GJ or mio. tDM or mio. tC per yr)
  q63_feedstock_availability_residues(i)           Residue availability for biochar production (mio. GJ per yr)
  q63_biochar_simulation_mode(i,feedstock63)       Activation of biochar feedstock demand interface depending on simulation mode (mio. GJ per yr)
  q63_c_sequestration_biochar(i)                   Carbon removed annually from the atmosphere via stable biochar C (mio. tC per yr)
  q63_cdr_biochar(i)                               Expected annual carbon removal from biochar (mio. tC per yr)
 
- q63_biochar_application_land(i)                  Regional application of produced biochar on land (tDM per yr)
+ q63_biochar_application_land(i,land)             Regional application of produced biochar on land (mio. tDM per yr)
+ q63_biochar_application_total(i)                 Regional consistency between system-level and land-level application (mio. tDM per yr)
+ q63_biochar_application_balance_sys(i,bc_sys63)  Regional mass balance of biochar by production system (mio. tDM per yr)
  q63_biochar_app_rate_limit(j,land)               Annual limit for the biochar application rate on land on cluster level (tDM per ha per yr)
  q63_biochar_stock_limit(j,land)                  Cumulative limit for biochar soil stock per area on cluster level (tDM per ha)
  q63_biochar_stock_area(j,land)                   Biochar soil stock per area at cluster level (tDM per ha)

@@ -20,6 +20,7 @@ parameters
  p56_fader_reg(t_all,i)                             Regional GHG policy fader (1)
  pcm_carbon_stock(j,land,c_pools,stockType)         Carbon stock in vegetation soil and litter for different land types (mio. tC)
  p56_fader_cpriceaff(t_all)                         Fader for C price induced afforestation (1)
+ p56_cdr_bc_ded_credit(t_all,i)                                             Credit factor for rewarding biochar CDR based on dedicated biomass feedstock (1)
 ;
 
 equations
@@ -28,6 +29,8 @@ equations
  q56_emission_cost_oneoff(i,emis_oneoff)            Calculation of regional costs for emissions occuring only once in time (mio. USD17MER per yr)
  q56_reward_cdr_aff_reg(i)                          Regional revenues for carbon captured by afforestation (mio. USD17MER per yr)
  q56_reward_cdr_aff(j)                              Cellular revenues for carbon captured by afforestation (mio. USD17MER per yr)
+ q56_reward_cdr_bc_res(i)                           Regional revenues for carbon captured by residue-based biochar (mio. USD17MER per yr)
+ q56_reward_cdr_bc_ded(i)                           Regional revenues for carbon captured by dedicated-biomass biochar (mio. USD17MER per yr)
  q56_reward_cdr_bc_reg(i)                           Regional revenues for carbon captured by biochar (mio. USD17MER per yr)
  q56_emis_pricing(i,pollutants,emis_source)         Calculation of annual CO2 emissions for pricing (Tg per yr)
  q56_emis_pricing_co2(i,emis_oneoff)                Calculation of annual CO2 emissions for pricing (Tg per yr)
@@ -46,6 +49,8 @@ variables
  vm_reward_cdr_aff(i)                               Regional average annual expected revenue from afforestation (mio. USD17MER per yr)
  v56_reward_cdr_aff(j)                              Cellular average annual expected revenue from afforestation (mio. USD17MER per yr)
  vm_reward_cdr_bc(i)                                Regional annual expected revenue from biochar CDR (mio. USD17MER per yr)
+ v56_reward_cdr_bc_res(i)                          Regional annual reward from residue-based biochar CDR (mio. USD17MER per yr)
+ v56_reward_cdr_bc_ded(i)                          Regional annual reward from dedicated-biomass biochar CDR (mio. USD17MER per yr)
 ;
 
 *#################### R SECTION START (OUTPUT DECLARATIONS) ####################
@@ -58,11 +63,15 @@ parameters
  ov_reward_cdr_aff(t,i,type)                        Regional average annual expected revenue from afforestation (mio. USD17MER per yr)
  ov56_reward_cdr_aff(t,j,type)                      Cellular average annual expected revenue from afforestation (mio. USD17MER per yr)
  ov_reward_cdr_bc(t,i,type)                         Regional annual expected revenue from biochar CDR (mio. USD17MER per yr)
+ ov56_reward_cdr_bc_res(t,i,type)                   Regional annual reward from residue-based biochar CDR (mio. USD17MER per yr)
+ ov56_reward_cdr_bc_ded(t,i,type)                   Regional annual reward from dedicated-biomass biochar CDR (mio. USD17MER per yr)
  oq56_emission_costs(t,i,type)                      Calculation of total emission costs (mio. USD17MER per yr)
  oq56_emission_cost_annual(t,i,emis_annual,type)    Calculation of regional costs for annual emissions (mio. USD17MER per yr)
  oq56_emission_cost_oneoff(t,i,emis_oneoff,type)    Calculation of regional costs for emissions occuring only once in time (mio. USD17MER per yr)
  oq56_reward_cdr_aff_reg(t,i,type)                  Regional revenues for carbon captured by afforestation (mio. USD17MER per yr)
  oq56_reward_cdr_aff(t,j,type)                      Cellular revenues for carbon captured by afforestation (mio. USD17MER per yr)
+ oq56_reward_cdr_bc_res(t,i,type)                   Regional revenues for carbon captured by residue-based biochar (mio. USD17MER per yr)
+ oq56_reward_cdr_bc_ded(t,i,type)                   Regional revenues for carbon captured by dedicated-biomass biochar (mio. USD17MER per yr)
  oq56_reward_cdr_bc_reg(t,i,type)                   Regional revenues for carbon captured by biochar (mio. USD17MER per yr)
  oq56_emis_pricing(t,i,pollutants,emis_source,type) Calculation of annual CO2 emissions for pricing (Tg per yr)
  oq56_emis_pricing_co2(t,i,emis_oneoff,type)        Calculation of annual CO2 emissions for pricing (Tg per yr)

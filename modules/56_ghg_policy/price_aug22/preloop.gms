@@ -129,3 +129,6 @@ ac_exp(ac)$(ac.off = s56_c_price_exp_aff/5) = yes;
 p56_c_price_aff(t_all,i,ac)$(ac.off >= s56_c_price_exp_aff/5) = sum(ac_exp, p56_c_price_aff(t_all,i,ac_exp));
 *zero C price before starting year
 p56_c_price_aff(t_all,i,ac)$(m_year(t_all) <= max(m_year("%c56_mute_ghgprices_until%"),s56_fader_start*s56_ghgprice_fader)) = 0;
+
+* initialize credit factor for rewarding biochar CDR based on dedicated biomass feedstock
+p56_cdr_bc_ded_credit(t_all,i) = 1;

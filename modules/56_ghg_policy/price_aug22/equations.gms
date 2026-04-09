@@ -78,14 +78,38 @@
                / ((1+sum((cell(i2,j2),ct),pm_interest(ct,i2)))**(ac.off*5)))
                  *sum((cell(i2,j2),ct),pm_interest(ct,i2)/(1+pm_interest(ct,i2)));
 
-*' Biochar CDR is valued by multiplying the removal passed through the interface
-*' `vm_cdr_bc` from the 63_biochar module with the carbon price `p56_c_price_bc`.
-*' The resulting reward enters the objective function as negative costs.
-*' The interface `vm_cdr_bc` is active only in the MAgPIE-standalone biochar simulation
-*' mode (`mag`, `s63_simulation_mode_mag = 1`). In the coupled REMIND–MAgPIE biochar
-*' mode(`rem-mag`), `vm_cdr_bc` is set to zero, as biochar CDR is already accounted
-*' for and rewarded within REMIND.
+*' Biochar-based CDR rewards are calculated separately for residues and
+*' dedicated biomass feedstocks by multiplying the removal passed through the
+*' interface `vm_cdr_bc_fs` from the 63_biochar module with the carbon price
+*' `p56_c_price_bc`.
+*' In contrast to afforestation, biochar CDR rewards are calculated on an
+*' annual flow basis without intertemporal discounting, reflecting the
+*' immediate realization of sequestration benefits.
+*' Residue-based biochar CDR is fully rewarded.
+*' Biochar CDR from dedicated biomass can be reduced via the factor
+*' `p56_cdr_bc_ded_credit`, which allows representing sustainability-related
+*' restrictions on rewarding biochar from purpose-grown biomass.
+*' Total regional biochar CDR reward is the sum of both components and enters
+*' the objective function as negative costs.
+*' The interface `vm_cdr_bc_fs` is active only in MAgPIE-standalone mode (`mag`).
+*' In coupled REMIND-MAgPIE mode (`rem-mag`), it is zero to prevent double counting.
 
- q56_reward_cdr_bc_reg(i2) ..
-                 vm_reward_cdr_bc(i2) =e=
-                 vm_cdr_bc(i2) * sum(ct, p56_c_price_bc(ct,i2));
+*' Biochar CDR from residues is fully rewarded.
+q56_reward_cdr_bc_res(i2) ..
+      v56_reward_cdr_bc_res(i2) =e=
+          vm_cdr_bc_fs(i2,"residues")
+          * sum(ct, p56_c_price_bc(ct,i2));
+
+*' Biochar CDR from dedicated biomass is rewarded only partly, depending on
+*' the credit factor `p56_cdr_bc_ded_credit` for rewarding biochar CDR based on
+*' dedicated biomass feedstock.
+q56_reward_cdr_bc_ded(i2) ..
+      v56_reward_cdr_bc_ded(i2) =e=
+          vm_cdr_bc_fs(i2,"dedicated")
+          * sum(ct, p56_c_price_bc(ct,i2) * p56_cdr_bc_ded_credit(ct,i2));
+
+*' Total biochar CDR reward is the sum of residue-based and dedicated-biomass rewards.
+q56_reward_cdr_bc_reg(i2) ..
+      vm_reward_cdr_bc(i2) =e=
+          v56_reward_cdr_bc_res(i2)
+        + v56_reward_cdr_bc_ded(i2);

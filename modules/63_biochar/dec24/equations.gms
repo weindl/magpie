@@ -72,25 +72,30 @@ q63_biochar_simulation_mode(i2,feedstock63) ..
 *' from system-specific applied biochar in dry matter terms, multiplied by the
 *' corresponding carbon content and the 100-year stability factor `s63_BC100`.
 
-q63_c_sequestration_biochar(i2) ..
-      v63_c_stable_biochar(i2) =e=
+q63_c_sequestration_biochar_fs(i2,feedstock63) ..
+      v63_c_stable_biochar_fs(i2,feedstock63) =e=
           s63_BC100
           * sum(bc_sys63,
           f63_biochar_attributes("c",bc_sys63)
-          * v63_biochar_applied_sys(i2,bc_sys63))
+          * v63_biochar_applied_sys_fs(i2,bc_sys63,feedstock63))
           ;
+
+*' Total regional stable carbon sequestration is calculated by aggregating over feedstock.
+q63_c_sequestration_biochar_total(i2) ..
+      v63_c_stable_biochar(i2) =e=
+          sum(feedstock63, v63_c_stable_biochar_fs(i2,feedstock63));
 
 
 *' Information about biochar carbon removal is only passed to the `56_ghg_policy`
 *' module when the standalone mode (`mag`) is active (`s63_simulation_mode_mag`
-*' is set to 1). This is done via the interface `vm_cdr_bc`.
+*' is set to 1). This is done via the interface `vm_cdr_bc_fs`.
 *' In coupled REMIND–MAgPIE mode (`rem-mag`), biochar-related carbon dioxide
 *' removal is accounted for and rewarded within REMIND, and the interface
-*' `vm_cdr_bc` remains zero to prevent double counting of CDR revenues.
+*' `vm_cdr_bc_fs` remains zero to prevent double counting of CDR revenues.
 
-q63_cdr_biochar(i2) ..
-      vm_cdr_bc(i2) =e=
-          s63_simulation_mode_mag * v63_c_stable_biochar(i2)
+q63_cdr_biochar_fs(i2,feedstock63) ..
+      vm_cdr_bc_fs(i2,feedstock63) =e=
+          s63_simulation_mode_mag * v63_c_stable_biochar_fs(i2,feedstock63)
           ;
 
 
@@ -102,27 +107,29 @@ q63_biochar_application_land(i2,land) ..
           ;
 
 
-*' Aggregation over land types or biochar production systems yields the same
-*' total regional biochar application.
+*' Aggregation over land types or over biochar production systems and feedstocks
+*' yields the same total regional biochar application.
 q63_biochar_application_total(i2) ..
       sum(land, v63_biochar_applied(i2,land)) =e=
-          sum(bc_sys63, v63_biochar_applied_sys(i2,bc_sys63))
+          sum((bc_sys63,feedstock63), v63_biochar_applied_sys_fs(i2,bc_sys63,feedstock63))
           ;
 
 
 *' Mass balance ensures that produced biochar in dry matter terms is either
 *' applied to land or remains not applied.
-q63_biochar_application_balance_sys(i2,bc_sys63) ..
-      v63_biochar_applied_sys(i2,bc_sys63) + v63_biochar_notapplied_sys(i2,bc_sys63) =e=
-          sum(feedstock63, v63_biochar_prod(i2,bc_sys63,feedstock63)
-          / f63_biochar_attributes("ge",bc_sys63))
+q63_biochar_application_balance_sys_fs(i2,bc_sys63,feedstock63) ..
+      v63_biochar_applied_sys_fs(i2,bc_sys63,feedstock63)
+      + v63_biochar_notapplied_sys_fs(i2,bc_sys63,feedstock63)
+      =e=
+          v63_biochar_prod(i2,bc_sys63,feedstock63)
+          / f63_biochar_attributes("ge",bc_sys63)
           ;
 
 
 *' Annual biochar application per area is capped by a maximum rate.
 q63_biochar_app_rate_limit(j2,land) ..
       v63_biochar_app_rate_area(j2,land) =l=
-          i63_max_app_rate_area(j2,land)
+      i63_max_app_rate_area(j2,land)
           ;
 
 

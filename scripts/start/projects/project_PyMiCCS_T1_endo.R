@@ -28,7 +28,7 @@ cfg$results_folder <- "output/:title:"
 #cfg$results_folder <- "output/:title::date:"
 cfg$force_replace <- TRUE
 
-cfg$info$flag <- "PT1endo"
+cfg$info$flag <- "PT1endo_rewC_APP_fs3"
 cfg$qos <- "standby"
 
 .title <- function(cfg, ...) return(paste(cfg$info$flag, sep="_",...))
@@ -75,7 +75,7 @@ cfg0 <- cfg
 
 # Scenario runs ==============================================================
 
-ssps      <- c("SSP1", "SSP2")
+ssps      <- c("SSP2")
 #         <- c("SSP1", "SSP2", "SSP3", "SSP5") SSP5 is also available but not maintained anymore
 
 mitiScen  <- c("NPi2025", "PkBudg650")

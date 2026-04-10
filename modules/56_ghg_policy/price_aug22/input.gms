@@ -79,6 +79,7 @@ scalars
   s56_fader_functional_form       Switch for functional form of GHG policy fader (1=linear 2=sigmoid) / 1 /
   s56_fader_cpriceaff_start       Start year of C price induced afforestation fade-in (1) / 2030 /
   s56_fader_cpriceaff_end         End year of C price induced afforestation fade-in (1) / 2030 /
+  s56_bc_luc_credit_steepness     Steepness of dedicated-biomass biochar reward eligibility (1 per mio. ha) / 10 /
 ;
 
 $setglobal c56_pollutant_prices  R34M410-SSP2-NPi2025

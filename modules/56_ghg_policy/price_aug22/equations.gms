@@ -101,15 +101,28 @@ q56_reward_cdr_bc_res(i2) ..
           * sum(ct, p56_c_price_bc(ct,i2));
 
 *' Biochar CDR from dedicated biomass is rewarded only partly, depending on
-*' the credit factor `p56_cdr_bc_ded_credit` for rewarding biochar CDR based on
+*' the credit factor `v56_cdr_bc_ded_credit` for rewarding biochar CDR based on
 *' dedicated biomass feedstock.
 q56_reward_cdr_bc_ded(i2) ..
       v56_reward_cdr_bc_ded(i2) =e=
           vm_cdr_bc_fs(i2,"dedicated")
-          * sum(ct, p56_c_price_bc(ct,i2) * p56_cdr_bc_ded_credit(ct,i2));
+          * sum(ct, p56_c_price_bc(ct,i2))
+          * v56_cdr_bc_ded_credit(i2);
 
 *' Total biochar CDR reward is the sum of residue-based and dedicated-biomass rewards.
 q56_reward_cdr_bc_reg(i2) ..
       vm_reward_cdr_bc(i2) =e=
           v56_reward_cdr_bc_res(i2)
-        + v56_reward_cdr_bc_ded(i2);
+          + v56_reward_cdr_bc_ded(i2);
+
+*' Regional reduction in sensitive land (natural vegetation) is used as proxy
+*' for land-system pressure affecting eligibility of dedicated-biomass biochar CDR.
+q56_luc_sens_bc_eligibility(i2) ..
+      v56_luc_sens_bc_eligibility(i2) =e=
+          sum((cell(i2,j2), land_bc_sens56), vm_landreduction(j2,land_bc_sens56));
+
+*' Credit factor reducing rewards for dedicated-biomass biochar CDR is defined
+*' as a function of sensitive land loss. Higher land conversion reduces eligibility.
+q56_cdr_bc_ded_credit(i2) ..
+      v56_cdr_bc_ded_credit(i2) =e=
+          1 / (1 + s56_bc_luc_credit_steepness * v56_luc_sens_bc_eligibility(i2));

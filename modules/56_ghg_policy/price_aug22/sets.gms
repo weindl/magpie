@@ -211,4 +211,7 @@ sets
 
    stockType Carbon stock types
          / actual, actualNoAcEst /
+
+   land_bc_sens56(land) Land types sensitive for biochar eligibility
+         / primforest, secdforest, other /
 ;

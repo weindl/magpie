@@ -68,6 +68,8 @@ parameters
  ov_reward_cdr_bc(t,i,type)                         Regional annual expected revenue from biochar CDR (mio. USD17MER per yr)
  ov56_reward_cdr_bc_res(t,i,type)                   Regional annual reward from residue-based biochar CDR (mio. USD17MER per yr)
  ov56_reward_cdr_bc_ded(t,i,type)                   Regional annual reward from dedicated-biomass biochar CDR (mio. USD17MER per yr)
+ ov56_luc_sens_bc_eligibility(t,i,type)             Sensitive land reduction that restricts biochar eligibility (mio. ha)
+ ov56_cdr_bc_ded_credit(t,i,type)                   Regional credit factor for rewarding biochar CDR based on dedicated biomass (1)
  oq56_emission_costs(t,i,type)                      Calculation of total emission costs (mio. USD17MER per yr)
  oq56_emission_cost_annual(t,i,emis_annual,type)    Calculation of regional costs for annual emissions (mio. USD17MER per yr)
  oq56_emission_cost_oneoff(t,i,emis_oneoff,type)    Calculation of regional costs for emissions occuring only once in time (mio. USD17MER per yr)
@@ -76,6 +78,8 @@ parameters
  oq56_reward_cdr_bc_res(t,i,type)                   Regional revenues for carbon captured by residue-based biochar (mio. USD17MER per yr)
  oq56_reward_cdr_bc_ded(t,i,type)                   Regional revenues for carbon captured by dedicated-biomass biochar (mio. USD17MER per yr)
  oq56_reward_cdr_bc_reg(t,i,type)                   Regional revenues for carbon captured by biochar (mio. USD17MER per yr)
+ oq56_luc_sens_bc_eligibility(t,i,type)             Regional reduction in sensitive land that restricts biochar eligibility (mio. ha)
+ oq56_cdr_bc_ded_credit(t,i,type)                   Regional estimation of credit factor for rewarding biochar CDR based on dedicated biomass (1)
  oq56_emis_pricing(t,i,pollutants,emis_source,type) Calculation of annual CO2 emissions for pricing (Tg per yr)
  oq56_emis_pricing_co2(t,i,emis_oneoff,type)        Calculation of annual CO2 emissions for pricing (Tg per yr)
 ;

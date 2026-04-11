@@ -121,8 +121,17 @@ q56_luc_sens_bc_eligibility(i2) ..
       v56_luc_sens_bc_eligibility(i2) =e=
           sum((cell(i2,j2), land_bc_sens56), vm_landreduction(j2,land_bc_sens56));
 
-*' Credit factor reducing rewards for dedicated-biomass biochar CDR is defined
-*' as a function of sensitive land loss. Higher land conversion reduces eligibility.
+*' The credit factor for rewarding dedicated-biomass biochar CDR is represented
+*' by a logistic function of normalized sensitive land loss.
+*' Sensitive land loss is calculated as the regional reduction of land types in
+*' `land_bc_sens56`, divided by their initial regional area.
+*' Reward eligibility is close to 1 when land loss is low, falls to 0.5 at the
+*' threshold `s56_bc_luc_credit_threshold`, and approaches 0 as normalized
+*' sensitive land loss increases further.
 q56_cdr_bc_ded_credit(i2) ..
       v56_cdr_bc_ded_credit(i2) =e=
-          1 / (1 + s56_bc_luc_credit_steepness * v56_luc_sens_bc_eligibility(i2));
+          1 / (1 + exp(s56_bc_luc_credit_steepness
+          * (v56_luc_sens_bc_eligibility(i2)
+          / sum((cell(i2,j2), land_bc_sens56), pcm_land(j2,land_bc_sens56))
+          - s56_bc_luc_credit_threshold)
+          ));

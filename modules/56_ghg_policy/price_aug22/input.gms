@@ -59,6 +59,8 @@ sets
 pollutants_fader(pollutants) pollutants affected by GHG policy fader 
               / co2_c, ch4, n2o_n_direct, n2o_n_indirect, nh3_n, no2_n, no3_n /
 
+land_bc_sens56(land) Land types sensitive for biochar eligibility
+         / primforest, secdforest, other /
 ;
 
 scalars
@@ -79,8 +81,8 @@ scalars
   s56_fader_functional_form       Switch for functional form of GHG policy fader (1=linear 2=sigmoid) / 1 /
   s56_fader_cpriceaff_start       Start year of C price induced afforestation fade-in (1) / 2030 /
   s56_fader_cpriceaff_end         End year of C price induced afforestation fade-in (1) / 2030 /
-  s56_bc_luc_credit_steepness     Steepness of logistic reward reduction for dedicated-biomass biochar CDR (1) / 20 /
-  s56_bc_luc_credit_threshold     Share of sensitive land loss at which dedicated-biomass biochar reward eligibility equals 0.5 (1) / 0.002 /
+  s56_bc_luc_credit_steepness     Steepness of logistic reward reduction for dedicated-biomass biochar CDR (1) / 10 /
+  s56_bc_luc_credit_threshold     Share of sensitive land loss at which dedicated-biomass biochar reward eligibility equals 0.5 (1) / 0.001 /
 ;
 
 $setglobal c56_pollutant_prices  R34M410-SSP2-NPi2025

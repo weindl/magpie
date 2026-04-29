@@ -29,4 +29,5 @@
 
 *###################### R SECTION START (MODULETYPES) ##########################
 $Ifi "%yields%" == "managementcalib_aug19" $include "./modules/14_yields/managementcalib_aug19/realization.gms"
+$Ifi "%yields%" == "dynRegPastrTau_apr26"  $include "./modules/14_yields/dynRegPastrTau_apr26/realization.gms"
 *###################### R SECTION END (MODULETYPES) ############################

@@ -33,9 +33,8 @@ equations
 
 *#################### R SECTION START (OUTPUT DECLARATIONS) ####################
 parameters
- ov_yld(t,j,kve,w,type)              Yields (variable because of technical change) (tDM per ha per yr)
- oq14_yield_crop(t,j,kcr,w,type)     Crop yields (tDM per ha per yr)
- oq14_yield_past(t,j,w,type)         Pasture yields (tDM per ha per yr)
- op14_yld_past_switch(t,i,type)      Pasture yield spillover factor from crop-sector TC by region (1)
+ ov_yld(t,j,kve,w,type)          Yields (variable because of technical change) (tDM per ha per yr)
+ oq14_yield_crop(t,j,kcr,w,type) Crop yields (tDM per ha per yr)
+ oq14_yield_past(t,j,w,type)     Pasture yields (tDM per ha per yr)
 ;
 *##################### R SECTION END (OUTPUT DECLARATIONS) #####################

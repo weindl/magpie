@@ -29,14 +29,14 @@
 
 
 *####################### R SECTION START (PHASES) ##############################
-$Ifi "%phase%" == "sets"        $include "./modules/14_yields/dynRegPastrTau_apr26/sets.gms"
+$Ifi "%phase%" == "sets" $include "./modules/14_yields/dynRegPastrTau_apr26/sets.gms"
 $Ifi "%phase%" == "declarations" $include "./modules/14_yields/dynRegPastrTau_apr26/declarations.gms"
-$Ifi "%phase%" == "input"       $include "./modules/14_yields/dynRegPastrTau_apr26/input.gms"
-$Ifi "%phase%" == "equations"   $include "./modules/14_yields/dynRegPastrTau_apr26/equations.gms"
-$Ifi "%phase%" == "scaling"     $include "./modules/14_yields/dynRegPastrTau_apr26/scaling.gms"
-$Ifi "%phase%" == "preloop"     $include "./modules/14_yields/dynRegPastrTau_apr26/preloop.gms"
-$Ifi "%phase%" == "presolve"    $include "./modules/14_yields/dynRegPastrTau_apr26/presolve.gms"
-$Ifi "%phase%" == "postsolve"   $include "./modules/14_yields/dynRegPastrTau_apr26/postsolve.gms"
-$Ifi "%phase%" == "nl_fix"      $include "./modules/14_yields/dynRegPastrTau_apr26/nl_fix.gms"
-$Ifi "%phase%" == "nl_release"  $include "./modules/14_yields/dynRegPastrTau_apr26/nl_release.gms"
+$Ifi "%phase%" == "input" $include "./modules/14_yields/dynRegPastrTau_apr26/input.gms"
+$Ifi "%phase%" == "equations" $include "./modules/14_yields/dynRegPastrTau_apr26/equations.gms"
+$Ifi "%phase%" == "scaling" $include "./modules/14_yields/dynRegPastrTau_apr26/scaling.gms"
+$Ifi "%phase%" == "preloop" $include "./modules/14_yields/dynRegPastrTau_apr26/preloop.gms"
+$Ifi "%phase%" == "presolve" $include "./modules/14_yields/dynRegPastrTau_apr26/presolve.gms"
+$Ifi "%phase%" == "postsolve" $include "./modules/14_yields/dynRegPastrTau_apr26/postsolve.gms"
+$Ifi "%phase%" == "nl_fix" $include "./modules/14_yields/dynRegPastrTau_apr26/nl_fix.gms"
+$Ifi "%phase%" == "nl_release" $include "./modules/14_yields/dynRegPastrTau_apr26/nl_release.gms"
 *######################## R SECTION END (PHASES) ###############################

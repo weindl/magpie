@@ -21,5 +21,4 @@
  ov_yld(t,j,kve,w,"lower")             = vm_yld.lo(j,kve,w);
  oq14_yield_crop(t,j,kcr,w,"lower")    = q14_yield_crop.lo(j,kcr,w);
  oq14_yield_past(t,j,w,"lower")        = q14_yield_past.lo(j,w);
- op14_yld_past_switch(t,i,"level")     = f14_yld_past_switch(t,i);
 *##################### R SECTION END (OUTPUT DEFINITIONS) ######################

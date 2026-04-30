@@ -12,6 +12,10 @@
 
 # Load start_run(cfg) function which is needed to start MAgPIE runs
 source("scripts/start_functions.R")
+source("config/default.cfg")
+
+cfg$title <- "dyn_reg_tau"
+cfg$results_folder <- "output/:title:"
 
 cfg$gms$yields <- "dynRegPastrTau_apr26"           # def = managementcalib_aug19
 

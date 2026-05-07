@@ -14,10 +14,12 @@
 source("scripts/start_functions.R")
 source("config/default.cfg")
 
-cfg$title <- "dyn_reg_tau"
+cfg$title <- "dyn_reg_tau_LAM0p5_test"   # def = default
 cfg$results_folder <- "output/:title::date:"
 
 cfg$gms$yields <- "dynRegPastrTau_apr26"           # def = managementcalib_aug19
 
 #start MAgPIE run
 start_run(cfg=cfg)
+
+

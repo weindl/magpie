@@ -22,6 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Dockerfile** Re-added a Dockerfile, which can be used to build a local docker image as well as a GH codespace
 - **.devcontainer/devcontainer.json** A new configuration for development containers, which allow for reproducible, prepared development environments
 - **scripts** added $RSCRIPT_SLURM_HOOK to run on slurm compute nodes via apptainer
+- **22_land_conservation** new options for IPLC land conservation
 
 ### removed
 - **scripts/projects/fsec.R** Removed FSEC_nitrogenPollution (grid-level nitrogen pollution downscaling) from the FSEC run output pipeline.
@@ -29,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### fixed
 - **59_som** Carry the soil carbon stock (`pcm_carbon_stock(...,"soilc",...)`) forward each timestep in `postsolve` (both `cellpool_jan23` and `static_jan19`), so the soil term in `vm_emissions_reg` (`q52_emis_co2_actual`) is a per-timestep flux instead of a cumulative-since-initialisation change.
 - **21_trade** Bugfix and refinement of bilateral trade realization to avoid infeasibiliteis in SSP4 and SSP5.
+- **09_drivers**, **14_yields**, **15_food** Minor stylistic improvements to GAMS code following capitalization consistency rules in `gms::codeCheck`.
 
 
 ## [4.14.0] - 2026-05-05

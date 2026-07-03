@@ -282,6 +282,13 @@ calc_NPI_NDC <- function(policyregions = "iso",
     # mirror ndc: years <= 2025 follow the NPI baseline
     ndcdelay_aff[,which(getYears(ndcdelay_aff,as.integer=TRUE)<=2025),] <-
       npi_aff[,which(getYears(npi_aff,as.integer=TRUE)<=2025),]
+    # Floor at the NPI baseline. Without this, the delayed (slower) ndc ramp can sit below the
+    # npi-2025 level at 2030, so the cumulative target decreases making negative per-timestep
+    # afforestation flow. NPI is already-implemented policy, so the
+    # roll-back delays the extra NDC ambition but never afforests less than NPI.
+    npi_floor <- npi_aff
+    getNames(npi_floor) <- "ndcdelay"
+    ndcdelay_aff <- pmax(ndcdelay_aff, npi_floor)
   }
   cat(paste0(" (time elapsed: ", format(proc.time()["elapsed"] - ptm, width = 6, nsmall = 2, digits = 2), "s)\n"))
 

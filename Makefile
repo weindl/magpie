@@ -31,9 +31,12 @@ restore-renv: ## Restore renv to the state described in interactively
 	Rscript -e 'piamenv::restoreRenv()'
 
 reset-renv: ## reset renv to state of a freshly cloned repo
-	chmod +w -R renv
-	rm -r renv
-	git restore renv
+	@mv renv/archive tmp-renv-archive
+	@chmod +w -R renv
+	@rm -r renv
+	@git restore renv
+	@mv tmp-renv-archive/* renv/archive/
+	@rm -d tmp-renv-archive
 
 check: ## Check if the GAMS code follows the coding etiquette
        ## using gms::codeCheck.

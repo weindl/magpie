@@ -34,11 +34,16 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     texlive-full && \
   rm -rf /var/lib/apt/lists/*
 
+# We do not want a minimal image, as we want to use this interactively
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  apt update && DEBIAN_FRONTEND=noninteractive apt install -y unminimize && \
+  yes | unminimize && \
+  rm -rf /var/lib/apt/lists/*
+
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
   apt update && DEBIAN_FRONTEND=noninteractive apt install -y \
-    # We do not want a minimal image, as we want to use this interactively
-    unminimize \
     # Basic tools
     wget \
     curl \

@@ -18,8 +18,8 @@
 *' and can vary across the 12 MAgPIE world regions and across 5-year model
 *' time steps from 1965 to 2150. A value of 0 implies no spillover; a value
 *' of 1 implies full spillover equal to the crop-sector intensification rate.
-*' The default input file populates all regions and time steps with 0.25,
-*' reproducing the behaviour of managementcalib_aug19.
+*' The default input file populates all regions and time steps with values able to 
+*' reproduce the behaviour of managementcalib_aug19 realization.
 
 *' @limitations The exogenous implementation of pasture intensification cannot
 *' capture feedbacks between land scarcity and efforts to improve pasture

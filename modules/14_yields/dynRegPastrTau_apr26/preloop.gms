@@ -15,10 +15,10 @@ i14_yields_calib(t,j,"betr",w) = f14_yields(t,j,"betr",w) * sum((supreg(h,i),cel
 p14_pyield_LPJ_reg(t,i) = (sum(cell(i,j),i14_yields_calib(t,j,"pasture","rainfed") * pm_land_start(j,"past")) /
                             sum(cell(i,j),pm_land_start(j,"past")) );
 
-p14_pyield_corr(t,i) = (f14_pyld_hist(t,i)/p14_pyield_LPJ_reg(t,i))$(sum(sameas(t_past,t),1) = 1)
-      + sum(t_past,(f14_pyld_hist(t_past,i)/(p14_pyield_LPJ_reg(t_past,i)+0.000001))$(ord(t_past)=card(t_past)))$(sum(sameas(t_past,t),1) <> 1);
-i14_yields_calib(t,j,"pasture",w) = i14_yields_calib(t,j,"pasture",w) * sum(cell(i,j),p14_pyield_corr(t,i));
-
+p14_pyield_corr(t,i)$(f14_pyld_hist(t,i) > 0) = f14_pyld_hist(t,i) / (p14_pyield_LPJ_reg(t,i) + 0.000001);
+loop(t,
+  p14_pyield_corr(t,i)$(p14_pyield_corr(t,i) = 0) = p14_pyield_corr(t-1,i);
+);
 
 ***YIELD MANAGEMENT CALIBRATION************************************************************
 

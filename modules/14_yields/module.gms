@@ -24,7 +24,7 @@
 *' by the modules [30_crop] and [31_past].
 *'
 *' @authors Jan Philipp Dietrich, Isabelle Weindl, Florian Humpenöder,
-*' Anne Biewald, Kristine Karstens
+*' Anne Biewald, Kristine Karstens, Alexandre Köberle
 
 
 *###################### R SECTION START (MODULETYPES) ##########################

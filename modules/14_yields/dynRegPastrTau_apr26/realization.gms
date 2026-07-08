@@ -15,7 +15,7 @@
 *'
 *' The parameter `f14_yld_past_switch(t_all,i)` scales the fraction of
 *' crop-sector technological change (tau) that spills over to pasture yields,
-*' and can vary across the 12 MAgPIE world regions and across 5-year model
+*' and can vary across the MAgPIE world regions and across model
 *' time steps from 1965 to 2150. A value of 0 implies no spillover; a value
 *' of 1 implies full spillover equal to the crop-sector intensification rate.
 *' The default input file populates all regions and time steps with values able to 

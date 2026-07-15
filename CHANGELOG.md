@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **scenario_config_susmip.csv** A set of sceanrios for the SusMIP excercise in the PRISMA project
 - **calc_npi_ndc.R** New policy, AFFEXP, on defining afforestation targets based on the share of potential forest land and speed of afforestation.
 - **14_yields/dynRegPastrTau_apr26** New realization, allows changing tau factor spillover to pastures by region and timestep.
+- **calc_npi_ndc.R** New afforestation policy `ndcdelay` (PRISMA T6.4 "Asymmetric Roll-back"): the `ndc` afforestation targets with future milestone target-years delayed by country categorization.
 - **80_optimization/nlp_ipopt** New realization, using IPOPT instead of CONOPT4 (and the fallback CONOPT3) as the NLP solver for the MAgPIE model.
 - **scripts/start/extra/ipopt.R** Start script for solving MAgPIE with IPOPT.
 - **Dockerfile** Re-added a Dockerfile, which can be used to build a local docker image as well as a GH codespace

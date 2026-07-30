@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### changed
+- **14_yields** pasture yield correction added to dynRegPastrTau_apr26 realization to match managementcalib_aug19
 - **inputdata** updated input data to rev4.132, added f14_yld_past_switch.csv
 - **scripts** saveToResultsArchive saves to inbox folder if available
 - **renv/activate.R** updated to version 1.2.3

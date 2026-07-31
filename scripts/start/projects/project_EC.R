@@ -107,18 +107,9 @@ for (i in seq_len(nrow(scenario_grid))) {
   # are applied. Future climate-change impacts are switched off.
   cfg <- setScenario(cfg, c("SSP2", "nocc_hist"))
 
-
-  # ------------------------------------
-  # Earth Commission pathway settings
-  # ------------------------------------
-
-  if (pathway %in% names(ec_config_column)) {
-    cfg <- setScenario(
-      cfg,
-      ec_config_column[[pathway]],
-      scenario_config = scenario_config_ec
-    )
-  }
+  # !!! ForestryExo is intentionally not activated for EC scenario set.
+  # Add it only after a deliberate decision to use exogenous forestry:
+  # cfg <- setScenario(cfg, "ForestryExo")
 
 
   # ------------------------------------
@@ -150,6 +141,22 @@ for (i in seq_len(nrow(scenario_grid))) {
 
 
   # ------------------------------------
+  # Earth Commission pathway settings
+  # ------------------------------------
+
+  # Keep this as the final setScenario() call because comma-separated EC settings such as
+  # kfo_rd and land_snv are converted by setScenario() into vectors.
+  # A subsequent setScenario() call would fail on these vector settings.
+  if (pathway %in% names(ec_config_column)) {
+    cfg <- setScenario(
+      cfg,
+      ec_config_column[[pathway]],
+      scenario_config = scenario_config_ec
+    )
+  }
+
+
+  # ------------------------------------
   # Explicit EC project overrides
   # ------------------------------------
 
@@ -160,9 +167,6 @@ for (i in seq_len(nrow(scenario_grid))) {
   cfg$gms$s32_annual_aff_limit <- 0.03
   cfg$gms$s15_elastic_demand <- 0
 
-  # !!! ForestryExo is intentionally not activated for EC scenario set.
-  # Add it only after a deliberate decision to use exogenous forestry:
-  # cfg <- setScenario(cfg, "ForestryExo")
 
   # !!! The following settings currently match develop defaults and are therefore
   # not repeated here. Add them explicitly only if the EC project should pin

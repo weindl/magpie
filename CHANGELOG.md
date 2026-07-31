@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **calc_npi_ndc.R** New afforestation policy `ndcdelay` (PRISMA T6.4 "Asymmetric Roll-back"): the `ndc` afforestation targets with future milestone target-years delayed by country categorization.
 - **80_optimization/nlp_ipopt** New realization, using IPOPT instead of CONOPT4 (and the fallback CONOPT3) as the NLP solver for the MAgPIE model.
 - **scripts/start/extra/ipopt.R** Start script for solving MAgPIE with IPOPT.
+- **scripts/start/projects/project_EC.R** Start script for EC scenarios.
 - **Dockerfile** Re-added a Dockerfile, which can be used to build a local docker image as well as a GH codespace
 - **.devcontainer/devcontainer.json** A new configuration for development containers, which allow for reproducible, prepared development environments
 - **scripts** added $RSCRIPT_SLURM_HOOK to run on slurm compute nodes via apptainer

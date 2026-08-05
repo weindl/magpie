@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **14_yields** pasture yield correction added to dynRegPastrTau_apr26 realization to match managementcalib_aug19
 - **inputdata** updated input data to rev4.132, added f14_yld_past_switch.csv
 - **scripts** saveToResultsArchive saves to inbox folder if available
-- **renv/activate.R** updated to version 1.2.3
+- **renv/activate.R** updated to version 1.2.4
 - **CI** test-code.yaml: use ubuntu-latest and checkout@v7
 - **Makefile** `make reset-renv` resets renv
 - **.Rprofile** add r-universe repo, use envvars if present

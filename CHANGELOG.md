@@ -11,7 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **14_yields** pasture yield correction added to dynRegPastrTau_apr26 realization to match managementcalib_aug19
 - **CI** test-code.yaml: use ubuntu-latest and checkout@v7
 - **Dockerfile** now based on ubuntu 26.04, R 4.6, gams 54.1
-- **inputdata** updated input data to rev4.132, added f14_yld_past_switch.csv
+- **inputdata** updated input data to rev4.132, repairing a FAO item-name mapping mismatch in the preprocessing (present since rev4.121): factor requirements in `f38_fac_req_fao.csv` for `others`, `cottn_pro`, `groundnut`, `cassav_sp`, `puls_pro` and `oilpalm` return to pre-rev4.121 levels; added `f14_yld_past_switch.csv`
 - **main.gms** `reslim` reduced from 1000000 to 900 seconds, so a solver stuck inside one iteration is interrupted and retried instead of consuming the whole job allocation
 - **Makefile** `make reset-renv` resets renv
 - **renv/activate.R** updated to version 1.2.4

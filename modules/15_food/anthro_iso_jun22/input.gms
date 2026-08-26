@@ -18,7 +18,7 @@ $setglobal c15_calibscen  constant
 $setglobal c15_rum_share  mixed
 *   options:   constant, halving2050, mixed
 
-setglobal c15_flexfood_subst_basis  protein
+$setglobal c15_flexfood_subst_basis  protein
 *   options:   kcal, protein
 
 $setglobal c15_kcal_scen  healthy_BMI

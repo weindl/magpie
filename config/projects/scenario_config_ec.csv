@@ -4,6 +4,10 @@ gms$c09_gdp_scenario;;SSP1;SSP1
 gms$c09_pal_scenario;;SSP1;SSP1
 gms$c15_food_scenario;;SSP2;SSP2
 gms$s15_rumdairy_scp_substitution;;0.5;0
+gms$s15_flexfood_substitution;;0.5;0
+gms$kfo_sf;;livst_pig,livst_chick,livst_egg;
+gms$kfo_tf;;soybean,puls_pro,groundnut;
+gms$c15_flexfood_subst_basis;;protein;
 gms$s15_food_subst_functional_form;;2;
 gms$s15_food_substitution_start;;2025;
 gms$s15_food_substitution_target;;2050;

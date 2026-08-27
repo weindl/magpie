@@ -28,14 +28,13 @@ source("scripts/start_functions.R")
 # ====================
 
 # Label for the version of EC scenario implementation
-run_flag <- "ECv01"
+run_flag <- "ECv02b"
 
 # Project-specific MAgPIE scenario configuration
 scenario_config_ec <- "config/projects/scenario_config_ec.csv"
 
 # Scenarios included in the test matrix
-policies_to_run <- c("NPi2025")
-# !!! policies_to_run <- c("NPi2025", "PkBudg1000", "PkBudg650")
+policies_to_run <- c("NPi2025", "PkBudg1000", "PkBudg650")
 pathways_to_run <- c("SSP2", "UF", "OC", "LM")
 
 

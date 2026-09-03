@@ -57,7 +57,7 @@ gms$s42_watdem_nonagr_scenario;;1;1
 gms$s42_irrig_eff_scenario;;2;2
 gms$c42_env_flow_policy;;on;on
 gms$s42_efp_targetyear;;2050;2070
-gms$s44_bii_target;;0;0.76
+gms$s44_bii_target;;0;0.75
 gms$c44_bii_decrease;;0;1
 gms$s44_start_year;;2030;2030
 gms$s44_target_year;;;2100

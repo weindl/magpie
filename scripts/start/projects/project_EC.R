@@ -28,7 +28,7 @@ source("scripts/start_functions.R")
 # ====================
 
 # Label for the version of EC scenario implementation
-run_flag <- "ECv02b"
+run_flag <- "ECv05"
 
 # Project-specific MAgPIE scenario configuration
 scenario_config_ec <- "config/projects/scenario_config_ec.csv"

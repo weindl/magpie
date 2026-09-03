@@ -43,6 +43,12 @@ if (s15_run_diet_postprocessing = 1,
 *###############################################################################
 * ###### Food substitution scenarios
 
+* Protein-to-kcal ratio used for protein-based food substitutions:
+  i15_protein_to_kcal_ratio(t,kfo) =
+      fm_nutrition_attributes(t,kfo,"protein")
+      / fm_nutrition_attributes(t,kfo,"kcal");
+
+
 * Substitution of ruminant beef with poultry:
   p15_kcal_pc_iso_orig(t,iso,kfo) = p15_kcal_pc_iso(t,iso,kfo);
   p15_kcal_pc_iso(t,iso,"livst_rum") =
@@ -112,9 +118,6 @@ if (s15_run_diet_postprocessing = 1,
 *' After the substitution of kfo_rd with SCP (1-i15_rumdairy_scp_fadeout), SCP is converted 
 *' back to kcal/cap/day using i15_protein_to_kcal_ratio(t,"scp").
 *'
-*' Protein to kcal ratio:
-i15_protein_to_kcal_ratio(t,kfo) = fm_nutrition_attributes(t,kfo,"protein") / fm_nutrition_attributes(t,kfo,"kcal");
-*'
 *' Increase of single-cell protein (SCP):
 p15_protein_pc_iso_scp(t,iso,kfo_rd) = p15_kcal_pc_iso(t,iso,kfo_rd) * (1-i15_rumdairy_scp_fadeout(t,iso)) * i15_protein_to_kcal_ratio(t,kfo_rd);
 p15_kcal_pc_iso(t,iso,"scp") = p15_kcal_pc_iso(t,iso,"scp") + sum(kfo_rd, p15_protein_pc_iso_scp(t,iso,kfo_rd)) / i15_protein_to_kcal_ratio(t,"scp");
@@ -181,6 +184,14 @@ p15_kcal_pc_iso(t,iso,"oils")$(s15_scp_supplement_fat_meat = 1) = p15_kcal_pc_is
 *' A main application is substitution of selected livestock foods by plant-based
 *' alternatives, but source and target sets are fully configurable.
 *'
+*' The flexfood substitution can also be combined with exogenous diet scenarios
+*' (`s15_exo_diet > 0`). Food substitution scenarios, including flexfood, are applied
+*' first. The subsequent waste and intake calculations and exogenous diet scenarios use
+*' the resulting diet as their starting point. For `s15_exo_diet = 3`, flexfood can
+*' therefore influence whether lower or upper EAT-Lancet constraints become binding,
+*' while these constraints can in turn further modify the result of the flexfood
+*' substitution.
+*'
 *' Save the current diet as reference for the flexfood substitution:
 p15_kcal_pc_iso_orig(t,iso,kfo) = p15_kcal_pc_iso(t,iso,kfo);
 *'
@@ -225,10 +236,6 @@ p15_kcal_pc_iso(t,iso,kfo_tf) =
     + p15_flexfood_kcal_removed(t,iso) * p15_flexfood_target_structure(t,iso,kfo_tf);
 *'
 $elseif "%c15_flexfood_subst_basis%" == "protein"
-*'
-*' Protein-to-kcal ratio used for protein-equivalent replacement:
-i15_protein_to_kcal_ratio(t,kfo) =
-    fm_nutrition_attributes(t,kfo,"protein") / fm_nutrition_attributes(t,kfo,"kcal");
 *'
 *' Protein displaced from the configured source-food basket:
 p15_flexfood_protein_removed(t,iso) = sum(kfo_sf,

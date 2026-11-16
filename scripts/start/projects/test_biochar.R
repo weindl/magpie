@@ -33,8 +33,8 @@ cfg$force_replace <- TRUE
 
 
 ### biochar settings
-cfg$gms$biochar <- "dec24"
-cfg$gms$c63_biochar_simulation_mode <- "mag"
+cfg$gms$biochar <- "exo_oct26"
+cfg$gms$c63_biochar_mode <- "exo"
 
 
 ### bioenergy settings

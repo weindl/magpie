@@ -12,15 +12,8 @@
 
 sets
 
-  scen2nd60 second generation bioenergy scenarios
-    / PIK_GDP,
-      PIK_H2C,
-      PIK_HBL,
-      PIK_HOS,
-      PIK_LIN,
-      PIK_NPI,
-      PIK_OPT,
-      R21M42-SDP-NDC,
+  scenBC63 biochar scenarios
+    / R21M42-SDP-NDC,
       R21M42-SDP-NPi,
       R21M42-SDP-PkBudg1000,
       R21M42-SDP-PkBudg1100,
@@ -67,61 +60,18 @@ sets
       R34M410-SSP1-NPi2025,
       R34M410-SSP1-PkBudg1000,
       R34M410-SSP1-PkBudg650,
-      R34M410-SSP2-NPi2025,
-      R34M410-SSP2-PkBudg1000,
-      R34M410-SSP2-PkBudg650,
       R34M410-SSP2_lowEn-NPi2025,
       R34M410-SSP2_lowEn-PkBudg1000,
       R34M410-SSP2_lowEn-PkBudg650,
+      R34M410-SSP2-NPi2025,
+      R34M410-SSP2-PkBudg1000,
+      R34M410-SSP2-PkBudg650,
       R34M410-SSP3-NPi2025,
       R34M410-SSP3-PkBudg1000,
       R34M410-SSP3-rollBack,
       R34M410-SSP5-NPi2025,
       R34M410-SSP5-PkBudg1000,
-      R34M410-SSP5-PkBudg650,
-      R36M414-SSP1-NPi2025,
-      R36M414-SSP1-PkBudg1000,
-      R36M414-SSP1-PkBudg750,
-      R36M414-SSP2-NPi2025,
-      R36M414-SSP2-PkBudg1000,
-      R36M414-SSP2-PkBudg750,
-      R36M414-SSP3-NPi2025,
-      R36M414-SSP3-PkBudg1000,
-      SMIP7-H-SSP2-sens,
-      SMIP7-H-SSP3-main,
-      SMIP7-L-SSP1-sens,
-      SMIP7-L-SSP2-main,
-      SMIP7-LN-SSP2-main,
-      SMIP7-M-SSP1-sens,
-      SMIP7-M-SSP2-main,
-      SMIP7-M-SSP3-sens,
-      SMIP7-ML-SSP1-sens,
-      SMIP7-ML-SSP2-main,
-      SMIP7-ML-SSP3-sens,
-      SMIP7-VL-SSP1-main,
-      SMIP7-VL-SSP2-sens,
-      SSPDB-SSP1-19-IMAGE,
-      SSPDB-SSP1-19-REMIND-MAGPIE,
-      SSPDB-SSP1-26-IMAGE,
-      SSPDB-SSP1-26-REMIND-MAGPIE,
-      SSPDB-SSP1-34-IMAGE,
-      SSPDB-SSP1-34-REMIND-MAGPIE,
-      SSPDB-SSP1-45-IMAGE,
-      SSPDB-SSP1-45-REMIND-MAGPIE,
-      SSPDB-SSP1-Ref-IMAGE,
-      SSPDB-SSP1-Ref-REMIND-MAGPIE,
-      SSPDB-SSP2-19-REMIND-MAGPIE,
-      SSPDB-SSP2-26-REMIND-MAGPIE,
-      SSPDB-SSP2-34-REMIND-MAGPIE,
-      SSPDB-SSP2-45-REMIND-MAGPIE,
-      SSPDB-SSP2-60-REMIND-MAGPIE,
-      SSPDB-SSP2-Ref-REMIND-MAGPIE,
-      SSPDB-SSP5-19-REMIND-MAGPIE,
-      SSPDB-SSP5-26-REMIND-MAGPIE,
-      SSPDB-SSP5-34-REMIND-MAGPIE,
-      SSPDB-SSP5-45-REMIND-MAGPIE,
-      SSPDB-SSP5-60-REMIND-MAGPIE,
-      SSPDB-SSP5-Ref-REMIND-MAGPIE /
+      R34M410-SSP5-PkBudg650 /
 
 ;
 *######################### R SECTION END (SETS) ################################
@@ -129,16 +79,38 @@ sets
 
 sets
 
-   kbe60(kall) bioenergy activities
-        / betr, begr /
+   feedstock63 Available types of feedstock to produce biochar
+       / residues,
+         dedicated /
 
-   k1st60(kall) 1st generation bioenergy carriers
-        / oils, ethanol /
+   bcland63(land) Land types to which biochar can be applied
+       / crop /
 
-   scen1st60 first generation bioenergy scenarios
-       / const2020, const2030, phaseout2020 /
+   type63 Types of biochar characterisation and efficincy of biomass-to-biochar conversion
+       / dm_yield,
+         en_yield,
+         c_yield /
 
-   scen2ndres60 residues for second generation bioenergy scenarios
-       / ssp1, ssp2, ssp3, ssp4, ssp5, sdp, off /
+   att_bc(attributes) Attributes relevant for biochar
+       / dm, ge, c /
 
+   bc_plant63 Selected pyrolysis plant set-ups including different co-products
+       / biopyrchp,
+         biopyrhe,
+         biopyrliq,
+         biopyronly /
+
+   bc_tech63 Pyrolysis technologies by type and temperature
+      / SP-400, SP-500, SP-650, SP-800, FP-500, P-Woolf, P-KonTiki /
+
+   plant_tech63(bc_tech63, bc_plant63) Mapping of biochar production plants to pyrolysis technologies
+       / SP-500        . (biopyrchp, biopyrhe, biopyronly)
+         P-Woolf       . (biopyrliq)
+       /
+
+   scenCost63 Variants to capture uncertainty range of biochar cost assumptions
+       / low,
+         central,
+         high /
 ;
+

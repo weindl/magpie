@@ -1,4 +1,5 @@
 capitalExclusionList:
+  - h
   - land
   - iso
   - type

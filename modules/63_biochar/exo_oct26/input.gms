@@ -37,13 +37,13 @@ sets
 scalars
   s63_BC100  Fraction of biochar carbon remaining in the soil after 100 years   (1)   / 0.8 /
   s63_biochar_stock_decay_yr  Annual persistence factor of yield-relevant biochar stock   (1)   / 0.9995 /
-  s63_BC_app_timestep_weight  Share of biochar applied over current time step length contributing to same-period yield response   (1)   / 0.5 /
   s63_bc_max_app_rate_crop  Maximum annual biochar application rate on cropland   (tDM per ha per yr)   / 5 /
   s63_bc_max_stock_crop  Maximum cumulative biochar soil stock on cropland   (tDM per ha)   / 50 /
-  s63_bc_yield_response_max  Maximum relative yield response at saturation   (1)   / 0.1 /
+  s63_bc_min_app_share  Minimum share of biochar production applied to agricultural land   (1)   / 1 /
+  s63_bc_yield_response_max  Maximum relative yield response at saturation   (1)   / 0 /
   s63_bc_yield_response_k  Half-saturation stock for yield response   (tDM per ha)   / 10 /
-  s63_simulation_mode_mag  Biochar simulation mode   (1 for "mag" and 0 for "rem-mag" simulation mode)   / 0 /
-  s63_biochar_prod_endo  Biochar production decision mode   (0 for "exo" and 1 for "endo" decision mode)   / 0 /
+  s63_simulation_mode_mag  Biochar simulation mode   (1 for "exo" and "endo" mode and 0 for "rem-mag" mode)   / 0 /
+  s63_cdr_credited       Flag whether biochar CDR is credited to the model optimization (1 for "endo" mode)   (1)   / 0 /
   s63_bc_cost_transport  Biochar transport and logistics cost   (USD17MER per tDM)   / 80 /
   s63_bc_cost_application  Biochar application cost   (USD17MER per tDM)   / 10 /
   s63_biochar_min  Minimum biochar demand assumed in each region   (mio. GJ per yr)   / 0 /
@@ -53,37 +53,37 @@ scalars
   s63_bcScen_stylized_functional_form  Switch for functional form of faders   (1)   / 1 /
 ;
 
-$setglobal c63_biochar_simulation_mode  rem-mag
-$setglobal c63_biochar_prod_mode  exo
+# Biochar simulation mode. Options: rem-mag, exo, endo (see realization.gms)
+$setglobal c63_biochar_mode  exo
 $setglobal c63_biochar_prod  none
 $setglobal c63_biochar_prod_noselect  none
 $setglobal c63_BCcost_scen  central
 
-$if "%c63_biochar_prod%" == "coupling" table f63_biochar_prod_coupling(t_all,i,biopyr_all63) Annual biochar production (regional) (mio. GJ per yr)
+$if "%c63_biochar_prod%" == "coupling" table f63_biochar_prod_coupling(t_all,i,bc_plant63) Annual biochar production (regional) (mio. GJ per yr)
 $if "%c63_biochar_prod%" == "coupling" $ondelim
 $if "%c63_biochar_prod%" == "coupling" $include "./modules/63_biochar/input/f63_biochar_prod_coupling.cs3"
 $if "%c63_biochar_prod%" == "coupling" $offdelim
 $if "%c63_biochar_prod%" == "coupling" ;
 
-table f63_biochar_prod(t_all,i,biopyr_all63,scenBC63) Annual biochar production on energy basis (regional) (mio. GJ per yr)
+table f63_biochar_prod(t_all,i,bc_plant63,scenBC63) Annual biochar production on energy basis (regional) (mio. GJ per yr)
 $ondelim
 $include "./modules/63_biochar/input/f63_biochar_prod.cs3"
 $offdelim
 ;
 
-table f63_biochar_efficiency(type63,bc_sys63) HC_ratio and biochar yields expressed in terms of energy or mass or carbon (1)
+table f63_biochar_efficiency(type63,bc_tech63) HC_ratio and biochar yields expressed in terms of energy or mass or carbon (1)
 $ondelim
 $include "./modules/63_biochar/input/f63_biochar_efficiency.cs3"
 $offdelim
 ;
 
-table f63_biochar_attributes(attributes,bc_sys63) Conversion factors where X is Mt C or Mt DM or PJ lcv (X per Mt DM)
+table f63_biochar_attributes(attributes,bc_tech63) Conversion factors where X is Mt C or Mt DM or PJ lcv (X per Mt DM)
 $ondelim
 $include "./modules/63_biochar/input/f63_biochar_attributes.cs3"
 $offdelim
 ;
 
-table f63_biochar_gate_price(t_all,bc_sys63,scenCost63) Conversion-only biochar gate prices (feedstock excluded) (USD17MER per GJ)
+table f63_biochar_gate_price(t_all,bc_tech63,scenCost63) Conversion-only biochar gate prices (feedstock excluded) (USD17MER per GJ)
 $ondelim
 $include "./modules/63_biochar/input/f63_biochar_gate_price.cs3"
 $offdelim

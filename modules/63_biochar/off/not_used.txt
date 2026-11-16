@@ -1,0 +1,7 @@
+name,type,reason
+im_pop_iso,input,not needed
+im_res_2ndgenBE_dem,input,not needed
+pm_avl_cropland_iso,input,not needed
+pm_land_start,input,not needed
+sm_fix_SSP2,input,not needed
+vm_land,input,not needed

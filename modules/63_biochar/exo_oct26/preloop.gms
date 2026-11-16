@@ -42,87 +42,83 @@ elseif s63_bcScen_stylized_functional_form = 2,
 
 ****** Selection of biochar scenario
 $ifthen "%c63_biochar_prod%" == "coupling"
-  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod_coupling(t,i,biopyr_all63);
+  i63_biochar_prod(t,i,bc_plant63) = f63_biochar_prod_coupling(t,i,bc_plant63);
 
 $elseif "%c63_biochar_prod%" == "stylized"
-  i63_biochar_prod(t,i,biopyr_all63) = 0;
+  i63_biochar_prod(t,i,bc_plant63) = 0;
   i63_biochar_prod(t,i,"biopyrCHP") = i63_bcScen_stylized_fader(t) *
       p63_effective_land_share(i) * s63_bcScen_stylized_target;
 
 $else
 $ifthen "%c63_biochar_prod%" == "none"
-  i63_biochar_prod(t,i,biopyr_all63) = 0;
+  i63_biochar_prod(t,i,bc_plant63) = 0;
 
 $elseif "%c63_biochar_prod_noselect%" == "none"
-  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%")
+  i63_biochar_prod(t,i,bc_plant63) = f63_biochar_prod(t,i,bc_plant63,"%c63_biochar_prod%")
                                      * p63_region_BC_shr(t,i);
 
 $else
-  i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod%")
+  i63_biochar_prod(t,i,bc_plant63) = f63_biochar_prod(t,i,bc_plant63,"%c63_biochar_prod%")
                                      * p63_region_BC_shr(t,i)
-                                     + f63_biochar_prod(t,i,biopyr_all63,"%c63_biochar_prod_noselect%")
+                                     + f63_biochar_prod(t,i,bc_plant63,"%c63_biochar_prod_noselect%")
                                      * (1 - p63_region_BC_shr(t,i));
 $endif
 
 ** Harmonize until predefined time step if not applied in coupled or stylized set-up
   loop(t$(m_year(t) <= sm_fix_SSP2),
-    i63_biochar_prod(t,i,biopyr_all63) = f63_biochar_prod(t,i,biopyr_all63,"R2M41-SSP2-NPi");
+    i63_biochar_prod(t,i,bc_plant63) = f63_biochar_prod(t,i,bc_plant63,"R2M41-SSP2-NPi");
   );
 $endif
 
 
 ****** Additional configurations
-* Set simulation mode flag, reflecting if biochar is simulated within the
-* REMIND-MAgPIE framework or in a MAgPIE-standalone mode:
-$ifthen "%c63_biochar_simulation_mode%" == "mag"
-  s63_simulation_mode_mag = 1;
-$elseif "%c63_biochar_simulation_mode%" == "rem-mag"
+* Set flags according to the selected biochar simulation mode
+* (c63_biochar_mode: rem-mag, exo or endo, see realization.gms):
+$ifthen "%c63_biochar_mode%" == "rem-mag"
+*   biochar within the REMIND-MAgPIE framework: feedstock demand and CDR
+*   accounting are handled by REMIND, model-internal interfaces stay inactive
   s63_simulation_mode_mag = 0;
-$endif
-
-
-* Set decision mode flag, reflecting if biochar production is determined
-* exogenously or endogenously:
-s63_biochar_prod_endo = 0;
-$ifthen "%c63_biochar_prod_mode%" == "endo"
-  s63_biochar_prod_endo = 1;
-$endif
-* The endogenous mode is only supported in the MAgPIE-standalone mode:
-$ifthen "%c63_biochar_simulation_mode%" == "rem-mag"
-  s63_biochar_prod_endo = 0;
+  s63_cdr_credited        = 0;
+  s63_exo_mode            = 0;
+$elseif "%c63_biochar_mode%" == "exo"
+*   MAgPIE-standalone with exogenous production: feedstock demand is passed to
+*   the 60_bioenergy module, but biochar CDR is not credited to the model
+  s63_simulation_mode_mag = 1;
+  s63_cdr_credited        = 0;
+  s63_exo_mode            = 1;
+$elseif "%c63_biochar_mode%" == "endo"
+*   MAgPIE-standalone with endogenous production: feedstock demand is passed
+*   to the 60_bioenergy module and expected CDR is credited via 56_ghg_policy
+  s63_simulation_mode_mag = 1;
+  s63_cdr_credited        = 1;
+  s63_exo_mode            = 0;
+$else
+  $abort "c63_biochar_mode must be one of rem-mag, exo, endo"
 $endif
 
 
 * Biochar soil stock per area is initialized, assuming that no biochar was applied
 * before the start of the simulation period.
-pc63_biochar_stock_area(j,land) = 0;
-
+pc63_biochar_stock_area(j,bcland63) = 0;
 
 * Set biochar application limits according to configuration:
-i63_max_app_rate_area(j,land) = 0;
-i63_max_app_rate_area(j,"crop") = s63_bc_max_app_rate_crop;
-
-i63_max_biochar_stock_area(j,land) = 0;
-i63_max_biochar_stock_area(j,"crop") = s63_bc_max_stock_crop;
-
+i63_max_app_rate_area(j,bcland63) = s63_bc_max_app_rate_crop;
+i63_max_biochar_stock_area(j,bcland63) = s63_bc_max_stock_crop;
 
 * Set agronomic yield response parameters according to configuration:
 i63_yield_response_max(j) = s63_bc_yield_response_max;
 i63_yield_response_k(j) = s63_bc_yield_response_k;
 
 
-* Set biochar-related prices and costs according to configuration:
-i63_cost_transport(i) = s63_bc_cost_transport;
-i63_cost_application(i,land) = s63_bc_cost_application;
-
+* Set biochar gate prices according to configuration:
 $ifthen "%c63_BCcost_scen%" == "none"
-  i63_price_biochar_gate(t,i,bc_sys63) = 0;
+  i63_price_biochar_gate(t,i,bc_tech63) = 0;
 $else
 loop(t,
  if(m_year(t) <= sm_fix_SSP2,
-  i63_price_biochar_gate(t,i,bc_sys63) = f63_biochar_gate_price(t,bc_sys63,"central");
+  i63_price_biochar_gate(t,i,bc_tech63) = f63_biochar_gate_price(t,bc_tech63,"central");
  else
-  i63_price_biochar_gate(t,i,bc_sys63) = f63_biochar_gate_price(t,bc_sys63,"%c63_BCcost_scen%");
+  i63_price_biochar_gate(t,i,bc_tech63) = f63_biochar_gate_price(t,bc_tech63,"%c63_BCcost_scen%");
  );
 );
 $endif

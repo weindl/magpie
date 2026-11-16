@@ -27,7 +27,6 @@ EU_countries <- c("ALA", "AUT", "BEL", "BGR", "CYP", "CZE", "DEU", "DNK", "ESP",
 cdrRegions <- list(glo = all_iso_countries, eu = EU_countries)     
 
 ### biochar settings
-cfg$gms$c63_biochar_simulation_mode <- "mag"
 cfg$gms$c63_biochar_prod <- "stylized"
 cfg$gms$s63_bcScen_stylized_startyear <- 2025
 cfg$gms$s63_bcScen_stylized_targetyear <- 2050

@@ -12,9 +12,10 @@
 *' which is further used in the [60_bioenergy] module. For this calculation it
 *' requires information on conversion factors from biomass into biochar, provided
 *' by the module inputs f63\_biochar\_efficiency and f63\_biochar\_attributes.
-*' Expected carbon dioxide removal from stable biochar carbon is passed via the
-*' interface $vm\_cdr\_bc\_fs$ to the [56_ghg_policy] module, where the CDR reward
-*' is calculated.
+*' Expected carbon dioxide removal from stable biochar carbon is reported via
+*' the interface $vm\_cdr\_bc\_fs$, which is kept at zero because biochar CDR is
+*' not credited to the MAgPIE model; in `rem-mag` mode it is accounted for
+*' within REMIND.
 *'
 *' In addition to calculating biochar feedstock quantities, the costs associated
 *' with the biochar supply chain (interface $vm\_cost\_biochar$) are provided to

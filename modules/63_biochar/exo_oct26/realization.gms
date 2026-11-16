@@ -12,12 +12,6 @@
 *' dedicated cultivation of fast-growing biomass as well as by residues.
 *' Depending on the simulation mode switch `c63_biochar_mode`, biochar
 *' production is
-*' - (`endo`) determined endogenously by MAgPIE for all years after
-*'   `sm_fix_SSP2`, based on CDR rewards, supply chain costs and agronomic
-*'   yield benefits. Only for the harmonization period until `sm_fix_SSP2`,
-*'   production is fixed to the exogenous scenario selection. The interface
-*'   `vm_cdr_bc_fs` includes the expected CDR based on stable biochar C, and
-*'   the reward for CDR is calculated in the [56_ghg_policy] module.
 *' - (`exo`) exogenously specified for all years via the scenario switches
 *'   (`c63_biochar_prod`, `c63_biochar_prod_noselect`), while the model only
 *'   decides about the feedstock split and about where the biochar is applied.

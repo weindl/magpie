@@ -7,7 +7,6 @@
 
 
 scalars
-  s63_fixed_year                                  Flag characterizing the current year as part of the harmonization period (1)
   s63_exo_mode                                    Flag for MAgPIE-standalone exogenous biochar mode (1)
 ;
 

@@ -19,16 +19,13 @@ q63_biochar_feedstock_conversion(i2,feedstock63) ..
           / f63_biochar_efficiency("en_yield",bc_tech63))
           ;
 
-*' While `s63_fixed_year` is set to 1, the regional level of biochar production
-*' is exogenously specified for the different biochar production systems, but
-*' does not distinguish between the types of biomass feedstock. In `endo` mode,
-*' `s63_fixed_year` flags the harmonization period until `sm_fix_SSP2`, after
-*' which MAgPIE endogenously optimizes biochar production based on costs and
-*' benefits. In `exo` and `rem-mag` mode, production is exogenously specified in
-*' all years, and the model only decides about the feedstock split and about
-*' where the produced biochar is applied.
+*' The regional level of biochar production is exogenously specified for the
+*' different biochar production systems, but does not distinguish between the
+*' types of biomass feedstock. In both `exo` and `rem-mag` mode, production is
+*' exogenously specified in all years, and the model only decides about the
+*' feedstock split and about where the produced biochar is applied.
 
-q63_biochar_production(i2,bc_tech63)$(s63_fixed_year = 1) ..
+q63_biochar_production(i2,bc_tech63) ..
       sum(feedstock63, v63_biochar_prod(i2,bc_tech63,feedstock63)) =e=
           sum((ct, plant_tech63(bc_tech63, bc_plant63)), i63_biochar_prod(ct,i2,bc_plant63))
           ;
@@ -52,8 +49,8 @@ q63_feedstock_availability_residues(i2) ..
           sum(ct, im_res_2ndgenBE_dem(ct,i2))
           ;
 
-*' The following equation ensures that in MAgPIE-standalone modes (`exo` and
-*' `endo`), where `s63_simulation_mode_mag` is set to 1, the calculated
+*' The following equation ensures that in the MAgPIE-standalone mode (`exo`),
+*' where `s63_simulation_mode_mag` is set to 1, the calculated
 *' feedstock demand for biochar is passed to the `60_bioenergy` module via the
 *' interface `vm_biochar_feedstock_mag`. If biochar is simulated within the
 *' REMIND-MAgPIE framework (`rem-mag` mode), where `s63_simulation_mode_mag`
@@ -83,19 +80,16 @@ q63_c_sequestration_biochar_fs(i2,feedstock63) ..
           * v63_biochar_applied_sys_fs(i2,bc_tech63,feedstock63))
           ;
 
-*' Biochar CDR is credited to the model optimization only in `endo` mode, where
-*' MAgPIE endogenously decides on biochar production (`s63_cdr_credited` is 1).
-*' In this case, the expected CDR is passed to the `56_ghg_policy` module via
-*' the interface `vm_cdr_bc_fs` and rewarded. In `exo` mode, no CDR reward is
-*' paid and carbon pricing cannot act back on the model decisions. In coupled
+*' Biochar CDR is not credited to the model optimization: the interface
+*' `vm_cdr_bc_fs` is kept at zero in all modes, so no CDR reward is paid and
+*' carbon pricing cannot act back on the model decisions. In coupled
 *' REMIND-MAgPIE mode (`rem-mag`), biochar CDR is accounted for within REMIND.
 *' The expected CDR is calculated internally (`v63_c_stable_biochar_fs`) and
 *' reported in all modes.
 
 q63_cdr_biochar_fs(i2,feedstock63) ..
-      vm_cdr_bc_fs(i2,feedstock63) =e=
-          s63_cdr_credited * v63_c_stable_biochar_fs(i2,feedstock63)
-          ;
+      vm_cdr_bc_fs(i2,feedstock63) =e= 0
+      ;
 
 
 *' Regional biochar application on each land type is calculated from annual
@@ -118,8 +112,8 @@ q63_biochar_application_total(i2) ..
 *' biochar is a model decision without direct benefit (no CDR reward). To
 *' prevent produced biochar from being fully diverted to non-agricultural use,
 *' a minimum share of production (`s63_bc_min_app_share`, default 100%) must be
-*' applied to agricultural land. In `rem-mag` and `endo` mode the constraint is
-*' inactive (`s63_exo_mode` = 0).
+*' applied to agricultural land. In `rem-mag` mode the constraint is inactive
+*' (`s63_exo_mode` = 0).
 q63_biochar_application_min(i2) ..
       sum(bcland63, v63_biochar_applied(i2,bcland63)) =g=
           s63_exo_mode * s63_bc_min_app_share * v63_biochar_prod_total(i2,"dm")
@@ -178,8 +172,8 @@ q63_yld_response_biochar(j2) ..
 *' (i) biochar gate prices at the production facility (USD17MER per GJ produced),
 *' (ii) transport and logistics costs (USD17MER per tDM biochar applied) and
 *' (iii) field application costs on land (USD17MER per tDM biochar applied).
-*' Gate prices are only considered in MAgPIE-standalone modes (`exo` and
-*' `endo`) (`s63_simulation_mode_mag` = 1) to avoid double counting of
+*' Gate prices are only considered in the MAgPIE-standalone mode (`exo`)
+*' (`s63_simulation_mode_mag` = 1) to avoid double counting of
 *' conversion costs in the coupled `rem-mag` mode (`s63_simulation_mode_mag` = 0).
 q63_cost_biochar(i2) ..
       vm_cost_biochar(i2) =e=

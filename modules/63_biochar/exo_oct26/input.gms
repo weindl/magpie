@@ -42,18 +42,16 @@ scalars
   s63_bc_min_app_share  Minimum share of biochar production applied to agricultural land   (1)   / 1 /
   s63_bc_yield_response_max  Maximum relative yield response at saturation   (1)   / 0 /
   s63_bc_yield_response_k  Half-saturation stock for yield response   (tDM per ha)   / 10 /
-  s63_simulation_mode_mag  Biochar simulation mode   (1 for "exo" and "endo" mode and 0 for "rem-mag" mode)   / 0 /
-  s63_cdr_credited       Flag whether biochar CDR is credited to the model optimization (1 for "endo" mode)   (1)   / 0 /
+  s63_simulation_mode_mag  Biochar simulation mode   (1 for "exo" mode and 0 for "rem-mag" mode)   / 0 /
   s63_bc_cost_transport  Biochar transport and logistics cost   (USD17MER per tDM)   / 80 /
   s63_bc_cost_application  Biochar application cost   (USD17MER per tDM)   / 10 /
-  s63_biochar_min  Minimum biochar demand assumed in each region   (mio. GJ per yr)   / 0 /
   s63_bcScen_stylized_startyear  Biochar stylized scenario start year   / 2025 /
   s63_bcScen_stylized_targetyear  Biochar stylized scenario target year   / 2050 /
   s63_bcScen_stylized_target  Total stylized biochar production target in target year   (mio. GJ per yr)   / 0 /
   s63_bcScen_stylized_functional_form  Switch for functional form of faders   (1)   / 1 /
 ;
 
-# Biochar simulation mode. Options: rem-mag, exo, endo (see realization.gms)
+# Biochar simulation mode. Options: rem-mag, exo (see realization.gms)
 $setglobal c63_biochar_mode  exo
 $setglobal c63_biochar_prod  none
 $setglobal c63_biochar_prod_noselect  none

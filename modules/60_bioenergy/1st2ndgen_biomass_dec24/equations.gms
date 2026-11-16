@@ -54,7 +54,7 @@ q60_bioenergy_reg(i2) .. sum(kbe60, v60_2ndgen_bioenergy_dem_dedicated(i2,kbe60)
 *'   dedicated bioenergy crops to produce biochar, and `v60_res_substitution_bioen`
 *'   represents additional demand due to residues being substituted by dedicated
 *'   bioenergy crops in bioenergy production. Both variables only take effects (`>0`)
-*'   in the MAgPIE-standalone mode (`c63_biochar_mode = "exo"`).
+*'   in the MAgPIE-standalone mode (`c63_biochar_mode = "mag-exo"`).
 *'   When `c63_biochar_mode` is set to `rem-mag`, these variables are
 *'   set to zero. In this case the feedstock demand for biochar is already
 *'   accounted for by REMIND and included in `i60_bioenergy_dem`.
@@ -62,7 +62,7 @@ q60_bioenergy_reg(i2) .. sum(kbe60, v60_2ndgen_bioenergy_dem_dedicated(i2,kbe60)
 *'   are assumed to be fully substitutable based on their energy content.
 
 
-*' If the MAgPIE-standalone mode (`c63_biochar_mode = "exo"`) is selected
+*' If the MAgPIE-standalone mode (`c63_biochar_mode = "mag-exo"`) is selected
 *' in the `63_biochar` module, residues already used for biochar cannot be
 *' used to produce bioenergy. They have to be substituted by dedicated
 *' bioenergy crops (on energy basis), or result in lower bioenergy production

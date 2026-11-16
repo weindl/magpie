@@ -21,7 +21,7 @@ q63_biochar_feedstock_conversion(i2,feedstock63) ..
 
 *' The regional level of biochar production is exogenously specified for the
 *' different biochar production systems, but does not distinguish between the
-*' types of biomass feedstock. In both `exo` and `rem-mag` mode, production is
+*' types of biomass feedstock. In both `mag-exo` and `rem-mag` mode, production is
 *' exogenously specified in all years, and the model only decides about the
 *' feedstock split and about where the produced biochar is applied.
 
@@ -49,7 +49,7 @@ q63_feedstock_availability_residues(i2) ..
           sum(ct, im_res_2ndgenBE_dem(ct,i2))
           ;
 
-*' The following equation ensures that in the MAgPIE-standalone mode (`exo`),
+*' The following equation ensures that in the MAgPIE-standalone mode (`mag-exo`),
 *' where `s63_simulation_mode_mag` is set to 1, the calculated
 *' feedstock demand for biochar is passed to the `60_bioenergy` module via the
 *' interface `vm_biochar_feedstock_mag`. If biochar is simulated within the
@@ -103,7 +103,7 @@ q63_biochar_application_total(i2) ..
           ;
 
 
-*' In `exo` mode biochar production is exogenous, but the application of
+*' In `mag-exo` mode biochar production is exogenous, but the application of
 *' biochar is a model decision without direct benefit (no CDR reward). To
 *' prevent produced biochar from being fully diverted to non-agricultural use,
 *' a minimum share of production (`s63_bc_min_app_share`, default 100%) must be
@@ -167,7 +167,7 @@ q63_yld_response_biochar(j2) ..
 *' (i) biochar gate prices at the production facility (USD17MER per GJ produced),
 *' (ii) transport and logistics costs (USD17MER per tDM biochar applied) and
 *' (iii) field application costs on land (USD17MER per tDM biochar applied).
-*' Gate prices are only considered in the MAgPIE-standalone mode (`exo`)
+*' Gate prices are only considered in the MAgPIE-standalone mode (`mag-exo`)
 *' (`s63_simulation_mode_mag` = 1) to avoid double counting of
 *' conversion costs in the coupled `rem-mag` mode (`s63_simulation_mode_mag` = 0).
 q63_cost_biochar(i2) ..

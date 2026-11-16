@@ -45,7 +45,7 @@ cfg$gms$s60_res_substitution_factor  <- 1
 
 ### biochar settings
 cfg$gms$biochar <- "exo_oct26"
-cfg$gms$c63_biochar_mode <- "exo"
+cfg$gms$c63_biochar_mode <- "mag-exo"
 
 cfg$gms$s63_BC100 <- 0.8
 cfg$gms$s63_bc_max_app_rate_crop <- 5

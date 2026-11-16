@@ -12,7 +12,7 @@
 *' dedicated cultivation of fast-growing biomass as well as by residues.
 *' Depending on the simulation mode switch `c63_biochar_mode`, biochar
 *' production is
-*' - (`exo`) exogenously specified for all years via the scenario switches
+*' - (`mag-exo`) exogenously specified for all years via the scenario switches
 *'   (`c63_biochar_prod`, `c63_biochar_prod_noselect`), while the model only
 *'   decides about the feedstock split and about where the biochar is applied.
 *'   Biochar CDR is not credited to the model, so no CDR reward is paid and

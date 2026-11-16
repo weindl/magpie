@@ -34,7 +34,7 @@ cfg$force_replace <- TRUE
 
 ### biochar settings
 cfg$gms$biochar <- "exo_oct26"
-cfg$gms$c63_biochar_mode <- "exo"
+cfg$gms$c63_biochar_mode <- "mag-exo"
 
 
 ### bioenergy settings

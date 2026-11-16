@@ -11,6 +11,5 @@ positive variables
 
 variables
  vm_biochar_feedstock_mag(i,feedstock63)          Additional feedstock demand for biochar per feedstock type (mio. GJ per yr)
- vm_cdr_bc_fs(i,feedstock63)                      Expected annual CDR from biochar by feedstock (mio. tC per yr)
  vm_yld_response_biochar(j)                       Yield response multiplier from biochar soil stock (1)
 ;

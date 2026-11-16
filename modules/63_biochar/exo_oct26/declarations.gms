@@ -46,7 +46,6 @@ variables
  v63_biochar_applied(i,bcland63)                      Regional biochar applied to different land types (mio. tDM per yr)
 
  v63_c_stable_biochar_fs(i,feedstock63)           Annual stable C in soil from biochar after 100 years by feedstock (mio. tC per yr)
- vm_cdr_bc_fs(i,feedstock63)                      Expected annual CDR from biochar by feedstock (mio. tC per yr)
 
  v63_biochar_stock_area(j,bcland63)                   Cumulative biochar soil stock per area on cluster level for different land types (tDM per ha)
  vm_yld_response_biochar(j)                       Yield response multiplier from biochar soil stock (1)
@@ -59,8 +58,6 @@ equations
  q63_feedstock_availability_residues(i)           Residue availability for biochar production (mio. GJ per yr)
  q63_biochar_simulation_mode(i,feedstock63)       Activation of biochar feedstock demand interface depending on simulation mode (mio. GJ per yr)
  q63_c_sequestration_biochar_fs(i,feedstock63)    Carbon removed annually from the atmosphere via stable biochar C by feedstock (mio. tC per yr)
-
- q63_cdr_biochar_fs(i,feedstock63)                Expected annual carbon removal from biochar by feedstock (mio. tC per yr)
 
  q63_biochar_application_land(i,bcland63)             Regional application of produced biochar on land (mio. tDM per yr)
  q63_biochar_application_total(i)                 Regional consistency between system-level and land-level application (mio. tDM per yr)

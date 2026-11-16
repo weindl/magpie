@@ -15,15 +15,15 @@
 *' - (`exo`) exogenously specified for all years via the scenario switches
 *'   (`c63_biochar_prod`, `c63_biochar_prod_noselect`), while the model only
 *'   decides about the feedstock split and about where the biochar is applied.
-*'   Biochar CDR is not credited to the model (`vm_cdr_bc_fs` is zero), so no
-*'   CDR reward is paid and carbon pricing cannot act back on the model
-*'   optimization; the expected CDR is still calculated internally and
-*'   reported.
+*'   Biochar CDR is not credited to the model, so no CDR reward is paid and
+*'   carbon pricing cannot act back on the model
+*'   optimization; the expected CDR is still calculated internally
+*'   (`v63_c_stable_biochar_fs`) and reported.
 *' - (`rem-mag`) prescribed by REMIND, either from the coupling file in a
 *'   coupled REMIND-MAgPIE run or from a static REMIND scenario in
 *'   `f63_biochar_prod`. Feedstock demand and CDR accounting are handled by
-*'   REMIND, and the model-internal interfaces `vm_biochar_feedstock_mag` and
-*'   `vm_cdr_bc_fs` remain inactive to avoid double counting.
+*'   REMIND, and the model-internal feedstock interface
+*'   `vm_biochar_feedstock_mag` remains inactive to avoid double counting.
 
 *####################### R SECTION START (PHASES) ##############################
 $Ifi "%phase%" == "sets" $include "./modules/63_biochar/exo_oct26/sets.gms"

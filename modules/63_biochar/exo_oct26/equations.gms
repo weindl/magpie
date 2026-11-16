@@ -80,16 +80,11 @@ q63_c_sequestration_biochar_fs(i2,feedstock63) ..
           * v63_biochar_applied_sys_fs(i2,bc_tech63,feedstock63))
           ;
 
-*' Biochar CDR is not credited to the model optimization: the interface
-*' `vm_cdr_bc_fs` is kept at zero in all modes, so no CDR reward is paid and
-*' carbon pricing cannot act back on the model decisions. In coupled
+*' Biochar CDR is not credited to the model in any mode, so no CDR reward is
+*' paid and carbon pricing cannot act back on the model decisions. In coupled
 *' REMIND-MAgPIE mode (`rem-mag`), biochar CDR is accounted for within REMIND.
-*' The expected CDR is calculated internally (`v63_c_stable_biochar_fs`) and
-*' reported in all modes.
-
-q63_cdr_biochar_fs(i2,feedstock63) ..
-      vm_cdr_bc_fs(i2,feedstock63) =e= 0
-      ;
+*' The expected CDR (`v63_c_stable_biochar_fs`) is calculated and reported in
+*' all modes.
 
 
 *' Regional biochar application on each land type is calculated from annual

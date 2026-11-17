@@ -25,7 +25,6 @@
                    + vm_p_fert_costs(i2)
                    + vm_emission_costs(i2)
                    - vm_reward_cdr_aff(i2)
-                   - vm_reward_cdr_bc(i2)
                    + sum(factors,vm_maccs_costs(i2,factors))
                    + vm_cost_AEI(i2)
                    + vm_cost_trade_tariff(i2)
@@ -36,9 +35,9 @@
                    + vm_cost_hvarea_natveg(i2)
                    + vm_cost_processing(i2)
                    + sum(cell(i2,j2), vm_cost_scm(j2))
-                   + vm_processing_substitution_cost(i2)
                    + vm_bioenergy_utility(i2)
                    + vm_cost_biochar(i2)
+                   + vm_processing_substitution_cost(i2)
                    + vm_costs_additional_mon(i2)
                    + sum(cell(i2,j2), vm_cost_land_transition(j2))
                    + sum(cell(i2,j2), vm_peatland_cost(j2))
@@ -53,16 +52,15 @@
 *' cost interfaces, which are in turn calculated inside their respective modules.
 *' Different components of regional costs are as follows:
 *' Factor costs ([38_factor_costs]),
-*' Land conversion costs ([39_landconversion]),
+*' land conversion costs ([39_landconversion]),
 *' Transportation costs ([40_transport]),
 *' Technological costs ([13_tc]),
 *' Inorganic fertilizers ([50_nr_soil_budget]),
 *' Emission costs ([56_ghg_policy]),
-*' Rewarded CDR from afforestation (benefits as negative costs) ([56_ghg_policy]),
-*' Rewarded CDR from biochar (benefits as negative costs) ([56_ghg_policy]),
+*' Rewarded CDR from afforestation (Benefits as negative costs) ([56_ghg_policy]),
 *' Abatement costs ([57_maccs]),
 *' Irrigation expansion costs ([41_area_equipped_for_irrigation]),
-*' Trade costs (transport and bilateral trade) ([21_trade]),
+*' Trade costs (Transport and bilateral trade) ([21_trade]),
 *' Forestry related costs (afforestation) ([32_forestry]),
 *' Bioenergy costs ([60_bioenergy]),
 *' Biochar costs ([63_biochar]),

@@ -7,10 +7,11 @@
 
 # --------------------------------------------------------
 # description: biochar test runs comparing module off, no
-#              biochar, REMIND scenario inputs (R34BC and
-#              Dorndorf et al. 2026), stylized production and
-#              rem-mag input consistency, for BAU (NPi2025)
-#              and mitigation (PkBudg650) settings
+#              biochar, standard REMIND-MAgPIE production
+#              (R34M410, mag-exo and rem-mag), Dorndorf et
+#              al. 2026 production with and without yield
+#              response, and stylized production, for BAU
+#              (NPi2025) and mitigation (PkBudg650) settings
 # --------------------------------------------------------
 
 ## Load lucode2 and gms to use setScenario later
@@ -61,18 +62,11 @@ runs <- list(
   # rem-mag: replay of the standard REMIND-MAgPIE run (mode switch test,
   # biochar was not chosen in REMIND, so production is expected ~ zero)
   bcRemmag    = list(mode = "rem-mag", bc = "mitiref"),
-  bcBCdef     = list(mode = "mag-exo", bc = bcRef),
   bcDorndorf  = list(mode = "mag-exo", bc = bcDorndorf),
   # same, but with biochar yield response (central literature assumption)
   bcDorndorfYld = list(mode = "mag-exo", bc = bcDorndorf, yield_max = 0.1),
   # mag-exo: stylized ramp-up to 10000 (input units, about 10 EJ per yr)
-  bcStyl      = list(mode = "mag-exo", bc = "stylized"),
-  # rem-mag: replay of the REMIND run, biochar production, prices and
-  # bioenergy demand (including biochar feedstock) from the same reporting.
-  # Only defined for the PkBudg650 setting, as the consistent R34BC
-  # reporting (prices, demand, production) originates from that run
-  bcRemmag    = list(mode = "rem-mag", bc = bcRef, remindConsistent = TRUE,
-                     miti = "PkBudg650")
+  bcStyl      = list(mode = "mag-exo", bc = "stylized")
 )
 
 for (miti in names(mitis)) {
@@ -98,15 +92,8 @@ for (miti in names(mitis)) {
       cfg$gms$biochar <- run_cfg$biochar
     }
 
-    if (isTRUE(run_cfg$remindConsistent)) {
-      # consistent replay of the REMIND run: prices and 2nd generation
-      # bioenergy demand (including feedstock for biochar) from R34BC reporting
-      cfg$gms$c56_pollutant_prices <- run_cfg$bc
-      cfg$gms$c60_2ndgen_biodem    <- run_cfg$bc
-    } else {
-      cfg$gms$c56_pollutant_prices <- mitis[[miti]]$ref
-      cfg$gms$c60_2ndgen_biodem    <- mitis[[miti]]$ref
-    }
+    cfg$gms$c56_pollutant_prices <- mitis[[miti]]$ref
+    cfg$gms$c60_2ndgen_biodem    <- mitis[[miti]]$ref
 
     # yield response (default 0, only runs with yield_max set use it)
     cfg$gms$s63_bc_yield_response_max <- if (is.null(run_cfg$yield_max)) 0 else run_cfg$yield_max

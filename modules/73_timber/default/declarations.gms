@@ -8,20 +8,27 @@
 parameters
 p73_timber_demand_gdp_pop(t_all,i,kforestry)                                Timber demand based on lauri et al 2019 (mio. m3 per yr)
 p73_forestry_demand_prod_specific(t_all,iso,total_wood_products)            End product specific timber demand (mio. m3 per yr)
-pm_demand_forestry(t_ext,i,kforestry)                                       Extended demand for timber beyound simulation (mio. tDM per yr)
+pm_demand_forestry(t_ext,i,kforestry)                                       Extended demand for timber beyond simulation (mio. tDM per yr)
 p73_glo_wood(t_all,kforestry)                                               Global wood demand (mio. tDM per yr)
 p73_demand_modifier(t_all)                                                  Simple demand modifier for construction wood (mio. tDM per yr)
 p73_fraction(t_all)                                                         Fraction over which construction wood demand is spread out (1)
 p73_demand_constr_wood(t_all,i)                                             Demand for construction wood (mio. tDM per yr)
 p73_fraction_sm_fix                                                         Modifier fraction at sm_fix_SSP2 time step (1)
-im_timber_prod_cost(kforestry)                                              Cost for producing one unit of wood and woodfuel (USD17MER per tDM)
+im_timber_prod_cost(i,kforestry)                                            Regional base cost for timber production based on UNECE market prices (USD17MER per tDM)
+i73_timber_prod_cost_natveg(i,kforestry)                                    Regional cost for timber production from natural vegetation incl natveg premium (USD17MER per tDM)
 p73_income_elasticity(t_all,iso,total_wood_products)                        Income elasticities of wood products (1)
+p73_hvcapital_intensity(land_natveg)                                        Sticky harvest-capacity cost intensity per natveg source (1)
+p73_hvcapital_need(t,i,land_natveg)                                         Harvest-capacity capital required per unit natveg timber production (USD17MER per tDM)
+p73_hvcapital(t,j,land_natveg)                                              Preexisting natveg harvest-capacity capital stock before investment (mio. USD17MER)
+p73_sticky_active(t)                                                        Sticky harvest-capacity mechanism active this timestep (0 at the ord(t)=1 seed step or when switched off) (1)
 ;
 
 positive variables
 vm_cost_timber(i)                                                           Actual cost of harvesting timber from forests (mio. USD17MER per yr)
 v73_prod_heaven_timber(j,kforestry)                                         Production of woody biomass from heaven (mio. tDM per yr)
 v73_prod_residues(j)                                                        Production of residues from industrial roundwood harvest (mio. tDM per yr)
+v73_invest_harvest(j,land_natveg)                                           Investment into natveg harvest capacity (mio. USD17MER per yr)
+v73_disinvest_harvest(j,land_natveg)                                        Reduction of natveg harvest below existing harvest capacity (mio. USD17MER per yr)
 ;
 
 equations
@@ -29,17 +36,23 @@ q73_cost_timber(i)                                                          Actu
 q73_prod_wood(j)                                                            Production of industrial roundwood (mio. tDM per yr)
 q73_prod_woodfuel(j)                                                        Production of wood fuel (mio. tDM per yr)
 q73_prod_residues(j)                                                        Production of residues from industrial roundwood harvest (mio. tDM per yr)
+q73_invest_harvest(j,land_natveg)                                           Investment into natveg harvest capacity (mio. USD17MER per yr)
+q73_disinvest_harvest(j,land_natveg)                                        Reduction of natveg harvest below existing harvest capacity (mio. USD17MER per yr)
 ;
 
 
 *#################### R SECTION START (OUTPUT DECLARATIONS) ####################
 parameters
- ov_cost_timber(t,i,type)                    Actual cost of harvesting timber from forests (mio. USD17MER per yr)
- ov73_prod_heaven_timber(t,j,kforestry,type) Production of woody biomass from heaven (mio. tDM per yr)
- ov73_prod_residues(t,j,type)                Production of residues from industrial roundwood harvest (mio. tDM per yr)
- oq73_cost_timber(t,i,type)                  Actual cost of harvesting timber from forests (mio. USD17MER per yr)
- oq73_prod_wood(t,j,type)                    Production of industrial roundwood (mio. tDM per yr)
- oq73_prod_woodfuel(t,j,type)                Production of wood fuel (mio. tDM per yr)
- oq73_prod_residues(t,j,type)                Production of residues from industrial roundwood harvest (mio. tDM per yr)
+ ov_cost_timber(t,i,type)                     Actual cost of harvesting timber from forests (mio. USD17MER per yr)
+ ov73_prod_heaven_timber(t,j,kforestry,type)  Production of woody biomass from heaven (mio. tDM per yr)
+ ov73_prod_residues(t,j,type)                 Production of residues from industrial roundwood harvest (mio. tDM per yr)
+ ov73_invest_harvest(t,j,land_natveg,type)    Investment into natveg harvest capacity (mio. USD17MER per yr)
+ ov73_disinvest_harvest(t,j,land_natveg,type) Reduction of natveg harvest below existing harvest capacity (mio. USD17MER per yr)
+ oq73_cost_timber(t,i,type)                   Actual cost of harvesting timber from forests (mio. USD17MER per yr)
+ oq73_prod_wood(t,j,type)                     Production of industrial roundwood (mio. tDM per yr)
+ oq73_prod_woodfuel(t,j,type)                 Production of wood fuel (mio. tDM per yr)
+ oq73_prod_residues(t,j,type)                 Production of residues from industrial roundwood harvest (mio. tDM per yr)
+ oq73_invest_harvest(t,j,land_natveg,type)    Investment into natveg harvest capacity (mio. USD17MER per yr)
+ oq73_disinvest_harvest(t,j,land_natveg,type) Reduction of natveg harvest below existing harvest capacity (mio. USD17MER per yr)
 ;
 *##################### R SECTION END (OUTPUT DECLARATIONS) #####################

@@ -78,13 +78,7 @@ q63_c_sequestration_biochar_fs(i2,feedstock63) ..
           * sum(bc_tech63,
           f63_biochar_attributes("c",bc_tech63)
           * v63_biochar_applied_sys_fs(i2,bc_tech63,feedstock63))
-          ;
-
-*' Biochar CDR is not credited to the model in any mode, so no CDR reward is
-*' paid and carbon pricing cannot act back on the model decisions. In coupled
-*' REMIND-MAgPIE mode (`rem-mag`), biochar CDR is accounted for within REMIND.
-*' The expected CDR (`v63_c_stable_biochar_fs`) is calculated and reported in
-*' all modes.
+           ;
 
 
 *' Regional biochar application on each land type is calculated from annual
@@ -103,15 +97,13 @@ q63_biochar_application_total(i2) ..
           ;
 
 
-*' In `mag-exo` mode biochar production is exogenous, but the application of
-*' biochar is a model decision without direct benefit (no CDR reward). To
-*' prevent produced biochar from being fully diverted to non-agricultural use,
-*' a minimum share of production (`s63_bc_min_app_share`, default 100%) must be
-*' applied to agricultural land. In `rem-mag` mode the constraint is inactive
-*' (`s63_exo_mode` = 0).
+*' Biochar production is exogenous in both `mag-exo` and `rem-mag` mode, but the
+*' application of biochar is a model decision. To prevent produced biochar from
+*' being fully diverted to non-agricultural use, a minimum share of production
+*' (`s63_bc_min_app_share`, default 100%) must be applied to agricultural land.
 q63_biochar_application_min(i2) ..
       sum(bcland63, v63_biochar_applied(i2,bcland63)) =g=
-          s63_exo_mode * s63_bc_min_app_share * v63_biochar_prod_total(i2,"dm")
+          s63_bc_min_app_share * v63_biochar_prod_total(i2,"dm")
           ;
 
 

@@ -66,7 +66,7 @@ $endif
 
 ** Harmonize until predefined time step if not applied in coupled or stylized set-up
   loop(t$(m_year(t) <= sm_fix_SSP2),
-    i63_biochar_prod(t,i,bc_plant63) = f63_biochar_prod(t,i,bc_plant63,"R2M41-SSP2-NPi");
+    i63_biochar_prod(t,i,bc_plant63) = f63_biochar_prod(t,i,bc_plant63,"R34M410-SSP2-NPi2025");
   );
 $endif
 
@@ -78,12 +78,10 @@ $ifthen "%c63_biochar_mode%" == "rem-mag"
 *   biochar within the REMIND-MAgPIE framework: feedstock demand and CDR
 *   accounting are handled by REMIND, model-internal interfaces stay inactive
   s63_simulation_mode_mag = 0;
-  s63_exo_mode            = 0;
 $elseif "%c63_biochar_mode%" == "mag-exo"
 *   MAgPIE-standalone with exogenous production: feedstock demand is passed to
 *   the 60_bioenergy module, but biochar CDR is not credited to the model
   s63_simulation_mode_mag = 1;
-  s63_exo_mode            = 1;
 $else
   $abort "c63_biochar_mode must be one of rem-mag, mag-exo"
 $endif

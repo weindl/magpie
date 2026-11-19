@@ -6,10 +6,6 @@
 *** |  Contact: magpie@pik-potsdam.de
 
 
-scalars
-  s63_exo_mode                                    Flag for MAgPIE-standalone exogenous biochar mode (1)
-;
-
 parameters
  i63_biochar_prod(t,i,bc_plant63)               Regional biochar production per biochar production systems (mio. GJ per yr)
  p63_country_dummy(iso)                           Dummy parameter indicating whether country is selected for biochar production scenario (1)

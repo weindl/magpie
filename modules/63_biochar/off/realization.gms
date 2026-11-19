@@ -8,7 +8,7 @@
 *' @description The off realization switches off biochar production.
 *' All interfaces of the 63_biochar module are provided but fixed to neutral
 *' values (no feedstock demand, no CDR, no costs, yield response multiplier
-*' of 1), so that modules 14_yields, 56_ghg_policy and 60_bioenergy run
+*' of 1), so that modules 14_yields, 56_ghg_policy, 11_costs and 60_bioenergy run
 *' unaffected.
 
 *####################### R SECTION START (PHASES) ##############################

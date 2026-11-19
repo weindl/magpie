@@ -66,6 +66,7 @@ equations
  q63_biochar_application_land(i,bcland63)             Regional application of produced biochar on land (mio. tDM per yr)
  q63_biochar_application_total(i)                 Regional consistency between system-level and land-level application (mio. tDM per yr)
  q63_biochar_application_min(i)                   Minimum application share of biochar production (mio. tDM per yr)
+ q63_biochar_application_max(i)                   Maximum application share of biochar production (mio. tDM per yr)
  q63_biochar_application_balance_sys_fs(i,bc_tech63,feedstock63)  Regional mass balance of biochar by production system and feedstock (mio. tDM per yr)
  q63_biochar_app_rate_limit(j,bcland63)               Annual limit for the biochar application rate on land on cluster level (tDM per ha per yr)
  q63_biochar_stock_limit(j,bcland63)                  Cumulative limit for biochar soil stock per area on cluster level (tDM per ha)

@@ -66,34 +66,34 @@ $endif
 
 ** Harmonize until predefined time step if not applied in coupled or stylized set-up
   loop(t$(m_year(t) <= sm_fix_SSP2),
-    i63_biochar_prod(t,i,bc_plant63) = f63_biochar_prod(t,i,bc_plant63,"R2M41-SSP2-NPi");
+    i63_biochar_prod(t,i,bc_plant63) = f63_biochar_prod(t,i,bc_plant63,"R34M410-SSP2-NPi2025");
   );
 $endif
 
 
 ****** Additional configurations
 * Set flags according to the selected biochar simulation mode
-* (c63_biochar_mode: rem-mag, exo or endo, see realization.gms):
+* (c63_biochar_mode: rem-mag, mag-exo or mag-endo, see realization.gms):
 $ifthen "%c63_biochar_mode%" == "rem-mag"
 *   biochar within the REMIND-MAgPIE framework: feedstock demand and CDR
 *   accounting are handled by REMIND, model-internal interfaces stay inactive
   s63_simulation_mode_mag = 0;
   s63_cdr_credited        = 0;
-  s63_exo_mode            = 0;
-$elseif "%c63_biochar_mode%" == "exo"
+  s63_exo_mode            = 1;
+$elseif "%c63_biochar_mode%" == "mag-exo"
 *   MAgPIE-standalone with exogenous production: feedstock demand is passed to
 *   the 60_bioenergy module, but biochar CDR is not credited to the model
   s63_simulation_mode_mag = 1;
   s63_cdr_credited        = 0;
   s63_exo_mode            = 1;
-$elseif "%c63_biochar_mode%" == "endo"
+$elseif "%c63_biochar_mode%" == "mag-endo"
 *   MAgPIE-standalone with endogenous production: feedstock demand is passed
 *   to the 60_bioenergy module and expected CDR is credited via 56_ghg_policy
   s63_simulation_mode_mag = 1;
   s63_cdr_credited        = 1;
   s63_exo_mode            = 0;
 $else
-  $abort "c63_biochar_mode must be one of rem-mag, exo, endo"
+  $abort "c63_biochar_mode must be one of rem-mag, mag-exo, mag-endo"
 $endif
 
 

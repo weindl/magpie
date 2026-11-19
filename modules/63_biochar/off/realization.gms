@@ -15,4 +15,5 @@
 $Ifi "%phase%" == "sets" $include "./modules/63_biochar/off/sets.gms"
 $Ifi "%phase%" == "declarations" $include "./modules/63_biochar/off/declarations.gms"
 $Ifi "%phase%" == "preloop" $include "./modules/63_biochar/off/preloop.gms"
+$Ifi "%phase%" == "postsolve" $include "./modules/63_biochar/off/postsolve.gms"
 *######################## R SECTION END (PHASES) ###############################

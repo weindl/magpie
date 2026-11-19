@@ -13,7 +13,8 @@
 sets
 
   scenBC63 biochar scenarios
-    / R21M42-SDP-NDC,
+    / PB650-BCpess-CTS01-noFuel-CHP17-EJ100,
+      R21M42-SDP-NDC,
       R21M42-SDP-NPi,
       R21M42-SDP-PkBudg1000,
       R21M42-SDP-PkBudg1100,
@@ -71,7 +72,28 @@ sets
       R34M410-SSP3-rollBack,
       R34M410-SSP5-NPi2025,
       R34M410-SSP5-PkBudg1000,
-      R34M410-SSP5-PkBudg650 /
+      R34M410-SSP5-PkBudg650,
+      R36M414-SSP1-NPi2025,
+      R36M414-SSP1-PkBudg1000,
+      R36M414-SSP1-PkBudg750,
+      R36M414-SSP2-NPi2025,
+      R36M414-SSP2-PkBudg1000,
+      R36M414-SSP2-PkBudg750,
+      R36M414-SSP3-NPi2025,
+      R36M414-SSP3-PkBudg1000,
+      SMIP7-H-SSP2-sens,
+      SMIP7-H-SSP3-main,
+      SMIP7-L-SSP1-sens,
+      SMIP7-L-SSP2-main,
+      SMIP7-LN-SSP2-main,
+      SMIP7-M-SSP1-sens,
+      SMIP7-M-SSP2-main,
+      SMIP7-M-SSP3-sens,
+      SMIP7-ML-SSP1-sens,
+      SMIP7-ML-SSP2-main,
+      SMIP7-ML-SSP3-sens,
+      SMIP7-VL-SSP1-main,
+      SMIP7-VL-SSP2-sens /
 
 ;
 *######################### R SECTION END (SETS) ################################
@@ -91,7 +113,7 @@ sets
          en_yield,
          c_yield /
 
-   att_bc(attributes) Attributes relevant for biochar
+   att_bc(attributes) product attributes relevant for biochar
        / dm, ge, c /
 
    bc_plant63 Selected pyrolysis plant set-ups including different co-products

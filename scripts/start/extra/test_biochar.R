@@ -29,6 +29,9 @@ cfg$input["regional"] <- "rev4.138+testBiochar_h12_magpie.tgz"
 cfg$input["cellular"] <- "rev4.138+testBiochar_h12_1b5c3817_cellularmagpie_c200_MRI-ESM2-0-ssp245_lpjml-8e6c5eb1.tgz"
 cfg$input["validation"] <- "rev4.138+testBiochar_h12_92e02314_validation.tgz"
 
+# force input download for all runs
+cfg$force_download <- TRUE 
+
 # create additional information to describe the runs
 cfg$info$flag <- "BC_PR63"
 

@@ -1,2 +1,0 @@
-name,type,reason
-vm_biochar_feedstock_mag,input,not needed

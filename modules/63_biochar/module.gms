@@ -8,18 +8,24 @@
 *' @title Biochar
 *'
 *' @description The module 63_biochar provides a regional and biomass-specific
-*' biochar feedstock demand $vm\_dem\_biochar$ to the model, which is further
-*' used in the [16_demand] module. For this calculation it requires
-*' information on conversion factors from biomass into biochar (provided by
-*' [16_demand] module).
+*' biochar feedstock demand (interface $vm\_biochar\_feedstock\_mag$) to the model,
+*' which is further used in the [60_bioenergy] module. For this calculation it
+*' requires information on conversion factors from biomass into biochar, provided
+*' by the module inputs f63\_biochar\_efficiency and f63\_biochar\_attributes.
+*' Expected carbon dioxide removal from stable biochar carbon is calculated
+*' ($v63\_c\_stable\_biochar\_fs$) and reported, but not credited to the MAgPIE
+*' model; in `rem-mag` mode it is accounted for within REMIND.
 *'
 *' In addition to calculating biochar feedstock quantities, the costs associated
-*' with the biochar feedstock production are provided to the objective function
-*' by the [11_costs] module.
+*' with the biochar supply chain (interface $vm\_cost\_biochar$) are provided to
+*' the objective function by the [11_costs] module, and the yield response to
+*' biochar soil stocks (interface $vm\_yld\_response\_biochar$) to the [14_yields]
+*' module.
 *'
-*' @authors Isabelle Weindl
+*' @authors Isabelle Weindl, Kristine Karstens
 
 
 *###################### R SECTION START (MODULETYPES) ##########################
-$Ifi "%biochar%" == "dec24" $include "./modules/63_biochar/dec24/realization.gms"
+$Ifi "%biochar%" == "exo_oct26" $include "./modules/63_biochar/exo_oct26/realization.gms"
+$Ifi "%biochar%" == "off" $include "./modules/63_biochar/off/realization.gms"
 *###################### R SECTION END (MODULETYPES) ############################

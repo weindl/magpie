@@ -28,56 +28,73 @@ source("scripts/start_functions.R")
 # ====================
 
 # Label for the version of EC scenario implementation
-run_flag <- "ECv05"
+run_flag <- "EC"
 
 # Project-specific MAgPIE scenario configuration
 scenario_config_ec <- "config/projects/scenario_config_ec.csv"
 
-# Scenarios included in the test matrix
-policies_to_run <- c("NPi2025", "PkBudg1000", "PkBudg650")
-pathways_to_run <- c("SSP2", "UF", "OC", "LM")
 
+# ====================
+# REMIND forcing files
+# ====================
 
-scenario_grid <- expand.grid(
-  pathway = pathways_to_run,
-  policy = policies_to_run,
-  KEEP.OUT.ATTRS = FALSE,
-  stringsAsFactors = FALSE
+# Stand-alone MAgPIE runs use GHG-price and 2nd-generation bioenergy-demand
+# trajectories from existing REMIND-MAgPIE runs.
+#
+# For LM there is no coupled REMIND-MAgPIE scenario in the EC setup. The LM diagnostic
+# runs therefore deliberately use the corresponding OC REMIND forcing:
+#   - LM NPi    <- OC NPi forcing
+#   - LM policy <- OC climate-policy forcing
+#
+# This is a common-forcing diagnostic: it isolates MAgPIE-side differences
+# between OC and LM under identical external energy-system forcing.
+# The LM runs are therefore not final coupled results.
+
+remind_base <- "/p/projects/magpie/users/weindl/2_EarthCommission/EC_remmag/EC_runs_v03_oct26/remind/output"
+
+remind_report_paths <- c(
+  UF_NPi = file.path(
+    remind_base,
+    "C_EC_SSP2_UF_2026-10-01_14.38.59/REMIND_generic_C_EC_SSP2_UF.mif"
+  ),
+  UF_policy = file.path(
+    remind_base,
+    "C_EC_SSP2_UF_PkBudg750_2026-10-01_23.03.22/REMIND_generic_C_EC_SSP2_UF_PkBudg750.mif"
+  ),
+  OC_NPi = file.path(
+    remind_base,
+    "C_EC_SSP1_OC_NPi_2026-10-01_23.07.12/REMIND_generic_C_EC_SSP1_OC_NPi.mif"
+  ),
+  OC_policy = file.path(
+    remind_base,
+    "C_EC_SSP1_OC_2026-10-01_23.11.00/REMIND_generic_C_EC_SSP1_OC.mif"
+  )
 )
 
-# Mapping from pathway labels used in run titles to the shorter column names
-# in scenario_config_ec.csv.
-ec_config_column <- c(
-  UF = "EC-UF",
-  OC = "EC-OC",
-  LM = "EC-LM"
+
+# ====================
+# Scenarios
+# ====================
+
+scenarios <- c(
+  "EC_SSP2_UF",
+  "EC_SSP2_UF_PkBudg750",
+  "EC_SSP1_OC_NPi",
+  "EC_SSP1_OC",
+  "EC_SSP1_LM_NPi",
+  "EC_SSP1_LM"
 )
-
-# Run the full code check for the first scenario only.
-code_check_first_run <- TRUE
-
-# Support function for standardized run titles
-.make_title <- function(flag, pathway, policy) {
-  paste(flag, pathway, policy, sep = "_")
-}
 
 
 # ====================
 # Scenario runs
 # ====================
 
-# Climate-policy variants:
-# NPi2025: continuation of current climate policies
-# PkBudg1000: ambitious climate policy broadly in line with 2deg C Paris target
-# PkBudg650: ambitious climate policy broadly in line with 1.5deg C Paris target
+for (i in seq_along(scenarios)) {
 
+  scenario <- scenarios[i]
 
-for (i in seq_len(nrow(scenario_grid))) {
-
-  pathway <- scenario_grid$pathway[i]
-  policy <- scenario_grid$policy[i]
-
-  # Start every run from default configuration.
+  # Start each run from default configuration.
   source("config/default.cfg")
 
 
@@ -89,116 +106,107 @@ for (i in seq_len(nrow(scenario_grid))) {
 
   cfg$qos <- "short_highMem"
 
-  # Preserve individual tests and prevent replacement.
   cfg$results_folder <- "output/:title::date:"
   cfg$force_replace <- FALSE
 
-  # !!! Optional reduced output set for preliminary testing:
-  # cfg$output <- c("output_check", "rds_report")
 
+  # ------------------------------------
+  # Identify pathway and policy variant
+  # ------------------------------------
+
+  is_uf <- grepl("EC_SSP2_UF", scenario)
+  is_oc <- grepl("EC_SSP1_OC", scenario)
+  is_lm <- grepl("EC_SSP1_LM", scenario)
+
+  is_npi <- scenario %in% c(
+    "EC_SSP2_UF",
+    "EC_SSP1_OC_NPi",
+    "EC_SSP1_LM_NPi"
+  )
 
 
   # ------------------------------------
-  # Shared scenario basis
+  # Standard scenario settings
   # ------------------------------------
 
-  # SSP2 is the common starting point before pathway-specific EC settings
-  # are applied. Future climate-change impacts are switched off.
-  cfg <- setScenario(cfg, c("SSP2", "nocc_hist"))
-
-  # !!! ForestryExo is intentionally not activated for EC scenario set.
-  # Add it only after a deliberate decision to use exogenous forestry:
-  # cfg <- setScenario(cfg, "ForestryExo")
-
-
-  # ------------------------------------
-  # Climate-policy settings
-  # ------------------------------------
-
-  # !!! Align GHG-price muting years with corresponding REMIND scenario configurations.
-
-  if (policy == "NPi2025") {
-
-    cfg <- setScenario(cfg, "NPI")
-    cfg$gms$c56_mute_ghgprices_until <- "y2150"
-
-  } else if (policy %in% c("PkBudg1000", "PkBudg650")) {
-
-    cfg <- setScenario(cfg, "NDC")
-    cfg$gms$c56_mute_ghgprices_until <- "y2030"
-
+  if (is_uf) {
+    ssp <- "SSP2"
   } else {
-
-    stop("Unknown climate-policy variant: ", policy)
+    ssp <- "SSP1"
   }
 
-  # !!! COUPLING: Provisional stand-alone inputs based on the existing SSP2 REMIND runs.
-  # Replace these with coupled-run inputs once the corresponding
-  # REMIND-MAgPIE simulations are available.
-  cfg$gms$c56_pollutant_prices <- paste0("R34M410-SSP2-", policy)
-  cfg$gms$c60_2ndgen_biodem <- paste0("R34M410-SSP2-", policy)
+  if (is_npi) {
+    cfg <- setScenario(
+      cfg,
+      c(ssp, "NPI", "AR-natveg", "nocc_hist", "rcp4p5")
+    )
+    cfg$gms$c56_mute_ghgprices_until <- "y2150"
+
+  } else {
+    cfg <- setScenario(
+      cfg,
+      c(ssp, "NDC", "AR-natveg", "nocc_hist", "rcp1p9")
+    )
+    cfg$gms$c56_mute_ghgprices_until <- "y2030"
+  }
 
 
   # ------------------------------------
   # Earth Commission pathway settings
   # ------------------------------------
 
-  # Keep this as the final setScenario() call because comma-separated EC settings such as
-  # kfo_rd and land_snv are converted by setScenario() into vectors.
-  # A subsequent setScenario() call would fail on these vector settings.
-  if (pathway %in% names(ec_config_column)) {
-    cfg <- setScenario(
-      cfg,
-      ec_config_column[[pathway]],
-      scenario_config = scenario_config_ec
-    )
+  if (is_uf) {
+    cfg <- setScenario(cfg, "EC-UF", scenario_config = scenario_config_ec)
+  }
+
+  if (is_oc) {
+    cfg <- setScenario(cfg, "EC-OC", scenario_config = scenario_config_ec)
+  }
+
+  if (is_lm) {
+    cfg <- setScenario(cfg, "EC-LM", scenario_config = scenario_config_ec)
   }
 
 
   # ------------------------------------
-  # Explicit EC project overrides
+  # Settings from current EC coupling setup
   # ------------------------------------
-
-  # !!! Keep these explicit for later alignment with the REMIND configurations.
-  # They are applied after the scenario presets so that the values below
-  # override previous settings.
+  
+  cfg$gms$s15_elastic_demand <- 1
+  cfg$gms$c60_1stgen_biodem <- "const2030"
   cfg$gms$s56_limit_ch4_n2o_price <- 734
-  cfg$gms$s32_annual_aff_limit <- 0.03
-  cfg$gms$s15_elastic_demand <- 0
 
-
-  # !!! The following settings currently match develop defaults and are therefore
-  # not repeated here. Add them explicitly only if the EC project should pin
-  # these choices against future default changes:
-  # cfg$gms$cropland <- "detail_apr24"
-  # cfg$gms$som <- "cellpool_jan23"
-  # cfg$gms$factor_costs <- "sticky_feb18"
-
-
+ 
   # ------------------------------------
-  # Coupled-run settings for later use
+  # REMIND forcing
   # ------------------------------------
 
-  # !!! COUPLING: Replace with the actual pathway-specific REMIND report file.
-  # path_to_coupled_output <- paste0(
-  #   "/p/projects/magpie/users/.../...",
-  #   "/REMIND_generic_C_....mif"
-  # )
-  #
-  # cfg$gms$c56_pollutant_prices <- "coupling"
-  # cfg$gms$c60_2ndgen_biodem <- "coupling"
-  # cfg$path_to_report_ghgprices <- path_to_coupled_output
-  # cfg$path_to_report_bioenergy <- path_to_coupled_output
+  if (is_uf && is_npi) {
+    path_to_coupled_output <- remind_report_paths[["UF_NPi"]]
+  } else if (is_uf) {
+    path_to_coupled_output <- remind_report_paths[["UF_policy"]]
+  } else if (is_npi) {
+    # OC forcing is also used for the corresponding LM diagnostic run.
+    path_to_coupled_output <- remind_report_paths[["OC_NPi"]]
+  } else {
+    # OC forcing is also used for the corresponding LM diagnostic run.
+    path_to_coupled_output <- remind_report_paths[["OC_policy"]]
+  }
+
+  cfg$gms$c56_pollutant_prices <- "coupling"
+  cfg$gms$c60_2ndgen_biodem <- "coupling"
+  cfg$path_to_report_ghgprices <- path_to_coupled_output
+  cfg$path_to_report_bioenergy <- path_to_coupled_output
 
 
   # ------------------------------------
   # Start run
   # ------------------------------------
 
-  cfg$title <- .make_title(run_flag, pathway, policy)
+  cfg$title <- paste(run_flag, scenario, sep = "_")
 
   start_run(
     cfg = cfg,
-    codeCheck = code_check_first_run && i == 1
+    codeCheck = (i == 1)
   )
 }

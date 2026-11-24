@@ -49,6 +49,7 @@ scalars
   s63_bcScen_stylized_targetyear  Biochar stylized scenario target year   / 2050 /
   s63_bcScen_stylized_target  Total stylized biochar production target in target year   (mio. GJ per yr)   / 10000 /
   s63_bcScen_stylized_functional_form  Switch for functional form of faders   (1)   / 1 /
+  s63_biochar_prod_level  biochar production level indicator 1 for regional and 0 for global production   (1)   / 1 /
 ;
 
 $setglobal c63_biochar_mode  mag-exo

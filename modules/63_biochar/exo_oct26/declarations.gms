@@ -8,6 +8,7 @@
 
 parameters
  i63_biochar_prod(t,i,bc_plant63)               Regional biochar production per biochar production systems (mio. GJ per yr)
+ p63_biochar_prod_glo(t_all,bc_plant63)         Global biochar production per biochar production system (mio. GJ per yr)
  p63_country_dummy(iso)                           Dummy parameter indicating whether country is selected for biochar production scenario (1)
  p63_region_BC_shr(t_all,i)                       Regional biochar production share derived from country selection weighted by population size (1)
  p63_region_BC_avl_land_shr(i)                    Regional biochar production share derived from country selection weighted by available cropland area (1)
@@ -50,6 +51,7 @@ variables
 equations
  q63_biochar_feedstock_conversion(i,feedstock63)  Conversion of biomass feedstock to biochar (mio. GJ per yr)
  q63_biochar_production(i,bc_tech63)               Regional biochar production per system (mio. GJ per yr)
+ q63_biochar_production_glo(bc_tech63)             Global biochar production per system (mio. GJ per yr)
  q63_biochar_production_total(i,att_bc)           Total regional biochar production across systems and feedstocks (mio. GJ or mio. tDM or mio. tC per yr)
  q63_feedstock_availability_residues(i)           Residue availability for biochar production (mio. GJ per yr)
  q63_biochar_simulation_mode(i,feedstock63)       Activation of biochar feedstock demand interface depending on simulation mode (mio. GJ per yr)

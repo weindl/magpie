@@ -54,7 +54,12 @@ mitis <- list(
 )
 
 # Dorndorf et al. 2026 (https://doi.org/10.1016/j.erss.2026.104882),
-# pessimistic techno-economic assumptions, only available in mag-exo mode
+# pessimistic techno-economic assumptions, only available in mag-exo mode.
+# Note: regional biochar production in these REMIND standalone runs assumes
+# tradable biomass, e.g. production in JPN far exceeds regional feedstock
+# supply and application potential. Imposing production at the global level
+# (s63_biochar_prod_level = 0) lets MAgPIE choose production regions,
+# approximating REMIND's biomass trade and avoiding infeasibilities (y2070).
 bcDorndorf <- "PB650-BCpess-CTS01-noFuel-CHP17-EJ100"
 
 runs <- list(
@@ -72,9 +77,9 @@ runs <- list(
   # rem-mag: replay of the standard REMIND-MAgPIE run (mode switch test,
   # biochar was not chosen in REMIND, so production is expected ~ zero)
   bcRemmag    = list(mode = "rem-mag", bc = "mitiref"),
-  bcDorndorf  = list(mode = "mag-exo", bc = bcDorndorf),
+  bcDorndorf  = list(mode = "mag-exo", bc = bcDorndorf, bc_level = 0),
   # same, but with biochar yield response (central literature assumption)
-  bcDorndorfYld = list(mode = "mag-exo", bc = bcDorndorf, yield_max = 0.1),
+  bcDorndorfYld = list(mode = "mag-exo", bc = bcDorndorf, yield_max = 0.1, bc_level = 0),
   # mag-exo: stylized ramp-up to 10000 (input units, about 10 EJ per yr)
   bcStyl      = list(mode = "mag-exo", bc = "stylized")
 )
@@ -100,6 +105,12 @@ for (miti in names(mitis)) {
       }
     } else {
       cfg$gms$biochar <- run_cfg$biochar
+    }
+
+    # impose biochar production globally for scenarios from REMIND standalone
+    # runs (tradable biomass in REMIND), regionally otherwise (default)
+    if (!is.null(run_cfg$bc_level)) {
+      cfg$gms$s63_biochar_prod_level <- run_cfg$bc_level
     }
 
     cfg$gms$c56_pollutant_prices <- mitis[[miti]]$ref

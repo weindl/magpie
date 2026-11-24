@@ -71,6 +71,13 @@ $endif
 $endif
 
 
+****** Aggregate biochar production scenario to global level
+* Used by q63_biochar_production_glo if biochar production is imposed at the
+* global level (s63_biochar_prod_level = 0), e.g. for `mag-exo` replays of
+* scenarios from REMIND standalone runs with tradable biomass.
+p63_biochar_prod_glo(t,bc_plant63) = sum(i, i63_biochar_prod(t,i,bc_plant63));
+
+
 ****** Additional configurations
 * Set flags according to the selected biochar simulation mode
 * (c63_biochar_mode: rem-mag or mag-exo, see realization.gms):

@@ -24,10 +24,30 @@ q63_biochar_feedstock_conversion(i2,feedstock63) ..
 *' types of biomass feedstock. In both `mag-exo` and `rem-mag` mode, production is
 *' exogenously specified in all years, and the model only decides about the
 *' feedstock split and about where the produced biochar is applied.
+*' Production is imposed either at the regional or at the global level, where
+*' only one of the following two equations is active at a time, depending on
+*' the switch `s63_biochar_prod_level`:
+*' If switch `s63_biochar_prod_level` = 1 (regional), `q63_biochar_production`
+*' constrains biochar production in each region.
+*' If switch `s63_biochar_prod_level` = 0 (global), `q63_biochar_production_glo`
+*' constrains the global production total and the model chooses the regions
+*' where biochar is produced, approximating the biomass trade that takes place
+*' in REMIND.
 
 q63_biochar_production(i2,bc_tech63) ..
       sum(feedstock63, v63_biochar_prod(i2,bc_tech63,feedstock63)) =e=
-          sum((ct, plant_tech63(bc_tech63, bc_plant63)), i63_biochar_prod(ct,i2,bc_plant63))
+          sum((ct, plant_tech63(bc_tech63, bc_plant63)),
+              s63_biochar_prod_level * i63_biochar_prod(ct,i2,bc_plant63))
+          + sum(feedstock63, (1 - s63_biochar_prod_level)
+              * v63_biochar_prod(i2,bc_tech63,feedstock63))
+          ;
+
+q63_biochar_production_glo(bc_tech63) ..
+      sum((i2,feedstock63), v63_biochar_prod(i2,bc_tech63,feedstock63)) =e=
+          sum((ct, plant_tech63(bc_tech63, bc_plant63)),
+              (1 - s63_biochar_prod_level) * p63_biochar_prod_glo(ct,bc_plant63))
+          + sum((i2,feedstock63), s63_biochar_prod_level
+              * v63_biochar_prod(i2,bc_tech63,feedstock63))
           ;
 
 *' Total regional biochar production equals sum across biochar production systems and feedstocks.

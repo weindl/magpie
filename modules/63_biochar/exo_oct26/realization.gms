@@ -10,18 +10,18 @@
 *' which is applied to cropland to sequester carbon in agricultural soils.
 *' Biochar production drives feedstock demand, which can be fulfilled by
 *' dedicated cultivation of fast-growing biomass as well as by residues.
-*' Depending on the simulation mode switch `c63_biochar_mode`, biochar
-*' production is
-*' - (`mag-exo`) exogenously specified for all years via the scenario switches
-*'   (`c63_biochar_prod`, `c63_biochar_prod_noselect`), while the model only
-*'   decides about the feedstock split and about where the biochar is applied.
-*'   Biochar CDR is not credited to the model, so no CDR reward is paid and
-*'   carbon pricing cannot act back on the model
-*'   optimization; the expected CDR is still calculated internally
+*' Depending on the simulation mode switch `c63_biochar_mode`, biochar production
+*' is set as follows:
+*' - `mag-exo`: biochar production is exogenously specified for all years via the
+*'   scenario switches (`c63_biochar_prod`, `c63_biochar_prod_noselect`), while
+*'   the model only decides about the feedstock split and about where the biochar
+*'   is applied. Biochar CDR is not credited to the model, so no CDR reward is
+*'   paid and carbon pricing cannot act back on the model optimization; the
+*'   expected CDR is still calculated internally
 *'   (`v63_c_stable_biochar_fs`) and reported.
-*' - (`rem-mag`) prescribed by REMIND, either from the coupling file in a
-*'   coupled REMIND-MAgPIE run or from a static REMIND scenario in
-*'   `f63_biochar_prod`. Feedstock demand and CDR accounting are handled by
+*' - `rem-mag`: biochar production is prescribed by REMIND, either from the
+*'   coupling file in a coupled REMIND-MAgPIE run or from a static REMIND scenario
+*'   in `f63_biochar_prod`. Feedstock demand and CDR accounting are handled by
 *'   REMIND, and the model-internal feedstock interface
 *'   `vm_biochar_feedstock_mag` remains inactive to avoid double counting.
 

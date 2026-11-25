@@ -113,7 +113,7 @@ sets
          en_yield,
          c_yield /
 
-   att_bc(attributes) product attributes relevant for biochar
+   att_bc(attributes) Product attributes relevant for biochar
        / dm, ge, c /
 
    bc_plant63 Selected pyrolysis plant set-ups including different co-products

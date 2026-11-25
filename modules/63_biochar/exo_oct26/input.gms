@@ -47,13 +47,13 @@ scalars
   s63_bc_cost_application  Biochar application cost   (USD17MER per tDM)   / 10 /
   s63_bcScen_stylized_startyear  Biochar stylized scenario start year   / 2025 /
   s63_bcScen_stylized_targetyear  Biochar stylized scenario target year   / 2050 /
-  s63_bcScen_stylized_target  Total stylized biochar production target in target year   (mio. GJ per yr)   / 10000 /
+  s63_bcScen_stylized_target  Total stylized biochar production target in target year   (mio. GJ per yr)   / 0 /
   s63_bcScen_stylized_functional_form  Switch for functional form of faders   (1)   / 1 /
   s63_biochar_prod_level  biochar production level indicator 1 for regional and 0 for global production   (1)   / 1 /
 ;
 
-$setglobal c63_biochar_mode  mag-exo
-$setglobal c63_biochar_prod  stylized
+$setglobal c63_biochar_mode  rem-mag
+$setglobal c63_biochar_prod  none
 $setglobal c63_biochar_prod_noselect  none
 $setglobal c63_BCcost_scen  central
 

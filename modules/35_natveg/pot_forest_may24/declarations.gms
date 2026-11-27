@@ -27,7 +27,7 @@ parameters
  p35_carbon_density_other(t,j,othertype35,ac,ag_pools)   Carbon density other land (tC per ha)
  p35_disturbance_loss_secdf(t,j,ac)                      Loss due to disturbances in secondary forest (mio. ha)
  p35_disturbance_loss_primf(t,j)                         Loss due to disturbances in primary forest (mio. ha)
- p35_secdf_ageclass(j,ac)                                Secondadry forest area in 5-year age-classes (mio. ha)
+ p35_secdf_ageclass(j,ac)                                Secondary forest area in 5-year age-classes (mio. ha)
  p35_secdf_ageclass_dist(j,ac)                           Share of age-classes in secondary forest (1)
  p35_land_start_ac(j,ac,land_natveg)                     Initial Natural vegetation area (mio. ha)
  p35_protection_dist(j,ac)                               Distribution of secondary forest protection (1)
@@ -43,7 +43,7 @@ equations
  q35_carbon_other(j,ag_pools,stockType)                  Other land carbon stock calculation (mio tC)
  q35_min_forest(j)                                       Minimum forest land constraint (mio. ha)
  q35_min_other(j)                                        Minimum other land constraint (mio. ha)
- q35_natforest_reduction(j)                              Natural forest reduction (mio. ha)
+ q35_natforest_conversion(j)                             Natural forest conversion (mio. ha)
  q35_landdiff                                            Difference in natveg land (mio. ha)
  q35_other_expansion(j,othertype35)                      Other land expansion (mio. ha)
  q35_other_reduction(j,othertype35,ac)                   Other land reduction (mio. ha)
@@ -76,7 +76,7 @@ positive variables
   vm_landdiff_natveg                                     Aggregated difference in natveg land compared to previous timestep (mio. ha)
   v35_other_expansion(j,othertype35)                     Other land expansion compared to previous timestep (mio. ha)
   v35_other_reduction(j,othertype35,ac)                  Other land reduction compared to previous timestep (mio. ha)
-  v35_secdforest_expansion(j)                            Secdforest reduction compared to previous timestep (mio. ha)
+  v35_secdforest_expansion(j)                            Secdforest expansion compared to previous timestep (mio. ha)
   v35_secdforest_reduction(j,ac)                         Secdforest reduction compared to previous timestep (mio. ha)
   v35_primforest_reduction(j)                            Primforest reduction compared to previous timestep (mio. ha)
   v35_hvarea_secdforest(j,ac)                            Harvested area from secondary forest (mio. ha)
@@ -84,7 +84,10 @@ positive variables
   v35_hvarea_primforest(j)                               Harvested area from primary forest (mio. ha)
   vm_prod_natveg(j,land_natveg,kforestry)                Production of woody biomass from natural vegetation (mio. tDM per yr)
   vm_cost_hvarea_natveg(i)                               Cost of harvesting natural vegetation (mio. USD17MER)
-  vm_natforest_reduction(j)                              Natural forest reduction (mio. ha)
+;
+
+variables
+  vm_natforest_conversion(j)                             Natural forest conversion (mio. ha)
 ;
 
 
@@ -95,7 +98,7 @@ parameters
  ov_landdiff_natveg(t,type)                          Aggregated difference in natveg land compared to previous timestep (mio. ha)
  ov35_other_expansion(t,j,othertype35,type)          Other land expansion compared to previous timestep (mio. ha)
  ov35_other_reduction(t,j,othertype35,ac,type)       Other land reduction compared to previous timestep (mio. ha)
- ov35_secdforest_expansion(t,j,type)                 Secdforest reduction compared to previous timestep (mio. ha)
+ ov35_secdforest_expansion(t,j,type)                 Secdforest expansion compared to previous timestep (mio. ha)
  ov35_secdforest_reduction(t,j,ac,type)              Secdforest reduction compared to previous timestep (mio. ha)
  ov35_primforest_reduction(t,j,type)                 Primforest reduction compared to previous timestep (mio. ha)
  ov35_hvarea_secdforest(t,j,ac,type)                 Harvested area from secondary forest (mio. ha)
@@ -103,7 +106,7 @@ parameters
  ov35_hvarea_primforest(t,j,type)                    Harvested area from primary forest (mio. ha)
  ov_prod_natveg(t,j,land_natveg,kforestry,type)      Production of woody biomass from natural vegetation (mio. tDM per yr)
  ov_cost_hvarea_natveg(t,i,type)                     Cost of harvesting natural vegetation (mio. USD17MER)
- ov_natforest_reduction(t,j,type)                    Natural forest reduction (mio. ha)
+ ov_natforest_conversion(t,j,type)                   Natural forest conversion (mio. ha)
  oq35_land_secdforest(t,j,type)                      Secdforest land pool calculation (mio. ha)
  oq35_land_other(t,j,type)                           Other land pool calculation (mio. ha)
  oq35_carbon_primforest(t,j,ag_pools,stockType,type) Primforest carbon stock calculation (mio tC)
@@ -111,7 +114,7 @@ parameters
  oq35_carbon_other(t,j,ag_pools,stockType,type)      Other land carbon stock calculation (mio tC)
  oq35_min_forest(t,j,type)                           Minimum forest land constraint (mio. ha)
  oq35_min_other(t,j,type)                            Minimum other land constraint (mio. ha)
- oq35_natforest_reduction(t,j,type)                  Natural forest reduction (mio. ha)
+ oq35_natforest_conversion(t,j,type)                 Natural forest conversion (mio. ha)
  oq35_landdiff(t,type)                               Difference in natveg land (mio. ha)
  oq35_other_expansion(t,j,othertype35,type)          Other land expansion (mio. ha)
  oq35_other_reduction(t,j,othertype35,ac,type)       Other land reduction (mio. ha)

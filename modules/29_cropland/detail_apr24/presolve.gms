@@ -33,6 +33,14 @@ p29_snv_relocation(t,j)$(p29_snv_relocation(t, j) > p29_max_snv_relocation(t,j))
 
 *' Area potentially available for cropping
 p29_avl_cropland(t,j) = f29_avl_cropland(j,"%c29_marginal_land%") * (1 - p29_snv_shr(t,j));
+
+*' Existing tree cover on cropland cannot be removed (see below). Cropland therefore cannot fall below
+*' the area needed to hold it (tree cover <= cropland * s29_treecover_max), even if the SNV share
+*' lowers the available cropland.
+if (s29_treecover_max > 0,
+  p29_avl_cropland(t,j) = max(p29_avl_cropland(t,j),
+                              sum(ac, pc29_treecover(j,ac)) / s29_treecover_max);
+);
 *' @stop
 
 
@@ -79,7 +87,6 @@ if (s29_treecover_keep = 1,
 v29_treecover.lo(j,ac_est) = 0;
 v29_treecover.up(j,ac_est) = Inf;
 v29_treecover.fx(j,ac_sub) = pc29_treecover(j,ac_sub);
-m_boundfix(v29_treecover,(j,ac_sub),l,1e-6);
 
 * set treecover penalty
 if (m_year(t) <= s29_treecover_scenario_start,
@@ -100,26 +107,30 @@ else
 * Fallow land
 * ------------------------------------------------------- 
 
-* create fallow land target and penalty scenario
-i29_fallow_target(t) = s29_fallow_target * i29_fallow_scenario_fader(t);
+* if fallow is activated, define fallow penalty scenarios and open bounds.
 
-if (m_year(t) <= s29_fallow_scenario_start,
- i29_fallow_penalty(t) = 0;
- v29_fallow_missing.fx(j) = 0;
+if (s29_fallow_max = 0,
+    vm_fallow.fx(j) = 0;
+    v29_fallow_short_missing.fx(j) = 0;
+    v29_fallow_long_missing.fx(j) = 0;
+    i29_fallow_long_penalty(t) = 0;
+    i29_fallow_short_penalty(t) = 0;
 else
-  i29_fallow_penalty(t) = s29_fallow_penalty;
-  if (i29_fallow_penalty(t) > 0,
-    v29_fallow_missing.lo(j) = 0;
-    v29_fallow_missing.up(j) = Inf;
-  else
-    v29_fallow_missing.fx(j) = 0;
-  );
-);
+    vm_fallow.lo(j) = 0;
+    vm_fallow.up(j) = p29_avl_cropland(t,j);
+    m_boundfix(vm_fallow,(j));
+    v29_fallow_short_missing.lo(j) = 0;
+    v29_fallow_short_missing.up(j) = p29_avl_cropland(t,j);
+    m_boundfix(v29_fallow_short_missing,(j));
+    v29_fallow_long_missing.lo(j) = 0;
+    v29_fallow_long_missing.up(j) = p29_avl_cropland(t,j);
+    m_boundfix(v29_fallow_long_missing,(j));
 
-* Bounds for fallow land
-vm_fallow.lo(j) = 0;
-vm_fallow.up(j) = p29_avl_cropland(t,j);
-m_boundfix(vm_fallow,(j),l,1e-6);
+    i29_fallow_long_penalty(t) = (1-i29_fallow_scenario_fader(t)) * s29_fallow_long_penalty +
+                                  i29_fallow_scenario_fader(t) * s29_fallow_long_penalty_target;
+    i29_fallow_short_penalty(t) = (1-i29_fallow_scenario_fader(t)) * s29_fallow_short_penalty +
+                                  i29_fallow_scenario_fader(t) * s29_fallow_short_penalty_target;
+);
 
 * Update biodiversity value
 vm_bv.l(j,"crop_fallow",potnatveg) = 

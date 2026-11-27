@@ -59,6 +59,7 @@ scalars
   s15_yeardiff                       Number of 5-year time intervalls between time steps (1)
   s15_count                          Loop counter for interpolating body height estimates between longer timesteps (1)
   s15_run_diet_postprocessing        run diet postprocessing (1)
+  s15_kcal_calib_fadeout_switch      Calibration fadeout factor in the last time step before sm_fix_SSP2 (1) / 0 /
 ;
 
 parameters
@@ -76,6 +77,7 @@ parameters
  p15_livestock_subst_fader(t_all)              Livestock substitution fader (1)
  p15_rumdairy_subst_fader(t_all)               Ruminant and dairy substitution fader (1)
  p15_rumdairy_scp_subst_fader(t_all)           Ruminant and dairy substitution with SCP fader (1)
+ p15_flexfood_subst_fader(t_all)               Flexible source-to-target food substitution fader (1)
  p15_livestock_threshold_subst_fader(t_all)    Fader for livestock threshold target (1)
  p15_exo_food_scenario_fader(t_all)            Exogenous diet scenario fader (1)
  p15_shr_fafh(t,iso)                           Share of calories consumed away from home (1)
@@ -114,6 +116,7 @@ parameters
   i15_livestock_fadeout(t,iso)                     Livestock fadeout share (1)
   i15_rumdairy_fadeout(t,iso)                      Ruminant meat and dairy fadeout share (1)
   i15_rumdairy_scp_fadeout(t,iso)                  Ruminant meat and dairy fadeout share to be replaced by SCP (1)
+  i15_flexfood_fadeout(t,iso)                      Source food fadeout share for flexible food substitution (1)
   i15_livestock_fadeout_threshold(t,iso)           Livestock fadeout share for threshold (1)
 
   i15_protein_to_kcal_ratio(t,kfo)                   Protein-to-kcal ratio (g protein per kcal)
@@ -126,6 +129,8 @@ parameters
 * diet calibration
   p15_kcal_calib(t,iso,kfo)                   Balance flow to diverge from mean calories of regressions (kcal per cap per day)
   p15_kcal_calib_lastcalibyear(iso,kfo)       Calibration factor for the last year with observations (kcal per cap per day)
+  p15_kcal_regr_scen(iso,kfo)                 Regression food demand with scenario parameters in the last time step before sm_fix_SSP2 (kcal per cap per day)
+  p15_kcal_calib_switch(iso,kfo)              Calibration offset for the switch from SSP2 to scenario parameters after sm_fix_SSP2 (kcal per cap per day)
   p15_balanceflow_kcal(t,i,kfo)               Balance flow for mismatch between FAOSTAT and demand estimates (kcal per capita per day)
   p15_balanceflow_kcal_iso(t,iso,kfo)         Balance flow for mismatch between FAOSTAT and demand estimates (kcal per capita per day)
   p15_balanceflow_kcal_lastcalibyear(iso,kfo) Balance flow of last historic time step for mismatch between FAOSTAT and demand estimates (kcal per capita per day)
@@ -148,6 +153,12 @@ parameters
  p15_livestock_kcal_structure_orig(t,iso,kfo_lp)   Auxiliary parameter for livestock kcal structure - basis for scenarios of livestock food substitution (1)
  p15_rumdairy_kcal_structure_orig(t,iso,kfo_rd)    Auxiliary parameter for ruminant and dairy kcal structure - basis for scenarios of ruminant-based food substitution (1)
  p15_plant_kcal_structure_orig(t,iso,kfo_pp)       Auxiliary parameter for plant-based food kcal structure - basis for scenarios of livestock food substitution (1)
+ p15_flexfood_kcal_removed(t,iso)                  Calories removed from source foods by flexible food substitution (kcal per capita per day)
+ p15_flexfood_protein_removed(t,iso)               Protein removed from source foods by flexible food substitution (g protein per capita per day)
+ p15_flexfood_target_kcal_orig(t,iso)              Calories from target foods before flexible food substitution (kcal per capita per day)
+ p15_flexfood_target_protein_orig(t,iso)           Protein from target foods before flexible food substitution (g protein per capita per day)
+ p15_flexfood_target_structure(t,iso,kfo)          Target-food structure in selected substitution metric (1)
+ p15_flexfood_target_structure_global(t,kfo)       Population-weighted global target-food structure in selected substitution metric (1)
  p15_kcal_pc_livestock_supply_target(iso)          Target of per capita livestock consumption (kcal per capita per day)
 
  p15_bmi_shr_calibrated(t,iso,sex,age,bmi_group15) Calibrated estimates of BMI share for population groups  (1)

@@ -100,6 +100,8 @@ s35_shift = m_timestep_length_forestry/5;
 *' If the vegetation carbon density in a simulation unit due to regrowth
 *' exceeds a threshold of 20 tC/ha the respective area is shifted from young secondary
 *' forest, which is still considered other land, to secondary forest land.
+*' Uses the secdforest carbon curve so natural succession from abandoned cropland matures at realistic
+*' rates; the FRA 2025 match is a wood-only multiplier in module 14 and never bends carbon.
 p35_maturesecdf(t,j,ac)$(not sameas(ac,"acx")) =
       p35_land_other(t,j,"youngsecdf",ac)$(pm_carbon_density_secdforest_ac(t,j,ac,"vegc") > 20);
 p35_land_other(t,j,"youngsecdf",ac) = p35_land_other(t,j,"youngsecdf",ac) - p35_maturesecdf(t,j,ac);
@@ -153,6 +155,10 @@ v35_secdforest.up(j,ac) = Inf;
 p35_protection_dist(j,ac_sub) = 0;
 p35_protection_dist(j,ac_sub)$(sum(ac_sub2,pc35_secdforest(j,ac_sub2)) > 0) = pc35_secdforest(j,ac_sub) / sum(ac_sub2,pc35_secdforest(j,ac_sub2));
 pm_land_conservation(t,j,"secdforest","protect")$(pm_land_conservation(t,j,"secdforest","protect") > sum(ac_sub, pc35_secdforest(j,ac_sub))) = sum(ac_sub, pc35_secdforest(j,ac_sub));
+* Secondary-forest lower bound: conservation protection (WDPA) and, for future steps, the per-period
+* harvest-share cap. There is no age-specific protection of old stands, so cost-minimizing harvest takes
+* the densest (oldest) secondary forest first (most wood per hectare, least area disturbed). To protect
+* old secondary forest as policy, use pm_land_conservation(...,"secdforest","protect").
 if (sum(sameas(t_past,t),1) = 1,
 v35_secdforest.lo(j,ac_sub) = pm_land_conservation(t,j,"secdforest","protect") * p35_protection_dist(j,ac_sub);
 else
@@ -160,7 +166,7 @@ v35_secdforest.lo(j,ac_sub) = max((1-s35_natveg_harvest_shr) * pc35_secdforest(j
 );
 * upper bound
 v35_secdforest.up(j,ac_sub) = pc35_secdforest(j,ac_sub);
-m_boundfix(v35_secdforest,(j,ac_sub),l,1e-6);
+m_boundfix(v35_secdforest,(j,ac_sub));
 
 * set restoration target
 p35_land_restoration(j,"secdforest") = pm_land_conservation(t,j,"secdforest","restore");
@@ -188,9 +194,10 @@ vm_land_other.up(j,"othernat",ac) = Inf;
 vm_land_other.lo(j,"youngsecdf",ac) = 0;
 *set upper bound
 vm_land_other.up(j,"othernat",ac_sub) = pc35_land_other(j,"othernat",ac_sub);
+* No shr limit on other (only secdforest)
 vm_land_other.up(j,"youngsecdf",ac_sub) = pc35_land_other(j,"youngsecdf",ac_sub);
 vm_land_other.fx(j,"youngsecdf",ac_est) = 0;
-m_boundfix(vm_land_other,(j,othertype35,ac_sub),l,1e-6);
+m_boundfix(vm_land_other,(j,othertype35,ac_sub));
 
 pm_max_forest_est(t,j)$(pm_max_forest_est(t,j) < sum(ac, pc35_land_other(j,"youngsecdf",ac))) = 
   sum(ac, pc35_land_other(j,"youngsecdf",ac));
@@ -210,13 +217,14 @@ pm_land_conservation(t,j,"other","restore") = p35_land_restoration(j,"other");
 vm_land.lo(j,"other") = pm_land_conservation(t,j,"other","protect") + p35_land_restoration(j,"other");
 
 * boundfix for land_natveg
-m_boundfix(vm_land,(j,land_natveg),up,1e-6);
+m_boundfix(vm_land,(j,land_natveg));
 
 * ----------------------------
 * Calculate carbon density
 * ------------------------------
 
 p35_carbon_density_other(t,j,"othernat",ac,ag_pools) = pm_carbon_density_other_ac(t,j,ac,ag_pools);
+* Youngsecdf uses the secdforest carbon curve (never bent to FRA; see module 52).
 p35_carbon_density_other(t,j,"youngsecdf",ac,ag_pools) = pm_carbon_density_secdforest_ac(t,j,ac,ag_pools);
 
 * ----------------------------

@@ -68,7 +68,7 @@
           fm_bii_coeff(bii_class_secd,potnatveg)) * fm_luh2_side_layers(j2,potnatveg);
 
 *' NPI/NDC land protection policies based on country reports are implemented as
-*' minium forest and other land stocks. They are not interchangeable (as compared to
+*' minimum forest and other land stocks. They are not interchangeable (as compared to
 *' the natural land conservation constraint) and specifically formulated for forest and
 *' other land stocks.
 
@@ -78,8 +78,15 @@
 
  q35_min_other(j2) .. vm_land(j2,"other") =g= sum(ct, p35_min_other(ct,j2));
 
- q35_natforest_reduction(j2) .. vm_natforest_reduction(j2) =e=
- v35_primforest_reduction(j2) + sum(ac_sub, v35_secdforest_reduction(j2,ac_sub));
+*' Natural forest conversion, declared free but never negative: all terms are positive variables that count losses
+*' against the previous time step. Primary forest reduction counts in full, harvest included: by design the lock counts
+*' primary forest harvest as conversion, although harvested primary forest regrows as secondary forest, as harvested
+*' secondary forest does (`q35_secdforest_regeneration`). Secondary forest reduction counts net of its harvested area,
+*' which `q35_hvarea_secdforest` keeps at or below the reduction. Read by the NPI/NDC afforestation lock in [32_forestry].
+
+ q35_natforest_conversion(j2) .. vm_natforest_conversion(j2) =e=
+ v35_primforest_reduction(j2)
+ + sum(ac_sub, v35_secdforest_reduction(j2,ac_sub) - v35_hvarea_secdforest(j2,ac_sub));
 
 *' The following technical calculations are needed for reducing differences in land-use patterns between time steps.
 *' The gross change in natural vegetation is calculated based on land expansion and
@@ -125,6 +132,7 @@
 *' are paid everytime natural vegetation is harvested. The "real" harvested area
 *' are received from the timber module [73_timber].
 
+
 q35_cost_hvarea(i2)..
                     vm_cost_hvarea_natveg(i2)
                     =e=
@@ -135,39 +143,38 @@ q35_cost_hvarea(i2)..
 
 ** Secondary forest
 *' Woody biomass production from secondary forests is calculated by multiplying the
-*' area under production with corresponding yields of secondary forests, divided by the timestep length.
+*' area under production with corresponding growing stock of secondary forests, divided by the timestep length.
 
 q35_prod_secdforest(j2)..
                sum(kforestry, vm_prod_natveg(j2,"secdforest",kforestry))
                =e=
-               sum(ac_sub, v35_hvarea_secdforest(j2,ac_sub) * sum(ct,pm_timber_yield(ct,j2,ac_sub,"secdforest"))) / m_timestep_length_forestry;
+               sum(ac_sub, v35_hvarea_secdforest(j2,ac_sub) * sum(ct,im_growing_stock(ct,j2,ac_sub,"secdforest"))) / m_timestep_length_forestry;
 
 ** Primary forest
 *' Woody biomass production from primary forests is calculated by multiplying the
-*' area under production with corresponding yields of primary forests, divided by the timestep length.
+*' area under production with corresponding growing stock of primary forests, divided by the timestep length.
 
 q35_prod_primforest(j2)..
               sum(kforestry, vm_prod_natveg(j2,"primforest",kforestry))
               =e=
-              v35_hvarea_primforest(j2) * sum(ct, pm_timber_yield(ct,j2,"acx","primforest")) / m_timestep_length_forestry;
+              v35_hvarea_primforest(j2) * sum(ct, im_growing_stock(ct,j2,"acx","primforest")) / m_timestep_length_forestry;
 
 ** Other land
 *' Woody biomass production from other land is calculated by multiplying the area under
-*' production with corresponding yields of other land, divided by the timestep length.
+*' production with corresponding growing stock of other land, divided by the timestep length.
 
 q35_prod_other(j2)..
               sum(kforestry, vm_prod_natveg(j2,"other",kforestry))
                =e=
-               (sum(ac_sub, v35_hvarea_other(j2,"othernat",ac_sub) * sum(ct, pm_timber_yield(ct,j2,ac_sub,"other")))
-              + sum(ac_sub, v35_hvarea_other(j2,"youngsecdf",ac_sub) * sum(ct, pm_timber_yield(ct,j2,ac_sub,"secdforest"))))
+               (sum(ac_sub, v35_hvarea_other(j2,"othernat",ac_sub) * sum(ct, im_growing_stock(ct,j2,ac_sub,"other")))
+              + sum(ac_sub, v35_hvarea_other(j2,"youngsecdf",ac_sub) * sum(ct, im_growing_stock(ct,j2,ac_sub,"secdforest"))))
               / m_timestep_length_forestry
                 ;
 
 *' Following equations show the harvested area from natural vegetation i.e. primary
-*' forests, secondary forests and other land. Important to note here that no wood
-*' production should be realized from other land. Harvested area for production
-*' purposes can be lower oe equal than land reduction in natural vegetation as
-*' not all lost area is (or should be) used for production.
+*' forests, secondary forests and other land. Harvested area for production purposes
+*' can be lower than or equal to the land reduction in natural vegetation, as not all
+*' lost area is (or should be) used for production.
 
 q35_hvarea_secdforest(j2,ac_sub)..
                 v35_hvarea_secdforest(j2,ac_sub)

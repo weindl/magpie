@@ -74,6 +74,7 @@
 .update_sets_modules <- function() {
   require(gms)
 
+
   ### 56_ghg_policy
   ghgscen56 <- magclass::read.magpie("modules/56_ghg_policy/input/f56_pollutant_prices.cs3")
   ghgscen56 <- magclass::getNames(ghgscen56,dim=2)
@@ -98,8 +99,6 @@
                     desc = "second generation bioenergy scenarios",
                     items = scen2nd60))
 
-  gms::writeSets(sets , "modules/60_bioenergy/1stgen_priced_dec18/sets.gms")
-  gms::writeSets(sets , "modules/60_bioenergy/1st2ndgen_priced_feb24/sets.gms")
   gms::writeSets(sets , "modules/60_bioenergy/1st2ndgen_biomass_dec24/sets.gms")
 
   ### 63_biochar
@@ -110,7 +109,7 @@
                     desc = "biochar scenarios",
                     items = scenBC63))
 
-  gms::writeSets(sets , "modules/63_biochar/dec24/sets.gms")
+  gms::writeSets(sets , "modules/63_biochar/exo_oct26/sets.gms")
 }
 
 # Function to extract information from info.txt
@@ -383,13 +382,20 @@ start_run <- function(cfg, scenario = NULL, codeCheck = TRUE, lock_model = TRUE,
   ###########################################################################################################
 
   if(cfg$recalc_npi_ndc=="ifneeded") {
-    aff_pol     <- magclass::read.magpie("modules/32_forestry/input/npi_ndc_aff_pol.cs3")
-    ad_aolc_pol <- magclass::read.magpie("modules/35_natveg/input/npi_ndc_ad_aolc_pol.cs3")
-    ad_pol     <- ad_aolc_pol[,,"forest"]
-    aolc_pol    <- ad_aolc_pol[,,"other"]
-    if((all(aff_pol == 0)   & (cfg$gms$c32_aff_policy != "none")) |
-       (all(ad_pol == 0)    & (cfg$gms$c35_ad_policy != "none"))  |
-       (all(aolc_pol == 0) & (cfg$gms$c35_aolc_policy != "none")))
+    aff_pol        <- magclass::read.magpie("modules/32_forestry/input/npi_ndc_aff_pol.cs3")
+    ad_aolc_pol    <- magclass::read.magpie("modules/35_natveg/input/npi_ndc_ad_aolc_pol.cs3")
+    ad_pol         <- ad_aolc_pol[,,"forest"]
+    aolc_pol       <- ad_aolc_pol[,,"other"]
+    affexp_missing <- (cfg$gms$c32_aff_policy == "affexp") &&
+                        !("affexp" %in% magclass::getNames(aff_pol))
+    ndcdelay_missing <- (cfg$gms$c32_aff_policy == "ndcdelay") &&
+                        !("ndcdelay" %in% magclass::getNames(aff_pol))
+    lock_share_missing <- !file.exists("modules/32_forestry/input/npi_ndc_aff_lock_share.cs3")
+
+    if((all(aff_pol == 0)  && (cfg$gms$c32_aff_policy != "none"))  ||
+       (all(ad_pol == 0)   && (cfg$gms$c35_ad_policy != "none"))   ||
+       (all(aolc_pol == 0) && (cfg$gms$c35_aolc_policy != "none")) ||
+       affexp_missing || ndcdelay_missing || lock_share_missing)
     {
       cfg$recalc_npi_ndc <- TRUE
     } else cfg$recalc_npi_ndc <- FALSE
@@ -439,7 +445,12 @@ start_run <- function(cfg, scenario = NULL, codeCheck = TRUE, lock_model = TRUE,
     cat("Starting NPI/NDC recalculation!\n")
     source("scripts/npi_ndc/start_npi_ndc.R")
     setwd("scripts/npi_ndc")
-    calc_NPI_NDC(policyregions=cfg$policyregions)
+    # use the potential forest area matching c35_pot_forest_correction, so the cellular NPI/NDC
+    # afforestation placement stays consistent with the grassland-correction state used by the model
+    potForestFile <- if (isTRUE(cfg$gms$c35_pot_forest_correction == "off")) {
+      "../../modules/35_natveg/input/pot_forest_area_uncorrected_0.5.mz"
+    } else "../../modules/35_natveg/input/pot_forest_area_0.5.mz"
+    calc_NPI_NDC(policyregions=cfg$policyregions, potential_forest_file=potForestFile)
     setwd("../..")
     cat("NPI/NDC recalculation successful!\n")
   }
@@ -487,26 +498,44 @@ start_run <- function(cfg, scenario = NULL, codeCheck = TRUE, lock_model = TRUE,
   }
 
   land_calib_file <- "modules/39_landconversion/input/f39_calib.csv"
+  land_calib_file_past <- "modules/39_landconversion/input/f39_calib_past.csv"
+  source("scripts/calibration/landconversion_cost.R")
   if(cfg$recalibrate_landconversion_cost=="ifneeded") {
-    # recalibrate if file does not exist
-    if(!file.exists(land_calib_file)) cfg$recalibrate_landconversion_cost <- TRUE else cfg$recalibrate_landconversion_cost <- FALSE
+    # recalibrate if the cropland file is missing; if pasture calibration is switched on
+    # (calib_pasture_landconversion_cost = TRUE), also recalibrate if its file is missing; if
+    # pasture calibration is switched off, also recalibrate if its existing file isn't already
+    # neutral (cost=1/reward=0) -- this makes sure flipping calib_pasture_landconversion_cost to
+    # FALSE is never silently ignored just because a (non-neutral) leftover pasture calibration
+    # file from an earlier, pasture-calibration-enabled run happens to already exist.
+    pastFileNeedsAction <- if (cfg$calib_pasture_landconversion_cost) {
+      !file.exists(land_calib_file_past)
+    } else {
+      !isNeutralCalib(land_calib_file_past)
+    }
+    if(!file.exists(land_calib_file) || pastFileNeedsAction) cfg$recalibrate_landconversion_cost <- TRUE else cfg$recalibrate_landconversion_cost <- FALSE
   }
   if(cfg$recalibrate_landconversion_cost){
     #if(cfg$gms$landconversion!="devstate") stop("Land conversion cost calibration works only with realization devstate")
     cat("Starting land conversion cost calibration factor calculation!\n")
-    source("scripts/calibration/landconversion_cost.R")
-    calibrate_magpie(n_maxcalib = cfg$calib_maxiter_landconversion_cost,
-                     restart = cfg$restart_landconversion_cost,
-                     calib_accuracy = cfg$calib_accuracy_landconversion_cost,
-                     lowpass_filter = cfg$lowpass_filter_landconversion_cost,
-                     cost_max = cfg$cost_calib_max_landconversion_cost,
-                     cost_min = cfg$cost_calib_min_landconversion_cost,
-                     calib_file = land_calib_file,
-                     data_workspace = cfg$val_workspace,
-                     logoption = 3,
-                     debug = cfg$debug,
-                     best_calib = cfg$best_calib_landconversion_cost,
-                     histData = cfg$cost_calib_hist_data)
+    calibrateLandconversion(nMaxcalib = cfg$calib_maxiter_landconversion_cost,
+                            restart = cfg$restart_landconversion_cost,
+                            calibAccuracy = cfg$calib_accuracy_landconversion_cost,
+                            costMax = cfg$cost_calib_max_landconversion_cost,
+                            costMin = cfg$cost_calib_min_landconversion_cost,
+                            rewardMax = cfg$reward_calib_max_landconversion_cost,
+                            calibFile = land_calib_file,
+                            calibFilePast = land_calib_file_past,
+                            calibAccuracyPast = cfg$calib_accuracy_landconversion_cost_past,
+                            costMaxPast = cfg$cost_calib_max_landconversion_cost_past,
+                            costMinPast = cfg$cost_calib_min_landconversion_cost_past,
+                            rewardMaxPast = cfg$reward_calib_max_landconversion_cost_past,
+                            dataWorkspace = cfg$val_workspace,
+                            logoption = 3,
+                            debug = cfg$debug,
+                            bestCalib = cfg$best_calib_landconversion_cost,
+                            histData = cfg$cost_calib_hist_data,
+                            levelGradientMix = cfg$level_gradient_mix,
+                            calibratePasture = cfg$calib_pasture_landconversion_cost)
     cat("Land conversion cost calibration factor calculated!\n")
   }
 

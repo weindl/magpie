@@ -25,9 +25,9 @@ source("config/default.cfg")
 # use local test input builds containing f63_biochar_prod.cs3 (built by
 # mrland calcBiocharProd, rev >= 4.138). Files must be present in input/
 # or reachable via the repositories in cfg$repositories.
-cfg$input["regional"] <- "rev4.138+testBiochar_h12_magpie.tgz"
-cfg$input["cellular"] <- "rev4.138+testBiochar_h12_1b5c3817_cellularmagpie_c200_MRI-ESM2-0-ssp245_lpjml-8e6c5eb1.tgz"
-cfg$input["validation"] <- "rev4.138+testBiochar_h12_92e02314_validation.tgz"
+cfg$input["regional"] <- "rev4.138+new4p139_h12_magpie.tgz"
+cfg$input["cellular"] <- "rev4.138+new4p139_h12_1b5c3817_cellularmagpie_c200_MRI-ESM2-0-ssp245_lpjml-8e6c5eb1.tgz"
+cfg$input["validation"] <- "rev4.138+new4p139_h12_92e02314_validation.tgz"
 
 # force input download for all runs
 cfg$force_download <- TRUE 
